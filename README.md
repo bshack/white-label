@@ -137,6 +137,6 @@ yo white-label;
 
 Learn more about Yeoman here: https://yeoman.io
 
-## Bugs? Feature Requests?
+## Bugs or Feature Requests?
 
 Pull request or log a ticket :)
