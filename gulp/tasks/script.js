@@ -9,7 +9,6 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var modernizr = require('modernizr');
 var fs = require('fs');
-var babel = require('gulp-babel');
 
 // ## Environment Config
 
@@ -37,15 +36,17 @@ gulp.task('scriptLint', function() {
 gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], function() {
     'use strict';
     return browserify({
+        transform: [
+            ['babelify', {
+                'presets': ['es2015']
+            }]
+        ],
         entries: config.path.script.compile.source,
         debug: (config.path.isProduction ? false : true)
     })
         .bundle()
         .pipe(source(config.path.script.compile.filename))
         .pipe(buffer())
-        .pipe(babel({
-            presets: ['es2015']
-        }))
         .pipe(gulp.dest(config.path.script.compile.destination))
         .on('error', notify.onError('script: <%= error.message %>'));
 

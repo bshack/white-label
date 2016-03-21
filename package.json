@@ -57,6 +57,7 @@
   "devDependencies": {},
   "dependencies": {
     "babel-preset-es2015": "x.x.x",
+    "babelify": "x.x.x",
     "brfs": "x.x.x",
     "browser-sync": "x.x.x",
     "browserify": "x.x.x",
@@ -67,7 +68,6 @@
     "gulp": "x.x.x",
     "gulp-accessibility": "x.x.x",
     "gulp-autoprefixer": "x.x.x",
-    "gulp-babel": "x.x.x",
     "gulp-callback": "x.x.x",
     "gulp-changed": "x.x.x",
     "gulp-compass": "x.x.x",
