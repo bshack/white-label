@@ -41,7 +41,10 @@ module.exports = function(karma) {
                 'babelify',
                 istanbul({
                     ignore: ['**/node_modules/**']
-                })
+                }),
+                ['babelify', {
+                    'presets': ['es2015']
+                }]
             ]
         },
         coverageReporter: {
