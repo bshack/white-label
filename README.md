@@ -4,6 +4,7 @@
 
 ## Key Libraries
 
+- Babel
 - Browserify
 - Browsersync
 - Gulp
