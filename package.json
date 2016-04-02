@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "contributors": [
     {
       "name": "Bill Shackelford",
@@ -120,6 +120,7 @@
     "shrinkwrap": "x.x.x",
     "sprity": "x.x.x",
     "sprity-sass": "x.x.x",
+    "trndymodel": "x.x.x",
     "vinyl-buffer": "x.x.x",
     "vinyl-source-stream": "x.x.x",
     "watchify": "x.x.x",
