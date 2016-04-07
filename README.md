@@ -74,12 +74,6 @@ This will create a Browsersync server and reload your browser window(s) as you m
 
 Learn more about Browsersync here: https://www.browsersync.io
 
-If you want to run the 'watch' task without Browsersync you can do so like this:
-
-```
-gulp watch --sync=false;
-```
-
 ### Deploy
 
 This compiles and bundles everything into a deploy ready package outputted in the '\_deploy' directory.
@@ -91,6 +85,14 @@ gulp deploy --version=(unique deploy version - optional) --www=(www domain) --cd
 _The 'version' argument defaults to an epoch timestamp and the 'production' argument defaults to 'false'._
 
 ### Unit Tests
+
+watch:
+
+```
+gulp unitWatch;
+```
+
+single run:
 
 ```
 gulp unit;
