@@ -225,8 +225,7 @@
             report: {
                 // where to save code complexity report
                 source: 'app/report/**',
-                destination: 'report',
-                plato: 'app/report/plato'
+                destination: 'report'
             }
         }
     };

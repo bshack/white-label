@@ -36,15 +36,12 @@ module.exports = function(karma) {
         browserify: {
             debug: true,
             transform: [
+                'babelify',
                 'brfs',
                 'browserify-shim',
-                'babelify',
                 istanbul({
                     ignore: ['**/node_modules/**']
-                }),
-                ['babelify', {
-                    'presets': ['es2015']
-                }]
+                })
             ]
         },
         coverageReporter: {
