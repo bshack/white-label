@@ -19,3 +19,16 @@ gulp.task('unit', (done) => {
         done();
     });
 });
+
+// ## Unit Watch Task
+
+gulp.task('unitWatch', (done) => {
+    'use strict';
+    //run unit tests and write out coverage
+    return new KarmaServer.start({
+        configFile: config.path.script.karma,
+        autoWatch: true
+    }, function() {
+        done();
+    });
+});
