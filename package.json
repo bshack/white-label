@@ -28,7 +28,9 @@
     "jasmine",
     "karma",
     "yeoman-generator",
-    "shackstack"
+    "shackstack",
+    "es6",
+    "es2015"
   ],
   "scripts": {
     "test": "gulp deploy --www=//www.example.com --cdn=//cdn.example.com --service=//service.example.com --production=true;"
@@ -122,6 +124,9 @@
     "vinyl-buffer": "x.x.x",
     "vinyl-source-stream": "x.x.x",
     "watchify": "x.x.x",
+    "white-label-mediator": "x.x.x",
+    "white-label-model": "x.x.x",
+    "white-label-view": "x.x.x",
     "yargs": "x.x.x",
     "yeoman-generator": "x.x.x",
     "yosay": "x.x.x"
