@@ -1,17 +1,12 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "contributors": [
     {
       "name": "Bill Shackelford",
       "email": "bshackelford@gmail.com",
       "url": "https://github.com/bshack"
-    },
-    {
-      "name": "Paul Fox",
-      "email": "gibbitz@hotmail.com",
-      "url": "https://github.com/gibbitz"
     }
   ],
   "engines": {
