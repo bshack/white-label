@@ -28,11 +28,13 @@ _This project works with 'LTS' or 'stable'_
 
 http://gulpjs.com
 
-### Python
+### Other
 
-Mac OS X users can skip this.
+Windows Users:
+Python language support
 
-https://www.python.org/downloads/
+Debian/Ubuntu Users:
+build-essential & lib-vips-dev packages
 
 ### Node Modules
 
