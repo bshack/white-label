@@ -34,7 +34,7 @@ Windows Users:
 Python language support
 
 Debian/Ubuntu Users:
-build-essential & lib-vips-dev packages
+build-essential & libvips-dev packages
 
 ### Node Modules
 
