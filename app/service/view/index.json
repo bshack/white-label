@@ -1,3 +1,4 @@
 {
-    "title": "Home"
+    "title": "Home",
+    "scriptPage": "assets/script/index.compiled.js"
 }

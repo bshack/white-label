@@ -4,6 +4,7 @@
     <body itemscope itemtype="http://schema.org/WebPage">
         <p>Build your site here.</p>
         {{> config/config}}
-        {{> tags/script script='assets/script/global.compiled.js'}}
+        {{> tags/script script=scriptGlobal}}
+        {{> tags/script script=scriptPage}}
     </body>
 </html>

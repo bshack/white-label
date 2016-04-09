@@ -5,8 +5,6 @@ const eslint = require('gulp-eslint');
 const plumber = require('gulp-plumber');
 const browserify = require('browserify');
 const notify = require('gulp-notify');
-const source = require('vinyl-source-stream');
-const buffer = require('vinyl-buffer');
 const modernizr = require('modernizr');
 const fs = require('fs');
 
@@ -33,18 +31,26 @@ gulp.task('scriptLint', () => {
 // ## Script Task
 // complile the modules together, first lint .js files, then build modernizr and compile clientside templates
 
-gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], () => {
+gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callback => {
     'use strict';
-    return browserify({
+    
+    let entriesDestination = [];
+    let i;
+    for (i in config.path.script.entries) {
+        entriesDestination.push(config.path.script.entries[i].replace('.js', '.compiled.js'));
+    }
+    browserify({
         transform: ['babelify'],
-        entries: config.path.script.compile.source,
-        debug: (config.path.isProduction ? false : true)
+        entries: config.path.script.entries,
+        debug: (config.path.isProduction ? false : true),
+        plugin: [['factor-bundle', {
+            outputs: entriesDestination
+        }]]
     })
-        .bundle()
-        .pipe(source(config.path.script.compile.filename))
-        .pipe(buffer())
-        .pipe(gulp.dest(config.path.script.compile.destination))
+    .bundle()
+        .pipe(fs.createWriteStream(config.path.script.entriesGlobal))
         .on('error', notify.onError('script: <%= error.message %>'));
+    callback();
 
 });
 

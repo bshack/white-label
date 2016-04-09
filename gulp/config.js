@@ -169,9 +169,7 @@
                     '!app/assets/script/*.compiled.js'
                 ],
                 // glob js files to be delployed duirng release
-                release: [
-                    'app/assets/script/global.compiled.js'
-                ],
+                release: 'app/assets/script/*.compiled.js',
                 // file to be compliled by browserify
                 compile: {
                     source: 'app/assets/script/global.js',
@@ -179,7 +177,14 @@
                     filename: 'global.compiled.js'
                 },
                 // where to save script files in release task
-                destination: 'assets/script'
+                destination: 'assets/script',
+                // common libraries found when browserify builds entries
+                entriesGlobal: 'app/assets/script/global.compiled.js',
+                // browserify entries
+                entries: [
+                    'app/assets/script/index.js',
+                    'app/assets/script/404.js'
+                ]
             },
             // ### style
             style: {
