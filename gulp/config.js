@@ -181,10 +181,7 @@
                 // common libraries found when browserify builds entries
                 entriesGlobal: 'app/assets/script/global.compiled.js',
                 // browserify entries
-                entries: [
-                    'app/assets/script/index.js',
-                    'app/assets/script/404.js'
-                ]
+                entries: 'app/assets/script/*.js'
             },
             // ### style
             style: {

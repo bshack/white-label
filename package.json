@@ -63,6 +63,7 @@
     "chalk": "x.x.x",
     "eslint": "x.x.x",
     "factor-bundle": "x.x.x",
+    "glob": "x.x.x",
     "gulp": "x.x.x",
     "gulp-accessibility": "x.x.x",
     "gulp-autoprefixer": "x.x.x",

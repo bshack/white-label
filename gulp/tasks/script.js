@@ -7,6 +7,7 @@ const browserify = require('browserify');
 const notify = require('gulp-notify');
 const modernizr = require('modernizr');
 const fs = require('fs');
+const glob = require('glob');
 
 // ## Environment Config
 
@@ -17,6 +18,7 @@ const config = require('../config');
 
 gulp.task('scriptLint', () => {
     'use strict';
+
     return gulp.src(config.path.script.all)
         //support for better error handling
         .pipe(plumber())
@@ -33,24 +35,35 @@ gulp.task('scriptLint', () => {
 
 gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callback => {
     'use strict';
-    
-    let entriesDestination = [];
-    let i;
-    for (i in config.path.script.entries) {
-        entriesDestination.push(config.path.script.entries[i].replace('.js', '.compiled.js'));
-    }
-    browserify({
-        transform: ['babelify'],
-        entries: config.path.script.entries,
-        debug: (config.path.isProduction ? false : true),
-        plugin: [['factor-bundle', {
-            outputs: entriesDestination
-        }]]
-    })
-    .bundle()
+
+    const entries = [];
+    const entriesDestination = [];
+
+    glob(config.path.script.entries, {}, (err, files) => {
+
+        let i;
+        for (i = 0; i < files.length; i++) {
+            if (files[i].search('.compiled.js') === -1) {
+                entries.push(files[i]);
+                entriesDestination.push(files[i].replace('.js', '.compiled.js'));
+            }
+        }
+        browserify({
+            transform: ['babelify'],
+            entries: entries,
+            debug: (config.path.isProduction ? false : true),
+            plugin: [['factor-bundle', {
+                outputs: entriesDestination
+            }]]
+        })
+        .bundle()
         .pipe(fs.createWriteStream(config.path.script.entriesGlobal))
         .on('error', notify.onError('script: <%= error.message %>'));
-    callback();
+
+        // all done
+        callback();
+
+    });
 
 });
 
@@ -60,6 +73,7 @@ gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callbac
 
 gulp.task('scriptModernizr', callback => {
     'use strict';
+
     modernizr.build({
         'feature-detects': [
             'touchevents'
@@ -67,4 +81,5 @@ gulp.task('scriptModernizr', callback => {
     }, file => {
         fs.writeFile(config.path.script.modernizr, file, callback);
     });
+    
 });
