@@ -13,6 +13,9 @@
 - Modernizr
 - Karma
 - SCSS
+- White Label Mediator
+- White Label Model
+- White Label View
 
 ## Install Dependancies
 
