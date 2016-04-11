@@ -48,6 +48,9 @@ gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callbac
                 entriesDestination.push(files[i].replace('.js', '.compiled.js'));
             }
         }
+
+        const bundleFs = fs.createWriteStream(config.path.script.entriesGlobal);
+
         browserify({
             transform: ['babelify'],
             entries: entries,
@@ -57,11 +60,12 @@ gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callbac
             }]]
         })
         .bundle()
-        .pipe(fs.createWriteStream(config.path.script.entriesGlobal))
+        .pipe(bundleFs)
         .on('error', notify.onError('script: <%= error.message %>'));
 
-        // all done
-        callback();
+        bundleFs.on('finish', function() {
+            return callback();
+        });
 
     });
 
@@ -81,5 +85,5 @@ gulp.task('scriptModernizr', callback => {
     }, file => {
         fs.writeFile(config.path.script.modernizr, file, callback);
     });
-    
+
 });
