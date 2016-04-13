@@ -51,7 +51,9 @@ gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callbac
         }
 
         browserify({
-            transform: ['babelify'],
+            transform: [
+                'babelify'
+            ],
             entries: entries,
             debug: (config.path.isProduction ? false : true),
             plugin: [['factor-bundle', {
