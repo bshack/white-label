@@ -53,6 +53,8 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "babel-plugin-transform-es2015-modules-umd": "x.x.x",
+    "babel-polyfill": "x.x.x",
     "babel-preset-es2015": "x.x.x",
     "babelify": "x.x.x",
     "brfs": "x.x.x",

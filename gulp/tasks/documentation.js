@@ -1,3 +1,5 @@
+'use strict';
+
 // ## Load Modules
 
 const gulp = require('gulp');

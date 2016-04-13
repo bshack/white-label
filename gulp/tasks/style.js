@@ -1,3 +1,5 @@
+'use strict';
+
 // ## Load Modules
 
 const gulp = require('gulp');
@@ -14,7 +16,7 @@ const config = require('../config');
 // ## Style Task Complilation Logic
 
 const styleCompile = () => {
-    'use strict';
+
     return gulp.src(config.path.style.source.scss)
         //support for better error handling
         .pipe(plumber())

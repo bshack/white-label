@@ -1,3 +1,5 @@
+'use strict';
+
 // ## Load Modules
 
 const gulp = require('gulp');
@@ -10,7 +12,7 @@ const config = require('../config');
 // ## Unit Task
 
 gulp.task('unit', (done) => {
-    'use strict';
+
     //run unit tests and write out coverage
     return new KarmaServer.start({
         configFile: config.path.script.karma,
@@ -23,7 +25,7 @@ gulp.task('unit', (done) => {
 // ## Unit Watch Task
 
 gulp.task('unitWatch', (done) => {
-    'use strict';
+
     //run unit tests and write out coverage
     return new KarmaServer.start({
         configFile: config.path.script.karma,

@@ -1,3 +1,5 @@
+'use strict';
+
 // ## Load Modules
 
 const gulp = require('gulp');
@@ -17,7 +19,6 @@ const config = require('../config');
 // make sure the code is all tidy
 
 gulp.task('scriptLint', () => {
-    'use strict';
 
     return gulp.src(config.path.script.all)
         //support for better error handling
@@ -34,10 +35,10 @@ gulp.task('scriptLint', () => {
 // complile the modules together, first lint .js files, then build modernizr and compile clientside templates
 
 gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callback => {
-    'use strict';
 
     const entries = [];
     const entriesDestination = [];
+    const bundleFs = fs.createWriteStream(config.path.script.entriesGlobal);
 
     glob(config.path.script.entries, {}, (err, files) => {
 
@@ -48,8 +49,6 @@ gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callbac
                 entriesDestination.push(files[i].replace('.js', '.compiled.js'));
             }
         }
-
-        const bundleFs = fs.createWriteStream(config.path.script.entriesGlobal);
 
         browserify({
             transform: ['babelify'],
@@ -63,6 +62,7 @@ gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callbac
         .pipe(bundleFs)
         .on('error', notify.onError('script: <%= error.message %>'));
 
+        // all done
         bundleFs.on('finish', function() {
             return callback();
         });
@@ -76,7 +76,6 @@ gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callbac
 // config example: https://github.com/Modernizr/Modernizr/blob/master/lib/config-all.json
 
 gulp.task('scriptModernizr', callback => {
-    'use strict';
 
     modernizr.build({
         'feature-detects': [

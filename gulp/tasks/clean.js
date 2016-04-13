@@ -1,3 +1,5 @@
+'use strict';
+
 // ## Load Modules
 
 const gulp = require('gulp');
@@ -11,7 +13,6 @@ const config = require('../config');
 // ## cleanDeploy Task
 
 gulp.task('cleanDeploy', () => {
-    'use strict';
     return gulp.src(config.path.build, {read: false})
         //support for better error handling
         .pipe(plumber())
@@ -22,7 +23,6 @@ gulp.task('cleanDeploy', () => {
 // ## cleanTemplate Task
 
 gulp.task('cleanTemplate', () => {
-    'use strict';
     return gulp.src(config.path.markup.partials.destination, {read: false})
         //support for better error handling
         .pipe(plumber())

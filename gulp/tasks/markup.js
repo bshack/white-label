@@ -1,3 +1,5 @@
+'use strict';
+
 // ## Load Modules
 
 const gulp = require('gulp');
@@ -20,7 +22,6 @@ const config = require('../config');
 // create .html files written to app root
 
 gulp.task('markup', () => {
-    'use strict';
     //task
     return gulp.src(config.path.markup.source)
         //support for better error handling
@@ -70,7 +71,6 @@ gulp.task('markup', () => {
 // create precomiled .js templates
 
 gulp.task('markupTemplate', ['cleanTemplate'], () => {
-    'use strict';
     return gulp.src(config.path.markup.partials.watch)
         //support for better error handling
         .pipe(plumber())

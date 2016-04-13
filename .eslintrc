@@ -10,6 +10,9 @@
     "globals":{
 
     },
+    "parserOptions":{
+        "sourceType":"module"
+    },
     "rules":{
         "no-console":1,
         "curly":2,
@@ -18,7 +21,7 @@
             "never"
         ],
         "strict":[
-            2,
+            0,
             "function"
         ],
         "camelcase":[

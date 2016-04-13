@@ -1,3 +1,5 @@
+'use strict';
+
 // ## Load Modules
 
 const gulp = require('gulp');
@@ -10,7 +12,6 @@ const config = require('../config');
 // ## Reload
 
 const reload = () => {
-    'use strict';
     return browsersync.reload();
 };
 
@@ -26,7 +27,6 @@ gulp.task('image-watch', ['styleAndSprite'], reload);
 // ### Starup the Browsersync server
 
 gulp.task('watch', ['build'], () => {
-    'use strict';
 
     //start up Browsersync
     browsersync.init({

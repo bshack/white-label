@@ -1,3 +1,5 @@
+'use strict';
+
 // ## Load Modules
 
 const gulp = require('gulp');
@@ -14,7 +16,6 @@ const config = require('../config');
 // creates a .png sprite from .png images found in the sprite directory
 
 gulp.task('sprite', ['vectorToRaster'], () => {
-    'use strict';
     //generate the sprite image and the scss styles
     return sprity.src({
         src: config.path.image.sprite.compliled,
@@ -41,7 +42,6 @@ gulp.task('sprite', ['vectorToRaster'], () => {
 // make the the sprite .svg source files to .png
 
 gulp.task('vectorToRaster', () => {
-    'use strict';
     return gulp.src(config.path.image.sprite.source)
         //support for better error handling
         .pipe(plumber())
