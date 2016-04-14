@@ -12,6 +12,7 @@
 - Jasmine
 - Modernizr
 - Karma
+- React
 - SCSS
 - White Label Mediator
 - White Label Model
@@ -109,7 +110,6 @@ These all run as dependencies of the 'watch' and 'deploy' tasks.
 
 ```
 gulp markup;
-gulp markupTemplate;
 gulp style;
 gulp script;
 gulp sprite;

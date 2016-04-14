@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "2.0.13",
+  "version": "2.1.0",
   "contributors": [
     {
       "name": "Bill Shackelford",
@@ -24,7 +24,8 @@
     "yeoman-generator",
     "shackstack",
     "es6",
-    "es2015"
+    "es2015",
+    "react"
   ],
   "scripts": {
     "test": "gulp deploy --www=//www.example.com --cdn=//cdn.example.com --service=//service.example.com --production=true;"
