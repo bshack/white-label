@@ -103,7 +103,7 @@
                 htmlLint: '.htmllintrc',
                 // glob of handlebars templates
                 source: [
-                    'app/**/*.handlebars',
+                    'app/**/*.html',
                     '!app/assets/**',
                     '!app/report/**',
                     '!app/service/**'
@@ -114,17 +114,7 @@
                     '!app/assets/**',
                     '!app/report/**',
                     '!app/service/**'
-                ],
-                partials: {
-                    //glob of handlebars partials
-                    source: [
-                        'app/assets/markup'
-                    ],
-                    // glob of handlebars partials, needed for watch task
-                    watch: 'app/assets/markup/**',
-                    // where to save generated js templates
-                    destination: 'app/assets/script/template'
-                }
+                ]
             },
             // ### font
             font: {
@@ -146,11 +136,9 @@
                     'gulp/*.js',
                     'grunt/tasks/*.js',
                     'gulp/options/.js',
-                    'app/assets/script/*.js',
-                    'app/assets/script/**/*.js',
+                    'app/assets/script/**',
                     'app/assets/test/spec/*.js',
                     'app/assets/test/*.js',
-                    '!app/assets/script/template/**',
                     '!app/assets/script/*.compiled.js'
                 ],
                 // glob of only gulp js files for documentation task
@@ -164,8 +152,7 @@
                 // glob of only application files for documentation task
                 source: [
                     'app/assets/script/*.js',
-                    'app/assets/script/**/*.js',
-                    '!app/assets/script/template/**',
+                    'app/assets/script/**',
                     '!app/assets/script/*.compiled.js'
                 ],
                 // glob js files to be delployed duirng release

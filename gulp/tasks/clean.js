@@ -19,13 +19,3 @@ gulp.task('cleanDeploy', () => {
         // delete the build directory
         .pipe(rimraf());
 });
-
-// ## cleanTemplate Task
-
-gulp.task('cleanTemplate', () => {
-    return gulp.src(config.path.markup.partials.destination, {read: false})
-        //support for better error handling
-        .pipe(plumber())
-        // delete the build directory
-        .pipe(rimraf());
-});
