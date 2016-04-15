@@ -1,9 +1,8 @@
 import 'babel-polyfill';
-import 'modernizr';
+import modernizr from 'modernizr';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 (function() {
     'use strict';
-    window.console.log(React, ReactDOM);
 })();
