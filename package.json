@@ -13,7 +13,7 @@
     "node": ">=4.0",
     "npm": ">=2.0"
   },
-  "description": "Scaffolding for developing and deploying static sites.",
+  "description": "Scaffolding for developing and deploying sites.",
   "main": "app/index.html",
   "keywords": [
     "browserify",
@@ -25,7 +25,8 @@
     "shackstack",
     "es6",
     "es2015",
-    "react"
+    "react",
+    "jsx"
   ],
   "scripts": {
     "test": "gulp deploy --www=//www.example.com --cdn=//cdn.example.com --service=//service.example.com --production=true;"
@@ -122,7 +123,6 @@
     "watchify": "x.x.x",
     "white-label-mediator": "x.x.x",
     "white-label-model": "x.x.x",
-    "white-label-view": "x.x.x",
     "yargs": "x.x.x",
     "yeoman-generator": "x.x.x",
     "yosay": "x.x.x"

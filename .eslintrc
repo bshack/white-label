@@ -57,6 +57,9 @@
         "max-params":[
             2,
             3
+        ],
+        "no-unused-vars":[
+            0
         ]
     }
 }

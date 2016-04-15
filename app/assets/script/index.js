@@ -5,5 +5,4 @@ import ReactDOM from 'react-dom';
 
 (function() {
     'use strict';
-    window.console.log(React, ReactDOM);
 })();

@@ -191,13 +191,21 @@
                     release: 'assets/style'
                 }
             },
-            // ### data
+            // ### font
             data: {
-                directory: 'app/service',
-                source: 'app/service/**',
-                destination: 'service',
-                pageDirectory: 'view/',
-                pageDefaultData: 'global.json'
+                // glob of data
+                source: 'app/assets/data/**',
+                // where to save data
+                destination: 'assets/data',
+                // global config data
+                globalConfig: {
+                    'wwwd': www,
+                    'cdn': cdn,
+                    'service': service,
+                    'version': version
+                },
+                // global config file name
+                globalConfigFile: 'app/assets/data/config.json'
             },
             // ### release
             release: {

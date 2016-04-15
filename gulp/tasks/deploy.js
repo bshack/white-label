@@ -24,7 +24,7 @@ gulp.task('deploy', callback => {
     //runSequence support is only for gulp 3.x, 4.x natively support this functionalty
     return runSequence(
         ['cleanDeploy'],
-        ['sprite'],
+        ['sprite', 'data'],
         ['markup', 'style', 'script', 'documentation'],
         ['accessibility'],
         ['copyRoot', 'copyReport', 'copyFonts', 'minifyMarkup', 'copyData', 'minifyStyle', 'minifyScript',
@@ -80,12 +80,13 @@ gulp.task('minifyMarkup', () => {
 });
 
 // ## Copy Data Task
-// stubbed out data files over
+// copy data dependency files to deploy directory
 gulp.task('copyData', () => {
     return gulp.src(config.path.data.source)
         //support for better error handling
         .pipe(plumber())
-        .pipe(gulp.dest(config.path.build + '/' + config.path.data.destination));
+        .pipe(gulp.dest(config.path.build + config.path.release.destination + config.path.version + '/' +
+            config.path.data.destination));
 
 });
 

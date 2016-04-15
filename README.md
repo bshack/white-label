@@ -2,21 +2,22 @@
 
 [![Build Status](https://travis-ci.org/bshack/white-label.svg?branch=master)](https://travis-ci.org/bshack/white-label)
 
+Scaffolding for developing and deploying sites.
+
 ## Key Libraries
 
 - Babel
 - Browserify
 - Browsersync
 - Gulp
-- Handlebars
 - Jasmine
+- JSX
 - Modernizr
 - Karma
 - React
 - SCSS
 - White Label Mediator
 - White Label Model
-- White Label View
 
 ## Install Dependancies
 
