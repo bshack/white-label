@@ -67,35 +67,12 @@
             isProduction: isProduction,
             // ### image
             image: {
-                // glob of all image files and directories excluding icon source files
+                // glob of all image files and directories
                 source: [
-                    'app/assets/image/**',
-                    '!app/assets/image/sprite/**'
+                    'app/assets/image/**'
                 ],
                 // location to save processed images by tasks
-                destination: 'assets/image',
-                // #### sprite
-                sprite: {
-                    // glob of all svg images converted to png images
-                    compliled: [
-                        'app/assets/image/sprite/**/*.png'
-                    ],
-                    // where to save generated scss styles
-                    scss: '_sprites.scss',
-                    // template for the scss file format
-                    template: 'gulp/views/sprites.handlebars',
-                    // path output in css files pointing to where sprite files are
-                    cssPath: '../image',
-                    // glob of all the source svg icons
-                    source: [
-                        'app/assets/image/sprite/**/*.svg'
-                    ],
-                    // where to save the generated .png images
-                    destination: {
-                        png: 'app/assets/image/sprite',
-                        sprite: 'app/assets/image'
-                    }
-                }
+                destination: 'assets/image'
             },
             // ### markup
             markup: {

@@ -39,7 +39,7 @@ Windows Users:
 Python language support
 
 Debian/Ubuntu Users:
-build-essential & libvips-dev packages
+build-essential package
 
 ### Node Modules
 
@@ -105,7 +105,6 @@ These in additional to other tasks run as dependencies of the 'watch' and 'deplo
 gulp markup;
 gulp style;
 gulp script;
-gulp sprite;
 gulp accessibility;
 gulp documentation;
 ```

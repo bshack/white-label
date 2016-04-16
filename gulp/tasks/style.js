@@ -38,8 +38,3 @@ const styleCompile = () => {
 // ## Style Task
 
 gulp.task('style', styleCompile);
-
-// ## Style and Sprite Task
-// use this when you want to have the sprite and associated SCSS generated before style is compiled.
-
-gulp.task('styleAndSprite', ['sprite'], styleCompile);

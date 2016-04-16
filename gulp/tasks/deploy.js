@@ -24,7 +24,7 @@ gulp.task('deploy', callback => {
     //runSequence support is only for gulp 3.x, 4.x natively support this functionalty
     return runSequence(
         ['cleanDeploy'],
-        ['sprite', 'data'],
+        ['data'],
         ['markup', 'style', 'script', 'documentation'],
         ['accessibility'],
         ['copyRoot', 'copyReport', 'copyFonts', 'minifyMarkup', 'copyData', 'minifyStyle', 'minifyScript',

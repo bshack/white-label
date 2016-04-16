@@ -21,7 +21,7 @@ const reload = () => {
 gulp.task('markup-watch', ['markup'], reload);
 gulp.task('style-watch', ['style'], reload);
 gulp.task('script-watch', ['script'], reload);
-gulp.task('image-watch', ['styleAndSprite'], reload);
+gulp.task('image-watch', reload);
 
 // ### Starup the Browsersync server
 
@@ -55,7 +55,7 @@ gulp.task('watch', ['build'], () => {
 
     //image
     gulp.watch(
-        config.path.image.sprite.source,
+        config.path.image.source,
         ['image-watch']
     );
 
