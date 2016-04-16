@@ -1,130 +1,135 @@
 {
-  "name": "generator-white-label",
-  "homepage": "https://github.com/bshack/white-label",
-  "version": "2.1.0",
-  "contributors": [
-    {
-      "name": "Bill Shackelford",
-      "email": "bshackelford@gmail.com",
-      "url": "https://github.com/bshack"
+    "name":"generator-white-label",
+    "homepage":"https://github.com/bshack/white-label",
+    "version":"2.1.1",
+    "contributors":[
+        {
+            "name":"Bill Shackelford",
+            "email":"bshackelford@gmail.com",
+            "url":"https://github.com/bshack"
+        }
+    ],
+    "engines":{
+        "node":">=4.0",
+        "npm":">=2.0"
+    },
+    "description":"Scaffolding for developing and deploying sites.",
+    "main":"app/index.html",
+    "keywords":[
+        "browserify",
+        "gulp",
+        "lwip",
+        "jasmine",
+        "karma",
+        "yeoman-generator",
+        "shackstack",
+        "es6",
+        "es2015",
+        "react",
+        "jsx"
+    ],
+    "scripts":{
+        "test":"gulp deploy --www=//www.example.com --cdn=//cdn.example.com --service=//service.example.com --production=true;"
+    },
+    "author":{
+        "name":"Bill Shackelford",
+        "email":"bshackelford@gmail.com",
+        "url":"https://github.com/bshack"
+    },
+    "license":"MIT",
+    "repository":{
+        "type":"git",
+        "url":"git+https://github.com/bshack/white-label.git"
+    },
+    "bugs":{
+        "url":"https://github.com/bshack/white-label/issues"
+    },
+    "browser":{
+        "modernizr":"./node_modules/modernizr/modernizr.js"
+    },
+    "browserify-shim":{
+        "modernizr":"Modernizr"
+    },
+    "browserify":{
+        "transform":[
+            "browserify-shim"
+        ]
+    },
+    "devDependencies":{
+
+    },
+    "dependencies":{
+        "babel-plugin-transform-es2015-modules-umd":"x.x.x",
+        "babel-polyfill":"x.x.x",
+        "babel-preset-es2015":"x.x.x",
+        "babel-preset-react":"x.x.x",
+        "babelify":"x.x.x",
+        "browser-sync":"x.x.x",
+        "browserify":"x.x.x",
+        "browserify-istanbul":"x.x.x",
+        "browserify-shim":"x.x.x",
+        "chalk":"x.x.x",
+        "eslint":"x.x.x",
+        "eslint-plugin-react":"x.x.x",
+        "factor-bundle":"x.x.x",
+        "glob":"x.x.x",
+        "gulp":"x.x.x",
+        "gulp-accessibility":"x.x.x",
+        "gulp-autoprefixer":"x.x.x",
+        "gulp-callback":"x.x.x",
+        "gulp-changed":"x.x.x",
+        "gulp-compass":"x.x.x",
+        "gulp-concat":"x.x.x",
+        "gulp-cssnano":"x.x.x",
+        "gulp-data":"x.x.x",
+        "gulp-debug":"x.x.x",
+        "gulp-directory-map":"x.x.x",
+        "gulp-eslint":"x.x.x",
+        "gulp-htmllint":"x.x.x",
+        "gulp-htmlmin":"x.x.x",
+        "gulp-if":"x.x.x",
+        "gulp-imagemin":"x.x.x",
+        "gulp-karma":"x.x.x",
+        "gulp-notify":"x.x.x",
+        "gulp-plumber":"x.x.x",
+        "gulp-rename":"x.x.x",
+        "gulp-rimraf":"x.x.x",
+        "gulp-sass":"x.x.x",
+        "gulp-sass-lint":"x.x.x",
+        "gulp-sitemap":"x.x.x",
+        "gulp-sourcemaps":"x.x.x",
+        "gulp-strip-debug":"x.x.x",
+        "gulp-svg2png":"x.x.x",
+        "gulp-uglify":"x.x.x",
+        "gulp-watch":"x.x.x",
+        "istanbul":"x.x.x",
+        "jasmine-core":"x.x.x",
+        "jsdoc":"x.x.x",
+        "karma":"x.x.x",
+        "karma-browserify":"x.x.x",
+        "karma-chrome-launcher":"x.x.x",
+        "karma-coverage":"x.x.x",
+        "karma-firefox-launcher":"x.x.x",
+        "karma-jasmine":"x.x.x",
+        "karma-phantomjs-launcher":"x.x.x",
+        "karma-safari-launcher":"x.x.x",
+        "lodash-node":"x.x.x",
+        "lwip":"x.x.x",
+        "modernizr":"x.x.x",
+        "path":"x.x.x",
+        "phantomjs-prebuilt":"x.x.x",
+        "react":"x.x.x",
+        "react-dom":"x.x.x",
+        "require-dir":"x.x.x",
+        "run-sequence":"x.x.x",
+        "shrinkwrap":"x.x.x",
+        "sprity":"x.x.x",
+        "sprity-sass":"x.x.x",
+        "watchify":"x.x.x",
+        "white-label-mediator":"x.x.x",
+        "white-label-model":"x.x.x",
+        "yargs":"x.x.x",
+        "yeoman-generator":"x.x.x",
+        "yosay":"x.x.x"
     }
-  ],
-  "engines": {
-    "node": ">=4.0",
-    "npm": ">=2.0"
-  },
-  "description": "Scaffolding for developing and deploying sites.",
-  "main": "app/index.html",
-  "keywords": [
-    "browserify",
-    "gulp",
-    "lwip",
-    "jasmine",
-    "karma",
-    "yeoman-generator",
-    "shackstack",
-    "es6",
-    "es2015",
-    "react",
-    "jsx"
-  ],
-  "scripts": {
-    "test": "gulp deploy --www=//www.example.com --cdn=//cdn.example.com --service=//service.example.com --production=true;"
-  },
-  "author": {
-    "name": "Bill Shackelford"
-  },
-  "license": "MIT",
-  "repository": {
-    "url": "git://github.com/bshack/white-label.git"
-  },
-  "bugs": {
-    "url": "https://github.com/bshack/white-label/issues"
-  },
-  "browser": {
-    "modernizr": "./node_modules/modernizr/modernizr.js"
-  },
-  "browserify-shim": {
-    "modernizr": "Modernizr"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
-  },
-  "devDependencies": {},
-  "dependencies": {
-    "babel-plugin-transform-es2015-modules-umd": "x.x.x",
-    "babel-polyfill": "x.x.x",
-    "babel-preset-es2015": "x.x.x",
-    "babel-preset-react": "x.x.x",
-    "babelify": "x.x.x",
-    "browser-sync": "x.x.x",
-    "browserify": "x.x.x",
-    "browserify-istanbul": "x.x.x",
-    "browserify-shim": "x.x.x",
-    "chalk": "x.x.x",
-    "eslint": "x.x.x",
-    "eslint-plugin-react": "x.x.x",
-    "factor-bundle": "x.x.x",
-    "glob": "x.x.x",
-    "gulp": "x.x.x",
-    "gulp-accessibility": "x.x.x",
-    "gulp-autoprefixer": "x.x.x",
-    "gulp-callback": "x.x.x",
-    "gulp-changed": "x.x.x",
-    "gulp-compass": "x.x.x",
-    "gulp-concat": "x.x.x",
-    "gulp-cssnano": "x.x.x",
-    "gulp-data": "x.x.x",
-    "gulp-debug": "x.x.x",
-    "gulp-directory-map": "x.x.x",
-    "gulp-eslint": "x.x.x",
-    "gulp-htmllint": "x.x.x",
-    "gulp-htmlmin": "x.x.x",
-    "gulp-if": "x.x.x",
-    "gulp-imagemin": "x.x.x",
-    "gulp-karma": "x.x.x",
-    "gulp-notify": "x.x.x",
-    "gulp-plumber": "x.x.x",
-    "gulp-rename": "x.x.x",
-    "gulp-rimraf": "x.x.x",
-    "gulp-sass": "x.x.x",
-    "gulp-sass-lint": "x.x.x",
-    "gulp-sitemap": "x.x.x",
-    "gulp-sourcemaps": "x.x.x",
-    "gulp-strip-debug": "x.x.x",
-    "gulp-svg2png": "x.x.x",
-    "gulp-uglify": "x.x.x",
-    "gulp-watch": "x.x.x",
-    "istanbul": "x.x.x",
-    "jasmine-core": "x.x.x",
-    "jsdoc": "x.x.x",
-    "karma": "x.x.x",
-    "karma-browserify": "x.x.x",
-    "karma-chrome-launcher": "x.x.x",
-    "karma-coverage": "x.x.x",
-    "karma-firefox-launcher": "x.x.x",
-    "karma-jasmine": "x.x.x",
-    "karma-phantomjs-launcher": "x.x.x",
-    "karma-safari-launcher": "x.x.x",
-    "lodash-node": "x.x.x",
-    "lwip": "x.x.x",
-    "modernizr": "x.x.x",
-    "path": "x.x.x",
-    "phantomjs-prebuilt": "x.x.x",
-    "react": "x.x.x",
-    "react-dom": "x.x.x",
-    "require-dir": "x.x.x",
-    "run-sequence": "x.x.x",
-    "shrinkwrap": "x.x.x",
-    "sprity": "x.x.x",
-    "sprity-sass": "x.x.x",
-    "watchify": "x.x.x",
-    "white-label-mediator": "x.x.x",
-    "white-label-model": "x.x.x",
-    "yargs": "x.x.x",
-    "yeoman-generator": "x.x.x",
-    "yosay": "x.x.x"
-  }
 }
