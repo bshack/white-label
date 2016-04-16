@@ -176,7 +176,7 @@
                 destination: 'assets/data',
                 // global config data
                 globalConfig: {
-                    'wwwd': www,
+                    'www': www,
                     'cdn': cdn,
                     'service': service,
                     'version': version
