@@ -4,6 +4,7 @@ node_modules/
 bower_components/
 app/assets/script/*.compiled.js
 app/assets/style/*.css
+app/assets/data/config.json
 report/
 .sass-cache/
 .DS_Store
