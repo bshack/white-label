@@ -26,6 +26,7 @@ module.exports = function(karma) {
             ]
         },
         browsers: [
+            // 'IE',
             // 'Chrome',
             // 'Firefox',
             // 'Safari',

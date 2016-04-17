@@ -1,5 +1,3 @@
 import WLMediator from 'white-label-mediator';
 
-const globalMediator = new WLMediator();
-
-module.exports = globalMediator;
+module.exports = new WLMediator();
