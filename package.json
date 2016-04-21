@@ -68,6 +68,7 @@
     "eslint": "x.x.x",
     "eslint-plugin-react": "x.x.x",
     "factor-bundle": "x.x.x",
+    "foundation-sites": "^6.2.1",
     "glob": "x.x.x",
     "gulp": "x.x.x",
     "gulp-accessibility": "x.x.x",
