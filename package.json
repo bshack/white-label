@@ -24,7 +24,6 @@
     "shackstack",
     "es6",
     "es2015",
-    "react",
     "jsx"
   ],
   "scripts": {
@@ -58,7 +57,6 @@
     "babel-plugin-transform-es2015-modules-umd": "x.x.x",
     "babel-polyfill": "x.x.x",
     "babel-preset-es2015": "x.x.x",
-    "babel-preset-react": "x.x.x",
     "babelify": "x.x.x",
     "browser-sync": "x.x.x",
     "browserify": "x.x.x",
@@ -67,7 +65,6 @@
     "chalk": "x.x.x",
     "dom-delegate": "x.x.x",
     "eslint": "x.x.x",
-    "eslint-plugin-react": "x.x.x",
     "factor-bundle": "x.x.x",
     "foundation-sites": "x.x.x",
     "glob": "x.x.x",
@@ -114,8 +111,6 @@
     "modernizr": "x.x.x",
     "path": "x.x.x",
     "phantomjs-prebuilt": "x.x.x",
-    "react": "x.x.x",
-    "react-dom": "x.x.x",
     "require-dir": "x.x.x",
     "run-sequence": "x.x.x",
     "shrinkwrap": "x.x.x",
