@@ -11,7 +11,6 @@ const data = require('gulp-data');
 const notify = require('gulp-notify');
 const _ = require('lodash-node');
 
-
 // ## Environment Config
 
 const config = require('../config');
