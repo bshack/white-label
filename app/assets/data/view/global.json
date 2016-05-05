@@ -35,5 +35,7 @@
             "id":"UA-XXXXXX-X"
         }
     },
-    "webRepo":"https://github.com/bshack/shackstack/tree/master/"
+    "scripts":{
+        "global":"assets/script/global.compiled.js"
+    }
 }

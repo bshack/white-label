@@ -126,6 +126,7 @@
                     'app/assets/script/**',
                     'app/assets/test/spec/*.js',
                     'app/assets/test/*.js',
+                    '!app/assets/script/template/**',
                     '!app/assets/script/*.compiled.js'
                 ],
                 // glob of only gulp js files for documentation task
@@ -140,6 +141,7 @@
                 source: [
                     'app/assets/script/*.js',
                     'app/assets/script/**',
+                    '!app/assets/script/template/**',
                     '!app/assets/script/*.compiled.js'
                 ],
                 // glob js files to be delployed duirng release
@@ -202,9 +204,7 @@
                 copy: [
                     'app/sitemap.xml',
                     'app/robots.txt',
-                    'app/favicon.ico',
-                    'app/web.config',
-                    'app/.htaccess'
+                    'app/favicon.ico'
                 ]
             },
             // ### report

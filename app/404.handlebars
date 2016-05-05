@@ -9,6 +9,11 @@
                 </div>
             </main>
         </div>
-        {{> tags/script script='assets/script/global.compiled.js'}}
+        {{#if scripts.global}}
+        {{> tags/script script=scripts.global}}
+        {{/if}}
+        {{#if scripts.section}}
+        {{> tags/script script=scripts.section}}
+        {{/if}}
     </body>
 </html>
