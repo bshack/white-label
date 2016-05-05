@@ -5,6 +5,7 @@ bower_components/
 app/assets/script/*.compiled.js
 app/assets/style/*.css
 app/assets/data/config.json
+app/assets/script/template/
 report/
 .sass-cache/
 .DS_Store

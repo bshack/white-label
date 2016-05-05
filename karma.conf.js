@@ -26,10 +26,9 @@ module.exports = function(karma) {
             ]
         },
         browsers: [
-            // 'IE',
-            // 'Chrome',
-            // 'Firefox',
-            // 'Safari',
+            //'Chrome',
+            //'Firefox',
+            //'Safari',
             'PhantomJS'
         ],
         singleRun: false,
@@ -37,8 +36,9 @@ module.exports = function(karma) {
         browserify: {
             debug: true,
             transform: [
-                'babelify',
+                'brfs',
                 'browserify-shim',
+                'babelify',
                 istanbul({
                     ignore: ['**/node_modules/**']
                 })
