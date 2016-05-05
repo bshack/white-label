@@ -121,6 +121,7 @@
     "watchify": "x.x.x",
     "white-label-mediator": "x.x.x",
     "white-label-model": "x.x.x",
+    "white-label-view": "x.x.x",
     "yargs": "x.x.x",
     "yeoman-generator": "x.x.x",
     "yosay": "x.x.x"
