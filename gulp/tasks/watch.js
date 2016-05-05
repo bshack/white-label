@@ -22,6 +22,7 @@ gulp.task('markup-watch', ['markup'], reload);
 gulp.task('style-watch', ['style'], reload);
 gulp.task('script-watch', ['script'], reload);
 gulp.task('image-watch', reload);
+gulp.task('data-watch', ['script', 'markup'], reload);
 
 // ### Starup the Browsersync server
 
@@ -53,10 +54,16 @@ gulp.task('watch', ['build'], () => {
         ['markup-watch']
     );
 
-    //image
+    //watch images
     gulp.watch(
         config.path.image.source,
         ['image-watch']
+    );
+
+    //watch data
+    gulp.watch(
+        config.path.data.sourceGlob,
+        ['data-watch']
     );
 
 });

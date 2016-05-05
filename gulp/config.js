@@ -182,8 +182,10 @@
             },
             // ### font
             data: {
-                // glob of data
-                source: 'app/assets/data/**',
+                // where to save data returns glob
+                sourceGlob: 'app/assets/data/**',
+                // where to save data
+                source: 'app/assets/data',
                 // where to save data
                 destination: 'assets/data',
                 // global config data

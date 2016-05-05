@@ -1,6 +1,7 @@
 // ## Load Modules
 
 const gulp = require('gulp');
+const handlebars = require('handlebars');
 const handlebarsToHTML = require('gulp-compile-handlebars');
 const handlebarsToJS = require('gulp-handlebars');
 const htmllint = require('gulp-htmllint');
@@ -39,7 +40,7 @@ gulp.task('markup', () => {
             return _.extend(
                 {},
                 require('../../' + config.path.data.globalConfigFile),
-                require('../../app/' + config.path.data.destination + '/' + config.path.data.pageDirectory +
+                require('../../' + config.path.data.source + '/' + config.path.data.pageDirectory +
                     config.path.data.pageDefaultData),
                 dataFile
             );
@@ -71,7 +72,7 @@ gulp.task('markupTemplate', ['cleanTemplate'], () => {
         //compile the template to javascript
         .pipe(handlebarsToJS({
             // Pass local handlebars version to keep everything on the same version
-            handlebars: require('handlebars')
+            handlebars: handlebars
         }))
         //wrap in define module and register all templates as partials
         .pipe(wrapper({
