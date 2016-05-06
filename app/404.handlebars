@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html id="error-404" lang="en-US" dir="ltr">
+    {{> tags/head}}
+    <body itemscope itemtype="http://schema.org/WebPage">
+        <div id="wrapper">
+            <main id="main" tabindex="-1">
+                <div class="small-12 columns">
+                    <p>Sorry, but the page you were trying to view does not exist.</p>
+                </div>
+            </main>
+        </div>
+        {{#if scripts.global}}
+        {{> tags/script script=scripts.global}}
+        {{/if}}
+        {{#if scripts.section}}
+        {{> tags/script script=scripts.section}}
+        {{/if}}
+    </body>
+</html>

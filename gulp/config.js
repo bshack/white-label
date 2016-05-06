@@ -80,7 +80,7 @@
                 htmlLint: '.htmllintrc',
                 // glob of handlebars templates
                 source: [
-                    'app/**/*.html',
+                    'app/**/*.handlebars',
                     '!app/assets/**',
                     '!app/report/**',
                     '!app/service/**'
@@ -91,7 +91,17 @@
                     '!app/assets/**',
                     '!app/report/**',
                     '!app/service/**'
-                ]
+                ],
+                partials: {
+                    //glob of handlebars partials
+                    source: [
+                        'app/assets/markup'
+                    ],
+                    // glob of handlebars partials, needed for watch task
+                    watch: 'app/assets/markup/**',
+                    // where to save generated js templates
+                    destination: 'app/assets/script/template'
+                }
             },
             // ### font
             font: {
@@ -116,6 +126,7 @@
                     'app/assets/script/**',
                     'app/assets/test/spec/*.js',
                     'app/assets/test/*.js',
+                    '!app/assets/script/template/**',
                     '!app/assets/script/*.compiled.js'
                 ],
                 // glob of only gulp js files for documentation task
@@ -130,6 +141,7 @@
                 source: [
                     'app/assets/script/*.js',
                     'app/assets/script/**',
+                    '!app/assets/script/template/**',
                     '!app/assets/script/*.compiled.js'
                 ],
                 // glob js files to be delployed duirng release
@@ -170,8 +182,10 @@
             },
             // ### font
             data: {
-                // glob of data
-                source: 'app/assets/data/**',
+                // where to save data returns glob
+                sourceGlob: 'app/assets/data/**',
+                // where to save data
+                source: 'app/assets/data',
                 // where to save data
                 destination: 'assets/data',
                 // global config data
@@ -182,7 +196,9 @@
                     'version': version
                 },
                 // global config file name
-                globalConfigFile: 'app/assets/data/config.json'
+                globalConfigFile: 'app/assets/data/config.json',
+                pageDirectory: 'view/',
+                pageDefaultData: 'global.json'
             },
             // ### release
             release: {
@@ -190,9 +206,7 @@
                 copy: [
                     'app/sitemap.xml',
                     'app/robots.txt',
-                    'app/favicon.ico',
-                    'app/web.config',
-                    'app/.htaccess'
+                    'app/favicon.ico'
                 ]
             },
             // ### report

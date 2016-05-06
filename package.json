@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "2.1.5",
+  "version": "2.2.5",
   "contributors": [
     {
       "name": "Bill Shackelford",
@@ -24,8 +24,7 @@
     "shackstack",
     "es6",
     "es2015",
-    "react",
-    "jsx"
+    "handelbars"
   ],
   "scripts": {
     "test": "gulp deploy --www=//www.example.com --cdn=//cdn.example.com --service=//service.example.com --production=true;"
@@ -58,7 +57,6 @@
     "babel-plugin-transform-es2015-modules-umd": "x.x.x",
     "babel-polyfill": "x.x.x",
     "babel-preset-es2015": "x.x.x",
-    "babel-preset-react": "x.x.x",
     "babelify": "x.x.x",
     "browser-sync": "x.x.x",
     "browserify": "x.x.x",
@@ -67,7 +65,6 @@
     "chalk": "x.x.x",
     "dom-delegate": "x.x.x",
     "eslint": "x.x.x",
-    "eslint-plugin-react": "x.x.x",
     "factor-bundle": "x.x.x",
     "foundation-sites": "x.x.x",
     "glob": "x.x.x",
@@ -77,12 +74,14 @@
     "gulp-callback": "x.x.x",
     "gulp-changed": "x.x.x",
     "gulp-compass": "x.x.x",
+    "gulp-compile-handlebars": "x.x.x",
     "gulp-concat": "x.x.x",
     "gulp-cssnano": "x.x.x",
     "gulp-data": "x.x.x",
     "gulp-debug": "x.x.x",
     "gulp-directory-map": "x.x.x",
     "gulp-eslint": "x.x.x",
+    "gulp-handlebars": "x.x.x",
     "gulp-htmllint": "x.x.x",
     "gulp-htmlmin": "x.x.x",
     "gulp-imagemin": "x.x.x",
@@ -98,6 +97,8 @@
     "gulp-strip-debug": "x.x.x",
     "gulp-uglify": "x.x.x",
     "gulp-watch": "x.x.x",
+    "gulp-wrapper": "x.x.x",
+    "handlebars": "x.x.x",
     "istanbul": "x.x.x",
     "jasmine-core": "x.x.x",
     "jsdoc": "x.x.x",
@@ -114,14 +115,13 @@
     "modernizr": "x.x.x",
     "path": "x.x.x",
     "phantomjs-prebuilt": "x.x.x",
-    "react": "x.x.x",
-    "react-dom": "x.x.x",
     "require-dir": "x.x.x",
     "run-sequence": "x.x.x",
     "shrinkwrap": "x.x.x",
     "watchify": "x.x.x",
     "white-label-mediator": "x.x.x",
     "white-label-model": "x.x.x",
+    "white-label-view": "x.x.x",
     "yargs": "x.x.x",
     "yeoman-generator": "x.x.x",
     "yosay": "x.x.x"

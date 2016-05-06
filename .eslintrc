@@ -8,16 +8,11 @@
     },
     "extends":"eslint:recommended",
     "globals":{
-
     },
     "plugins":[
-        "react"
     ],
     "parserOptions":{
-        "sourceType":"module",
-        "ecmaFeatures":{
-            "jsx":true
-        }
+        "sourceType":"module"
     },
     "rules":{
         "no-console":1,
