@@ -3,6 +3,7 @@ NetBoot/
 node_modules/
 bower_components/
 app/**/*.html
+app/**/**/*.html
 app/assets/script/*.compiled.js
 app/assets/style/*.css
 app/assets/data/config.json
