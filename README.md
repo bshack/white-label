@@ -10,14 +10,14 @@ Scaffolding for developing and deploying sites.
 - Browserify
 - Browsersync
 - Gulp
+- Handlebars
 - Jasmine
-- JSX
 - Modernizr
 - Karma
-- React
 - SCSS
-- White Label Mediator
-- White Label Model
+- [White Label Mediator](https://github.com/bshack/white-label-mediator)
+- [White Label Model](https://github.com/bshack/white-label-model)
+- [White Label View](https://github.com/bshack/white-label-view)
 
 ## Install Dependancies
 
@@ -60,6 +60,13 @@ This will normalize settings like what tab character(s) to use and will avoid li
 ### Source Files
 
 Site source files used to build your site are located in the 'app/' directory.
+
+### Stubbed JSON Data
+
+Any generated html page can have an associated JSON data file in 'app/assets/data/' directory. This is where you can
+stub out data to be used for populating the markup templates for that page. Follow the same directory and file structure as your pages.
+
+Define any data properties you want available for all your pages in 'global.json'. Any properties defined in page specific JSON files will override properties in 'global.json'.
 
 ## Gulp Tasks
 
