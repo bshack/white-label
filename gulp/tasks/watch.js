@@ -22,7 +22,7 @@ gulp.task('markup-watch', ['markup'], reload);
 gulp.task('style-watch', ['style'], reload);
 gulp.task('script-watch', ['script'], reload);
 gulp.task('image-watch', reload);
-gulp.task('data-watch', ['script', 'markup'], reload);
+gulp.task('data-watch', ['markup'], reload);
 
 // ### Starup the Browsersync server
 
