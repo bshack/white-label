@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "contributors": [
     {
       "name": "Bill Shackelford",
@@ -73,7 +73,6 @@
     "gulp-autoprefixer": "x.x.x",
     "gulp-callback": "x.x.x",
     "gulp-changed": "x.x.x",
-    "gulp-compass": "x.x.x",
     "gulp-compile-handlebars": "x.x.x",
     "gulp-concat": "x.x.x",
     "gulp-cssnano": "x.x.x",
