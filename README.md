@@ -27,7 +27,7 @@ IMPORTANT: Verify you have the latest versions of each of these if you have prev
 
 http://nodejs.org
 
-_This project works with 'LTS' or 'stable'_
+_This project works with 'LTS' or 'Current'_
 
 ### Gulp
 
