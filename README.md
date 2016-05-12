@@ -7,6 +7,7 @@ Scaffolding for developing and deploying sites.
 ## Key Libraries
 
 - Babel
+- Bootstrap
 - Browserify
 - Browsersync
 - Gulp
