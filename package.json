@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "2.2.7",
+  "version": "2.2.8",
   "contributors": [
     {
       "name": "Bill Shackelford",
@@ -58,6 +58,7 @@
     "babel-polyfill": "x.x.x",
     "babel-preset-es2015": "x.x.x",
     "babelify": "x.x.x",
+    "bootstrap": "4.0.0-alpha.2",
     "browser-sync": "x.x.x",
     "browserify": "x.x.x",
     "browserify-istanbul": "x.x.x",
@@ -66,7 +67,6 @@
     "dom-delegate": "x.x.x",
     "eslint": "x.x.x",
     "factor-bundle": "x.x.x",
-    "foundation-sites": "x.x.x",
     "glob": "x.x.x",
     "gulp": "x.x.x",
     "gulp-accessibility": "x.x.x",
