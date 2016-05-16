@@ -4,6 +4,7 @@
 
 const gulp = require('gulp');
 const browsersync = require('browser-sync').create();
+const proxy = require('http-proxy-middleware');
 
 // ## Environment Config
 
@@ -18,7 +19,7 @@ const reload = () => {
 // ## Watch Task
 
 // these workaround for browsersync and gulp 3.x, when 4.x is released this should be revisted
-gulp.task('markup-watch', ['markup'], reload);
+gulp.task('markup-watch', ['markup', 'markupTemplate'], reload);
 gulp.task('style-watch', ['style'], reload);
 gulp.task('script-watch', ['script'], reload);
 gulp.task('image-watch', reload);
@@ -32,7 +33,14 @@ gulp.task('watch', ['build'], () => {
     browsersync.init({
         //proxy: 'localhost'
         server: {
-            baseDir: config.path.root
+            baseDir: config.path.root,
+            middleware: [
+                proxy(config.path.service.endPoint, {
+                    target: config.path.service.proxy.target,
+                    pathRewrite: config.path.service.proxy.rewrite,
+                    changeOrigin: true
+                })
+            ]
         }
     });
 
@@ -51,6 +59,12 @@ gulp.task('watch', ['build'], () => {
     // watch handlebars templates
     gulp.watch(
         config.path.markup.source,
+        ['markup-watch']
+    );
+
+    // watch handlebars partials
+    gulp.watch(
+        config.path.markup.partials.watch,
         ['markup-watch']
     );
 
