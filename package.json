@@ -98,6 +98,7 @@
     "gulp-watch": "x.x.x",
     "gulp-wrapper": "x.x.x",
     "handlebars": "x.x.x",
+    "http-proxy-middleware": "x.x.x",
     "istanbul": "x.x.x",
     "jasmine-core": "x.x.x",
     "jsdoc": "x.x.x",
