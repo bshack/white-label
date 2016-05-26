@@ -48,7 +48,7 @@
     if (yargs.service) {
         service = yargs.service + '/';
     } else {
-        service = '/';
+        service = '/service-endpoint/';
     }
 
     // ## paths
@@ -62,7 +62,15 @@
             version: version,
             www: www,
             cdn: cdn,
-            service: service,
+            service: {
+                endPoint: service,
+                proxy: {
+                    target: 'http://127.0.0.1:8000/service-endpoint',
+                    rewrite: {
+                        '/service-endpoint': '/'
+                    }
+                }
+            },
             // is this a production build?
             isProduction: isProduction,
             // ### image
@@ -192,7 +200,7 @@
                 globalConfig: {
                     'www': www,
                     'cdn': cdn,
-                    'service': service,
+                    'service': service.endPoint,
                     'version': version
                 },
                 // global config file name
