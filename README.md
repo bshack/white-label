@@ -18,6 +18,7 @@ Scaffolding for developing and deploying sites.
 - SCSS
 - [White Label Mediator](https://github.com/bshack/white-label-mediator)
 - [White Label Model](https://github.com/bshack/white-label-model)
+- [White Label Router](https://github.com/bshack/white-label-router)
 - [White Label View](https://github.com/bshack/white-label-view)
 
 ## Install Dependancies

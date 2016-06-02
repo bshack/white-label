@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "contributors": [
     {
       "name": "Bill Shackelford",
@@ -121,6 +121,7 @@
     "watchify": "x.x.x",
     "white-label-mediator": "x.x.x",
     "white-label-model": "x.x.x",
+    "white-label-router": "x.x.x",
     "white-label-view": "x.x.x",
     "yargs": "x.x.x",
     "yeoman-generator": "x.x.x",
