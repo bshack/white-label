@@ -154,6 +154,18 @@ Learn more about Yeoman here: https://yeoman.io
 
 ## Getting Started
 
+### Markup
+
+This project uses HandlebarJS for the templating for both server side and client side.
+
+#### Directory Structure
+
+/app - these are the top level templates. These are compiled directly to .html files in the www root of the project. This is where index.html lives.
+
+/app/assets/markup - this is where all handlebars partials live
+
+/app/assets/markup/tags - these are partials for basic html tags, useful if you don't want to reinvent the wheel constantly
+
 ### Javascript
 
 #### Model
