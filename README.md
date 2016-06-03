@@ -156,7 +156,7 @@ Learn more about Yeoman here: https://yeoman.io
 
 ### Model
 
-This project uses the [White Label Model](https://github.com/bshack/white-label-model). Full Documentation is available on the project page.
+This project uses the [White Label Model](https://github.com/bshack/white-label-model). Full Documentation is available on the project page with examples of usage with collections of data.
 
 ####Let's look at an example:
 
