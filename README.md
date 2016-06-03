@@ -168,7 +168,7 @@ This project uses the [White Label Mediator](https://github.com/bshack/white-lab
 
 A mediator pattern (also sometimes called pub/sub) is an event bus for messaging between views. It's strength is in that it decouples views from one another because you are not directly binding events between views. You simply are broadcasting a message through the mediator that other views throughout the application can listen and react to as needed.
 
-Let's look at an example:
+####Let's look at an example:
 
 import the mediator module
 ```
