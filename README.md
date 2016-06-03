@@ -198,6 +198,16 @@ This project uses SCSS for the CSS compilation.
 
 ### Javascript
 
+#### Service
+
+Services hold reusable bits of business logic that DO NOT touch the DOM. If you have some code that touches the DOM and is intended to be reusable it should instead just be another view (see below).
+
+Service code is the only code expected to be unit tested in the project.
+
+In this project the service files are placed here:
+
+/app/assets/script/service
+
 #### Model
 
 This project uses the [White Label Model](https://github.com/bshack/white-label-model). Full Documentation is available on the project page with examples of usage with collections of data.
