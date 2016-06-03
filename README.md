@@ -162,6 +162,34 @@ This project uses the [White Label Model](https://github.com/bshack/white-label-
 
 This project uses the [White Label View](https://github.com/bshack/white-label-view). Full Documentation is available on the project page.
 
+####Let's look at an example:
+
+import the view module
+```
+import View from 'white-label-view';
+```
+create the view
+```
+const MyView = class extends View {
+    initialize() {
+        this.addListeners();
+    }
+    addListeners() {
+        window.addEventListener('scroll', (e) => {
+            window.console.log('window is scrolling', e);
+        }, false);
+    }
+};
+```
+instantiate the view
+```
+const myView = new MyView();
+```
+initialize the view
+```
+myView.initialize();
+```
+
 ### Mediator
 
 This project uses the [White Label Mediator](https://github.com/bshack/white-label-mediator). Full Documentation is available on the project page.
