@@ -154,11 +154,13 @@ Learn more about Yeoman here: https://yeoman.io
 
 ## Getting Started
 
-### Model
+### Javascript
+
+#### Model
 
 This project uses the [White Label Model](https://github.com/bshack/white-label-model). Full Documentation is available on the project page with examples of usage with collections of data.
 
-####Let's look at an example:
+#####Let's look at an example:
 
 import the model module
 ```
@@ -190,11 +192,11 @@ delete the data
 modelColor.delete();
 ```
 
-### View
+#### View
 
 This project uses the [White Label View](https://github.com/bshack/white-label-view). Full Documentation is available on the project page.
 
-####Let's look at an example:
+#####Let's look at an example:
 
 import the view module
 ```
@@ -222,13 +224,13 @@ initialize the view
 myView.initialize();
 ```
 
-### Mediator
+#### Mediator
 
 This project uses the [White Label Mediator](https://github.com/bshack/white-label-mediator). Full Documentation is available on the project page.
 
 A mediator pattern (also sometimes called pub/sub) is an event bus for messaging between views. It's strength is in that it decouples views from one another because you are not directly binding events between views. You simply are broadcasting a message through the mediator that other views throughout the application can listen and react to as needed.
 
-####Let's look at an example:
+#####Let's look at an example:
 
 import the mediator module
 ```
@@ -279,11 +281,11 @@ myView1.initialize();
 myView2.initialize();
 ```
 
-### Router
+#### Router
 
 This project uses the [White Label Router](https://github.com/bshack/white-label-router). Full Documentation is available on the project page.
 
-####Let's look at an example:
+#####Let's look at an example:
 
 import the module
 ```
