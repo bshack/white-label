@@ -184,6 +184,10 @@ This project uses SCSS for the CSS compilation.
 
 This project uses the [White Label Model](https://github.com/bshack/white-label-model). Full Documentation is available on the project page with examples of usage with collections of data.
 
+In this project the model files are placed here:
+
+/app/assets/script/model
+
 #####Let's look at an example:
 
 import the model module
@@ -220,6 +224,10 @@ modelColor.delete();
 
 This project uses the [White Label View](https://github.com/bshack/white-label-view). Full Documentation is available on the project page.
 
+In this project the view files are placed here:
+
+/app/assets/script/view
+
 #####Let's look at an example:
 
 import the view module
@@ -253,6 +261,10 @@ myView.initialize();
 This project uses the [White Label Mediator](https://github.com/bshack/white-label-mediator). Full Documentation is available on the project page.
 
 A mediator pattern (also sometimes called pub/sub) is an event bus for messaging between views. It's strength is in that it decouples views from one another because you are not directly binding events between views. You simply are broadcasting a message through the mediator that other views throughout the application can listen and react to as needed.
+
+In this project the mediator files are placed here:
+
+/app/assets/script/mediator
 
 #####Let's look at an example:
 
@@ -308,6 +320,10 @@ myView2.initialize();
 #### Router
 
 This project uses the [White Label Router](https://github.com/bshack/white-label-router). Full Documentation is available on the project page.
+
+In this project the router files are placed here:
+
+/app/assets/script/router
 
 #####Let's look at an example:
 
