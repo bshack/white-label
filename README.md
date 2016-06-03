@@ -168,6 +168,48 @@ This project uses the [White Label Mediator](https://github.com/bshack/white-lab
 
 A mediator pattern (also sometimes called pub/sub) is an event bus for messaging between views. It's strength is in that it decouples views from one another because you are not directly binding events between views. You simply are broadcasting a message through the mediator that other views throughout the application can listen and react to as needed.
 
+Let's look at an example:
+
+```
+// import the mediator module
+import Mediator from 'white-label-mediator';
+
+// instantiate the mediator
+const myMediator = new Mediator();
+
+// import the view module
+import View from 'white-label-view';
+
+// create the first view to listen to the mediator for a 'window-scrolling' message
+const MyView1 = class extends View {
+    Initialization() {
+        this.addListeners();
+    }
+    addListeners() {
+        myMediator.on('window-scrolling', (data) => {
+            window.console.log('MyView2 is messaging that the window is scrolling', data);
+        });
+    }
+};
+
+// create the second view to emit through the mediator the 'window-scrolling' event as the window scrolls
+// and pass the event object along
+const MyView2 = class extends View {
+    Initialization() {
+        this.addListeners();
+    }
+    addListeners() {
+        window.addEventListener('scroll', (e) => {
+            myMediator.emit('window-scrolling', e);
+        }, false);
+    }
+};
+
+// instantiate the views
+const myView1 = new MyView1();
+const myView2 = new MyView2();
+```
+
 ### Router
 
 This project uses the [White Label Router](https://github.com/bshack/white-label-router). Full Documentation is avaible on its project page.
