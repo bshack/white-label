@@ -158,6 +158,38 @@ Learn more about Yeoman here: https://yeoman.io
 
 This project uses the [White Label Model](https://github.com/bshack/white-label-model). Full Documentation is available on the project page.
 
+####Let's look at an example:
+
+import the model module
+```
+const Model = require('white-label-model').Model;
+```
+instantiate your model
+```
+const modelColor = new Model();
+```
+set some data in the model
+```
+modelColor.set({
+    name: 'red'
+});
+```
+retrieve it
+```
+const redColorData = modelColor.get();
+```
+update it
+```
+modelColor.update({
+    name: 'blue',
+    isPrimaryColor: true
+});
+```
+delete it
+```
+modelColor.delete();
+```
+
 ### View
 
 This project uses the [White Label View](https://github.com/bshack/white-label-view). Full Documentation is available on the project page.
