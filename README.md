@@ -174,18 +174,18 @@ modelColor.set({
     name: 'red'
 });
 ```
-retrieve it
+retrieve the data
 ```
 const redColorData = modelColor.get();
 ```
-update it
+update the data
 ```
 modelColor.update({
     name: 'blue',
     isPrimaryColor: true
 });
 ```
-delete it
+delete the data
 ```
 modelColor.delete();
 ```
