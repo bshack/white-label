@@ -27,7 +27,7 @@
     "handelbars"
   ],
   "scripts": {
-    "test": "gulp deploy --www=//www.example.com --cdn=//cdn.example.com --service=//service.example.com --production=true;"
+    "test": "gulp deploy --www=//www.example.com --cdn=//cdn.example.com --service=//service.example.com --version=123456789 --production=true;"
   },
   "author": {
     "name": "Bill Shackelford",
