@@ -168,6 +168,24 @@ This project uses HandlebarJS for the templating for both server side and client
 
 /app/assets/script/template - all partials are precomiled into js files and placed into this directory
 
+#### Client Side
+
+To use templates client side you would simply require precompiled js template and then executed it. It will return a string of markup. If you have data you want to popluate the template with you can optionally passed it in.
+
+import the template
+
+```
+import templateLogin from '../template/login';
+```
+
+set the html content of the body element to be the returned markup populated with passed in data
+
+```
+document.body.innerHTML = templateLogin({
+    someKey: 'someValue'
+});
+```
+
 ### CSS
 
 This project uses SCSS for the CSS compilation.
