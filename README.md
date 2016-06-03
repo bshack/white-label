@@ -87,7 +87,7 @@ Learn more about Browsersync here: https://www.browsersync.io
 This compiles and bundles everything into a deploy ready package outputted in the '\_deploy' directory.
 
 ```
-gulp deploy --version=(unique deploy version - optional) --www=(www domain) --cdn=(cdn domain) --service=(service domain) --production=(true|false - optional);
+gulp deploy --www=(www domain - required) --cdn=(cdn domain - required) --service=(service domain - required) --production=(true|false - optional) --version=(unique deploy version - optional);
 ```
 
 _The 'version' argument defaults to an epoch timestamp and the 'production' argument defaults to 'false'._
