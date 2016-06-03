@@ -82,7 +82,7 @@ gulp.task('minifyMarkup', () => {
 // ## Copy Data Task
 // copy data dependency files to deploy directory
 gulp.task('copyData', () => {
-    return gulp.src(config.path.data.source)
+    return gulp.src(config.path.data.sourceGlob)
         //support for better error handling
         .pipe(plumber())
         .pipe(gulp.dest(config.path.build + config.path.release.destination + config.path.version + '/' +
