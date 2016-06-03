@@ -166,6 +166,16 @@ This project uses HandlebarJS for the templating for both server side and client
 
 /app/assets/markup/tags - these are partials for basic html tags, useful if you don't want to reinvent the wheel constantly
 
+### CSS
+
+This project uses SCSS for the CSS compliation.
+
+#### Directory Structure
+
+/app/assets/style - these are the top level scss files live, these are compiled directly into to .css files.
+
+/app/assets/style/base - this is where all the scss files with reusable placeholders live
+
 ### Javascript
 
 #### Model
