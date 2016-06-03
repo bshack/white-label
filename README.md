@@ -249,7 +249,7 @@ myView2.initialize();
 
 ### Router
 
-This project uses the [White Label Router](https://github.com/bshack/white-label-router). Full Documentation is available on its project page.
+This project uses the [White Label Router](https://github.com/bshack/white-label-router). Full Documentation is available on the project page.
 
 ####Let's look at an example:
 
