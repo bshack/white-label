@@ -152,6 +152,26 @@ yo white-label;
 
 Learn more about Yeoman here: https://yeoman.io
 
+## Getting Started
+
+### Model
+
+This project uses the [White Label Model](https://github.com/bshack/white-label-model). Full Documentation is avaible on its project page.
+
+### View
+
+This project uses the [White Label View](https://github.com/bshack/white-label-view). Full Documentation is avaible on its project page.
+
+### Mediator
+
+This project uses the [White Label Mediator](https://github.com/bshack/white-label-mediator). Full Documentation is avaible on its project page.
+
+A mediator pattern (also sometimes called pub/sub) is an event bus for messaging between views. It's strength is that it decouples seperate views from each other because you are not directly binding events from one view to the other. You simply are broadcasting a message through the mediator that other views throughout the application can listen and react to.
+
+### Router
+
+This project uses the [White Label Router](https://github.com/bshack/white-label-router). Full Documentation is avaible on its project page.
+
 ## Bugs or Feature Requests?
 
 Pull request or log a ticket :)
