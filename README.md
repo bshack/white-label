@@ -168,7 +168,7 @@ This project uses HandlebarJS for the templating for both server side and client
 
 ### CSS
 
-This project uses SCSS for the CSS compliation.
+This project uses SCSS for the CSS compilation.
 
 #### Directory Structure
 
