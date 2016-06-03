@@ -166,7 +166,7 @@ This project uses the [White Label View](https://github.com/bshack/white-label-v
 
 This project uses the [White Label Mediator](https://github.com/bshack/white-label-mediator). Full Documentation is avaible on the project page.
 
-A mediator pattern (also sometimes called pub/sub) is an event bus for messaging between views. It's strength is that it decouples seperate views from each other because you are not directly binding events from one view to the other. You simply are broadcasting a message through the mediator that other views throughout the application can listen and react to.
+A mediator pattern (also sometimes called pub/sub) is an event bus for messaging between views. It's strength is in that it decouples views from one another because you are not directly binding events between views. You simply are broadcasting a message through the mediator that other views throughout the application can listen and react to as needed.
 
 ### Router
 
