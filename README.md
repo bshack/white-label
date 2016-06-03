@@ -92,6 +92,12 @@ gulp deploy --www=(www domain - required) --cdn=(cdn domain - required) --servic
 
 _The 'version' argument defaults to an epoch timestamp and the 'production' argument defaults to 'false'._
 
+#### Example
+
+```
+gulp deploy --www=//www.example.com --cdn=//cdn.example.com --service=//service.example.com --version=123456789 --production=true;
+```
+
 ### Unit Tests
 
 watch:
