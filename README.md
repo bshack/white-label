@@ -170,17 +170,20 @@ A mediator pattern (also sometimes called pub/sub) is an event bus for messaging
 
 Let's look at an example:
 
+import the mediator module
 ```
-// import the mediator module
 import Mediator from 'white-label-mediator';
-
-// instantiate the mediator
+```
+instantiate the mediator
+```
 const myMediator = new Mediator();
-
-// import the view module
+```
+import the view module
+```
 import View from 'white-label-view';
-
-// create the first view to listen to the mediator for a 'window-scrolling' message
+```
+create the first view to listen to the mediator for a 'window-scrolling' message
+```
 const MyView1 = class extends View {
     Initialization() {
         this.addListeners();
@@ -191,9 +194,9 @@ const MyView1 = class extends View {
         });
     }
 };
-
-// create the second view to emit through the mediator the 'window-scrolling' event as the window scrolls
-// and pass the event object along
+```
+create the second view to emit through the mediator the 'window-scrolling' event as the window scrolls and pass the event object along
+```
 const MyView2 = class extends View {
     Initialization() {
         this.addListeners();
@@ -204,8 +207,9 @@ const MyView2 = class extends View {
         }, false);
     }
 };
-
-// instantiate the views
+```
+instantiate the views
+```
 const myView1 = new MyView1();
 const myView2 = new MyView2();
 ```
