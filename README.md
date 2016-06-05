@@ -356,12 +356,15 @@ In this project the router files are placed here:
 #####Let's look at an example:
 
 import the module
+
 ```
 import Router from 'white-label-router';
 ```
+
 extend the router
+
 ```
-const MyRoute = class extends Router {
+const myRouter = class extends Router {
     // this is the constructor. This executed whenever the view is instantiated.
     constructor() {
         // always do this
@@ -371,27 +374,34 @@ const MyRoute = class extends Router {
                 //here you would put any view specific logic for the defaultRoute
                 window.console.log('the defaultRoute executed');
             },
-            page2: () => {
+            '/page2': () => {
                 //here you would put any view specific logic for the page2 route
                 window.console.log('the page2 route executed');
             }
         };
     }
 };
+
 ```
+
 instantiate your router
+
 ```
-const myRoute = new MyRoute();
+const myRouter = new MyRoute();
 ```
+
 initialize your router
 
 ```
-myRoute.initialize();
+myRouter.initialize();
 ```
-In the example above we have set up two routes. The first route 'defaultRoute' is a catch all route. If no other routes match the current hash this is the route that will be executed. In this example the defaultRoute would execute for 'http://example.com' or 'http://example.com/#home' but not 'http://example.com/#page2'.
 
-The second route 'page2' will only be executed when the hash matches exactly 'page2', or for example 'http://example.com/#page2'.
+navigate to '/page2'
 
-## Bugs or Feature Requests?
+```
+myRouter.navigate('/page2');
+```
 
-Pull request or log a ticket :)
+In the example above we have set up two routes. The first route 'defaultRoute' is a catch all route. If no other routes match the specified url path this is the route that will be executed. In this example the defaultRoute would be executed for 'http://example.com' or 'http://example.com/home', but not 'http://example.com/page2'.
+
+The second defined route 'page2' will only be executed when the specified url path matches exactly '/page2', or for example 'http://example.com/page2'.
