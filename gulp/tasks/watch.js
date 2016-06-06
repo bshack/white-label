@@ -35,9 +35,9 @@ gulp.task('watch', ['build'], () => {
         server: {
             baseDir: config.path.root,
             middleware: [
-                proxy(config.path.service.endPoint, {
-                    target: config.path.service.proxy.target,
-                    pathRewrite: config.path.service.proxy.rewrite,
+                proxy(config.path.service, {
+                    target: config.path.proxy.target,
+                    pathRewrite: config.path.proxy.rewrite,
                     changeOrigin: true
                 })
             ]

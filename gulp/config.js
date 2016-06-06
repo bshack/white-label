@@ -62,13 +62,11 @@
             version: version,
             www: www,
             cdn: cdn,
-            service: {
-                endPoint: service,
-                proxy: {
-                    target: 'http://127.0.0.1:8000/service-endpoint',
-                    rewrite: {
-                        '/service-endpoint': '/'
-                    }
+            service: service,
+            proxy: {
+                target: 'http://127.0.0.1:8000/service-endpoint',
+                rewrite: {
+                    '/service-endpoint': '/'
                 }
             },
             // is this a production build?
@@ -200,7 +198,7 @@
                 globalConfig: {
                     'www': www,
                     'cdn': cdn,
-                    'service': service.endPoint,
+                    'service': service,
                     'version': version
                 },
                 // global config file name
