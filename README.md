@@ -57,19 +57,6 @@ http://editorconfig.org/#download
 
 This will normalize settings like what tab character(s) to use and will avoid linting errors.
 
-## Locations
-
-### Source Files
-
-Site source files used to build your site are located in the 'app/' directory.
-
-### Stubbed JSON Data
-
-Any generated html page can have an associated JSON data file in 'app/assets/data/' directory. This is where you can
-stub out data to be used for populating the markup templates for that page. Follow the same directory and file structure as your pages.
-
-Define any data properties you want available for all your pages in 'global.json'. Any properties defined in page specific JSON files will override properties in 'global.json'.
-
 ## Gulp Tasks
 
 ### Watch
@@ -154,6 +141,17 @@ Learn more about Yeoman here: https://yeoman.io
 
 ## Getting Started
 
+### Source Files
+
+Site source files used to build your site are located in the '/app/' directory.
+
+### Data
+
+Any generated html page can have an associated JSON data file in 'app/assets/data/' directory. This is where you can
+stub out data to be used for populating the markup templates for that page. Follow the same directory and file structure as your pages.
+
+Define any data properties you want available for all your pages in 'global.json'. Any properties defined in page specific JSON files will override properties in 'global.json'.
+
 ### Markup
 
 This project uses HandlebarJS for the templating for both server side and client side.
@@ -170,7 +168,21 @@ This project uses HandlebarJS for the templating for both server side and client
 
 #### Client Side
 
-To use templates client side you would simply require precompiled js template and then executed it. It will return a string of markup. If you have data you want to popluate the template with you can optionally passed it in.
+To use templates client side you would simply require precompiled js template and then executed it. It will return a string of markup. If you have data you want to populate the template with you can optionally passed it in.
+
+JS template files are just .handlebars files from the markup directory that have been precompiled.
+
+source .handlebars template files are here:
+
+/app/assets/markup/
+
+precompiled .js versions of the .handlebars template files are here:
+
+/app/assets/script/template/
+
+As you create/modify the source .handlebars files precompiled .js versions will be automatically created.
+
+##### Usage
 
 import the template
 
