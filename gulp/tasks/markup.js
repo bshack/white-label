@@ -10,7 +10,7 @@ const wrapper = require('gulp-wrapper');
 const plumber = require('gulp-plumber');
 const data = require('gulp-data');
 const notify = require('gulp-notify');
-const _ = require('lodash-node');
+const _ = require('lodash');
 
 // ## Environment Config
 
