@@ -8,7 +8,7 @@ module.exports = function(karma) {
             'browserify'
         ],
         files: [{
-            pattern: 'app/assets/script/service/*.js'
+            pattern: 'app/assets/script/utility/*.js'
         },
         {
             pattern: 'app/assets/test/spec/*Spec.js'
@@ -18,7 +18,7 @@ module.exports = function(karma) {
             'coverage'
         ],
         preprocessors: {
-            'app/assets/script/service/*.js': [
+            'app/assets/script/utility/*.js': [
                 'browserify'
             ],
             'app/assets/test/spec/*Spec.js': [

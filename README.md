@@ -210,15 +210,15 @@ This project uses SCSS for the CSS compilation.
 
 ### Javascript
 
-#### Service
+#### Utility
 
-Services hold reusable bits of business logic that DO NOT touch the DOM. If you have some code that touches the DOM and is intended to be reusable it should instead just be another view (see below).
+Utilities hold reusable bits of business logic that DO NOT touch the DOM. If you have some code that touches the DOM and is intended to be reusable it should instead just be another view (see below).
 
-Service code is the only code expected to be unit tested in the project.
+Utility code is the only code expected to be unit tested in the project.
 
-In this project the service files are placed here:
+In this project the utility files are placed here:
 
-/app/assets/script/service
+/app/assets/script/utility
 
 #### Model
 

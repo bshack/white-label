@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    const Share = require('../../../../app/assets/script/service/share.js');
+    const Share = require('../../../../app/assets/script/utility/share.js');
     const share = new Share();
     describe('Canary', function() {
         it('is sucessfully running', function() {
