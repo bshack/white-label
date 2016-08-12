@@ -168,7 +168,7 @@ This project uses HandlebarJS for the templating for both server side and client
 
 #### Client Side
 
-To use templates client side you would simply require precompiled js template and then executed it. It will return a string of markup. If you have data you want to populate the template with you can optionally passed it in.
+To use templates client side you would simply require precompiled js template and then executed it. It will return a DOM object. If you have data you want to populate the template with you can optionally passed it in.
 
 JS template files are just .handlebars files from the markup directory that have been precompiled.
 
@@ -193,7 +193,7 @@ import templateLogin from '../template/login';
 set the html content of the body element to be the returned markup populated with passed in data
 
 ```
-document.body.innerHTML = templateLogin({
+document.body.appendChild(templateLogin({
     someKey: 'someValue'
 });
 ```
