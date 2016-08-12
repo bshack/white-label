@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html id="index" lang="en-US" dir="ltr">
-    {{> tags/head}}
+    {{> element/head}}
     <body itemscope itemtype="http://schema.org/WebPage">
         <div id="wrapper">
             <main id="main" tabindex="-1" class="container">
+                <h1 class="heading-1">Welcome</h1>
                 <p>Build your site here.</p>
             </main>
         </div>
         {{#if scripts.global}}
-        {{> tags/script script=scripts.global}}
+        {{> element/script script=scripts.global}}
         {{/if}}
         {{#if scripts.section}}
-        {{> tags/script script=scripts.section}}
+        {{> element/script script=scripts.section}}
         {{/if}}
         {{#if scripts.page}}
-        {{> tags/script script=scripts.page}}
+        {{> element/script script=scripts.page}}
         {{/if}}
     </body>
 </html>

@@ -1,0 +1,45 @@
+/// Remove the unit of a length
+/// @param {Number} $number - Number to remove unit from
+/// @return {Number} - Unitless number
+
+$rem-base: 16px;
+
+@function strip-unit($number) {
+    @if type-of($number) == 'number' and not unitless($number) {
+        @return $number / ($number * 0 + 1);
+    }
+
+    @return $number;
+}
+
+@function convert-to-rem($value, $base-value: $rem-base) {
+    $value: strip-unit($value) / strip-unit($base-value) * 1rem;
+    //@if ($value == 0rem) { $value: 0; } // Turn 0rem into 0
+    @return $value;
+}
+
+@function rem-calc($values, $base-value: $rem-base) {
+    $max: length($values);
+
+    @if $max == 1 { @return convert-to-rem(nth($values, 1), $base-value); }
+
+    $rem-values: ();
+    @for $i from 1 through $max {
+        $rem-values: append($rem-values, convert-to-rem(nth($values, $i), $base-value));
+    }
+    @return $rem-values;
+}
+
+@function em-calc($values) {
+    $rem-values: rem-calc($values);
+
+    $max: length($rem-values);
+
+    @if $max == 1 { @return strip-unit(nth($rem-values, 1)) * 1em; }
+
+    $em-values: ();
+    @for $i from 1 through $max {
+        $em-values: append($em-values, strip-unit(nth($rem-values, $i)) * 1em);
+    }
+    @return $em-values;
+}

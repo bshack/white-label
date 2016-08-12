@@ -1,7 +1,26 @@
-// ## colors
+// ## bootstrap mixins
+@import '../../../../node_modules/bootstrap/scss/variables';
+@import '../../../../node_modules/bootstrap/scss/mixins';
 
+// ## colors
 @import 'colors/colors';
 
-// ## utilities
+// ## fonts
+@import 'type/fonts';
+@import 'type/text';
+@import 'type/headings';
 
+
+// ## utilities
 @import 'utilities/accessibility';
+@import 'utilities/scroll';
+
+// ## elements
+@import 'elements/anchors';
+@import 'elements/buttons';
+@import 'elements/inputs';
+@import 'elements/labels';
+@import 'elements/lists';
+@import 'elements/pictures';
+@import 'elements/images';
+@import 'elements/tables';

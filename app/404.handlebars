@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html id="error-404" lang="en-US" dir="ltr">
-    {{> tags/head}}
+    {{> element/head}}
     <body itemscope itemtype="http://schema.org/WebPage">
         <div id="wrapper">
             <main id="main" tabindex="-1" class="container">
@@ -8,13 +8,13 @@
             </main>
         </div>
         {{#if scripts.global}}
-        {{> tags/script script=scripts.global}}
+        {{> element/script script=scripts.global}}
         {{/if}}
         {{#if scripts.section}}
-        {{> tags/script script=scripts.section}}
+        {{> element/script script=scripts.section}}
         {{/if}}
         {{#if scripts.page}}
-        {{> tags/script script=scripts.page}}
+        {{> element/script script=scripts.page}}
         {{/if}}
     </body>
 </html>

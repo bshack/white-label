@@ -1,12 +1,23 @@
 @charset 'UTF-8';
 
-// ## Foundation
+// ## rem-calc
+@import 'base/utilities/functions';
+
+// ## Vendors
 @import 'base/vendor/bootstrap';
 
-// ## fonts
-
-@import 'base/fonts/fonts';
+// ## Define Fonts
+@import '../font/opensans/stylesheet';
 
 // ## toolkit
-
 @import 'base/toolkit';
+
+//STYLES
+
+body {
+    @extend %text-1;
+}
+
+.heading-1 {
+    @extend %heading-1;
+}

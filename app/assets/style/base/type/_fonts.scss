@@ -1,0 +1,87 @@
+%font-base-1 {
+    color: $black-1;
+    font-size: rem-calc(16);
+    font-smoothing: antialiased;
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+}
+
+%open-sans-bold {
+
+    @extend %font-base-1;
+
+    font-family: 'open_sansbold';
+
+}
+
+%open-sans-bold-italic {
+
+    @extend %font-base-1;
+
+    font-family: 'open_sansbold_italic';
+
+}
+
+%open-sans-extra-bold {
+
+    @extend %font-base-1;
+
+    font-family: 'open_sansextrabold';
+
+}
+
+%open-sans-extra-bold-italic {
+
+    @extend %font-base-1;
+
+    font-family: 'open_sansextrabold_italic';
+
+}
+
+%open-sans-italic {
+
+    @extend %font-base-1;
+
+    font-family: 'open_sansitalic';
+
+}
+
+%open-sans-light {
+
+    @extend %font-base-1;
+
+    font-family: 'open_sanslight';
+
+}
+
+%open-sans-light-italic {
+
+    @extend %font-base-1;
+
+    font-family: 'open_sanslight_italic';
+
+}
+
+%open-sans-regular {
+
+    @extend %font-base-1;
+
+    font-family: 'open_sansregular';
+
+}
+
+%open-sans-semi-bold {
+
+    @extend %font-base-1;
+
+    font-family: 'open_sanssemibold';
+
+}
+
+%open-sans-semi-bold-italic {
+
+    @extend %font-base-1;
+
+    font-family: 'open_sanssemibold_italic';
+
+}

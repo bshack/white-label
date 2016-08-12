@@ -35,6 +35,9 @@
             "id":"UA-XXXXXX-X"
         }
     },
+    "styles":{
+        "global":"assets/style/global.css"
+    },
     "scripts":{
         "global":"assets/script/global.compiled.js"
     }
