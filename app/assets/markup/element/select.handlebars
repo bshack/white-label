@@ -19,6 +19,9 @@
     disabled
     aria-disabled="true"
     {{/if}}
+    {{#if this.aria-label}}
+    aria-label="{{this.aria-label}}"
+    {{/if}}
 >
     {{#if this.default}}
     <option value="{{this.default.value}}">{{this.default.name}}</option>

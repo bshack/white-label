@@ -1,6 +1,13 @@
 <nav
+    {{#if this.tabindex}}
+    tabindex="{{this.tabindex}}"
+    {{else}}
     tabindex="-1"
+    {{/if}}
     {{#if this.class}}
     class="{{this.class}}"
     {{/if}}
->{{> elements/ul class=''}}</nav>
+    {{#if this.aria-label}}
+    aria-label="{{this.aria-label}}"
+    {{/if}}
+>{{> elements/ul class=null}}</nav>

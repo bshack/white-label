@@ -8,8 +8,8 @@
     {{#if this.pushstate}}
     data-pushstate
     {{/if}}
-    {{#if this.accessible-title}}
-    aria-label="{{this.accessible-title}}"
+    {{#if this.aria-label}}
+    aria-label="{{this.aria-label}}"
     {{/if}}
     {{#if this.url}}
     href="{{#if this.type}}{{this.type}}:{{/if}}{{this.url}}"
