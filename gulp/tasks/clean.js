@@ -3,8 +3,7 @@
 // ## Load Modules
 
 const gulp = require('gulp');
-const rimraf = require('gulp-rimraf');
-const plumber = require('gulp-plumber');
+const rimraf = require('rimraf');
 
 // ## Environment Config
 
@@ -12,21 +11,13 @@ const config = require('../config');
 
 // ## cleanDeploy Task
 
-gulp.task('cleanDeploy', () => {
-    return gulp.src(config.path.build, {read: false})
-        //support for better error handling
-        .pipe(plumber())
-        // delete the build directory
-        .pipe(rimraf());
+gulp.task('cleanDeploy', (done) => {
+    rimraf(config.path.build, done);
 });
 
 // ## cleanTemplate Task
 
-gulp.task('cleanTemplate', () => {
+gulp.task('cleanTemplate', (done) => {
     'use strict';
-    return gulp.src(config.path.markup.partials.destination, {read: false})
-        //support for better error handling
-        .pipe(plumber())
-        // delete the build directory
-        .pipe(rimraf());
+    rimraf(config.path.markup.partials.destination, done);
 });
