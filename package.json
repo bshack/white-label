@@ -58,7 +58,7 @@
     "babel-polyfill": "x.x.x",
     "babel-preset-es2015": "x.x.x",
     "babelify": "x.x.x",
-    "bootstrap": "4.0.0-alpha.2",
+    "bootstrap": "4.0.0-alpha.3",
     "browser-sync": "x.x.x",
     "browserify": "x.x.x",
     "browserify-istanbul": "x.x.x",
