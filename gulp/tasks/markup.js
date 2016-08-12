@@ -62,7 +62,7 @@ gulp.task('markup', () => {
 });
 
 // ## markupTemplate Task
-// create precomiled .js templates
+// create precomiled .js templates that return DOM objects
 
 gulp.task('markupTemplate', ['cleanTemplate'], () => {
     'use strict';
@@ -84,7 +84,7 @@ gulp.task('markupTemplate', ['cleanTemplate'], () => {
                 return '(function() {' +
                     'var Handlebars = require("handlebars");' +
                     'if (typeof Handlebars.templates === \'undefined\') {' +
-                    'Handlebars.templates = {};'+
+                        'Handlebars.templates = {};'+
                     '}' +
                     'Handlebars.templates[\'' + templateName + '\'] = Handlebars.template(';
             },
@@ -92,7 +92,10 @@ gulp.task('markupTemplate', ['cleanTemplate'], () => {
                 let templateName = this.getTemplateName(file);
                 return ');' +
                 'Handlebars.registerPartial(\'' + templateName + '\', Handlebars.templates[\'' + templateName +'\']);' +
-                'module.exports = Handlebars.templates[\'' + templateName + '\'];' +
+                'module.exports = function(data) {' +
+                    'return new DOMParser().parseFromString(Handlebars.templates[\'' +
+                        templateName + '\'](data).trim(), "text/html").body.firstChild.cloneNode(true);' +
+                    '};' +
                 '})();';
             }
         }))
