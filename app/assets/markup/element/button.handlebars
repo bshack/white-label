@@ -1,0 +1,30 @@
+<button
+    {{#if this.id}}
+    id="{{this.id}}"
+    {{/if}}
+    {{#if this.name}}
+    name="{{this.name}}"
+    {{/if}}
+    {{#if this.class}}
+    class="{{this.class}}{{#if this.selected}} selected{{/if}}"
+    {{/if}}
+    {{#if this.accessible-title}}
+    aria-label="{{this.accessible-title}}"
+    {{/if}}
+    {{#if this.disabled}}
+    disabled
+    aria-disabled="true"
+    {{/if}}
+    {{#if this.type}}
+    type="{{this.type}}"
+    {{/if}}
+    {{#if this.role}}
+    role="{{this.role}}"
+    {{/if}}
+    {{#if this.tabindex}}
+    tabindex="{{this.tabindex}}"
+    {{/if}}
+    {{#if this.data}}
+    data-custom="{{this.data}}"
+    {{/if}}
+>{{this.title}}</button>

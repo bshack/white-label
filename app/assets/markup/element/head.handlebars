@@ -63,8 +63,10 @@
     {{#if link.author}}
     <link rel="author" href="{{link.author}}">
     {{/if}}
-    <link rel="stylesheet" type="text/css" media="all" href="{{cdn}}assets/style/global.css">
-    {{#if secondaryCSS}}
-    <link rel="stylesheet" type="text/css" media="all" href="{{cdn}}assets/style/{{secondaryCSS}}.css">
+    {{#if styles.global}}
+    <link rel="stylesheet" type="text/css" media="all" href="{{cdn}}{{styles.global}}">
+    {{/if}}
+    {{#if styles.section}}
+    <link rel="stylesheet" type="text/css" media="all" href="{{cdn}}{{styles.section}}">
     {{/if}}
 </head>

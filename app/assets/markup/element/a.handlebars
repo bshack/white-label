@@ -1,0 +1,29 @@
+<a
+    {{#if this.id}}
+    id="{{this.id}}"
+    {{/if}}
+    {{#if this.class}}
+    class="{{this.class}}"
+    {{/if}}
+    {{#if this.pushstate}}
+    data-pushstate
+    {{/if}}
+    {{#if this.accessible-title}}
+    aria-label="{{this.accessible-title}}"
+    {{/if}}
+    {{#if this.url}}
+    href="{{#if this.type}}{{this.type}}:{{/if}}{{this.url}}"
+    {{/if}}
+    {{#if this.role}}
+    role="{{this.role}}"
+    {{/if}}
+    {{#if this.tabindex}}
+    tabindex="{{this.tabindex}}"
+    {{/if}}
+    {{#if this.target}}
+    target="{{this.target}}"
+    {{/if}}
+    {{#if this.data}}
+    data-custom="{{this.data}}"
+    {{/if}}
+>{{this.title}}</a>
