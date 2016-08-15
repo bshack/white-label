@@ -1,5 +1,6 @@
-var istanbul = require('browserify-istanbul');
-module.exports = function(karma) {
+const istanbul = require('browserify-istanbul');
+
+module.exports = (karma) => {
     'use strict';
     karma.set({
         basePath: '',

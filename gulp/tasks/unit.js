@@ -17,7 +17,7 @@ gulp.task('unit', (done) => {
     return new KarmaServer.start({
         configFile: config.path.script.karma,
         singleRun: true
-    }, function() {
+    }, () => {
         done();
     });
 
@@ -31,8 +31,8 @@ gulp.task('unitWatch', (done) => {
     return new KarmaServer.start({
         configFile: config.path.script.karma,
         autoWatch: true
-    }, function() {
+    }, () => {
         done();
     });
-    
+
 });
