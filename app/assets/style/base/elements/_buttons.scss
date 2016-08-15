@@ -1,6 +1,10 @@
 %button-base-1 {
+
+    @extend %text-1;
+
     cursor: pointer;
     line-height: rem-calc(44);
     margin: 0;
     padding: 0;
+
 }
