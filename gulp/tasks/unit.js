@@ -13,14 +13,14 @@ const config = require('../config');
 
 gulp.task('unit', (done) => {
 
-    // //run unit tests and write out coverage
-    // return new KarmaServer.start({
-    //     configFile: config.path.script.karma,
-    //     singleRun: true
-    // }, function() {
-    //     done();
-    // });
-    done();
+    //run unit tests and write out coverage
+    return new KarmaServer.start({
+        configFile: config.path.script.karma,
+        singleRun: true
+    }, function() {
+        done();
+    });
+
 });
 
 // ## Unit Watch Task
@@ -34,4 +34,5 @@ gulp.task('unitWatch', (done) => {
     }, function() {
         done();
     });
+    
 });

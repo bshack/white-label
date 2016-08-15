@@ -39,6 +39,9 @@ module.exports = function(karma) {
                 'browserify-shim',
                 'babelify',
                 istanbul({
+                    instrumenterConfig: {
+                        embedSource: true
+                    },
                     ignore: ['**/node_modules/**']
                 })
             ]
