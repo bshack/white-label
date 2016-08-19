@@ -25,15 +25,23 @@ gulp.task('markup', () => {
     return gulp.src(config.path.markup.source)
         //support for better error handling
         .pipe(plumber())
-        .pipe(data(function(file) {
-            let dataFile;
+        .pipe(data((file) => {
+
+            let data;
             // page specific json files are optional
             try {
-                dataFile = file.path.split(config.path.root).pop().replace('.handlebars', '.json');
-                dataFile = require('../../app/' + config.path.data.destination + '/' +
-                    config.path.data.pageDirectory + dataFile);
+
+                let jsonFilePath = '../../app/' +
+                    config.path.data.destination + '/' + config.path.data.pageDirectory +
+                    file.path.split(config.path.root).pop().replace('.handlebars', '.json');
+
+                // prevent node from giving cached data, make it go to the disk.
+                delete require.cache[require.resolve(jsonFilePath)];
+
+                data = require(jsonFilePath);
+
             } catch(err) {
-                dataFile = {};
+                data = {};
             }
 
             //return the data
@@ -42,8 +50,9 @@ gulp.task('markup', () => {
                 require('../../' + config.path.data.globalConfigFile),
                 require('../../' + config.path.data.source + '/' + config.path.data.pageDirectory +
                     config.path.data.pageDefaultData),
-                dataFile
+                data
             );
+
         }))
         //compile the handlebars templates to html
         .pipe(handlebarsToHTML({}, {
@@ -54,7 +63,7 @@ gulp.task('markup', () => {
             config: config.path.markup.htmlLint
         }))
         //switch the file extension from .handlebars to .html
-        .pipe(rename(function(path) {
+        .pipe(rename((path) => {
             path.extname = '.html';
         }))
         .pipe(gulp.dest(config.path.root))
