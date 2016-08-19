@@ -72,7 +72,6 @@
     "gulp-accessibility": "x.x.x",
     "gulp-autoprefixer": "x.x.x",
     "gulp-callback": "x.x.x",
-    "gulp-changed": "x.x.x",
     "gulp-compile-handlebars": "x.x.x",
     "gulp-concat": "x.x.x",
     "gulp-cssnano": "x.x.x",
