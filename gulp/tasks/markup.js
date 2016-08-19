@@ -35,7 +35,7 @@ gulp.task('markup', () => {
                     config.path.data.destination + '/' + config.path.data.pageDirectory +
                     file.path.split(config.path.root).pop().replace('.handlebars', '.json');
 
-                // prevent node from giving cached data, make it go to the disk.
+                // prevent node from giving you back cached data, make it go to the disk.
                 delete require.cache[require.resolve(jsonFilePath)];
 
                 data = require(jsonFilePath);

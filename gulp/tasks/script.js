@@ -61,8 +61,10 @@ gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callbac
             }]]
         })
         .bundle()
-        .pipe(bundleFs)
-        .on('error', notify.onError('script: <%= error.message %>'));
+        .on('error', notify.onError('script: <%= error.message %>'))
+        //support for better error handling
+        .pipe(plumber())
+        .pipe(bundleFs);
 
         // all done
         bundleFs.on('finish', function() {
