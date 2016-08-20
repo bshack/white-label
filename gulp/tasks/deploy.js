@@ -188,7 +188,6 @@ gulp.task('minifyImage', () => {
 gulp.task('sizeReportCSS', () => {
     return gulp.src(config.path.build + config.path.release.destination + config.path.version + '/' +
         config.path.style.destination.release + '/*.css')
-        .pipe(plumber())
         .pipe(sizereport({
             gzip: true,
             '*': {
@@ -202,7 +201,6 @@ gulp.task('sizeReportCSS', () => {
 gulp.task('sizeReportJS', () => {
     return gulp.src(config.path.build + config.path.release.destination + config.path.version + '/' +
         config.path.script.destination + '/*.js')
-        .pipe(plumber())
         .pipe(sizereport({
             gzip: true,
             '*': {
@@ -220,6 +218,7 @@ gulp.task('sizeReportImage', () => {
         .pipe(sizereport({
             gzip: true,
             '*': {
+                'maxSize': 1000000,
                 'maxGzippedSize': 1000000
             }
         }));
