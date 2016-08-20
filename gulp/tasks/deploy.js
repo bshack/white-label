@@ -12,6 +12,7 @@ const plumber = require('gulp-plumber');
 const sitemap = require('gulp-sitemap');
 const runSequence = require('run-sequence');
 const cssnano = require('gulp-cssnano');
+const sizereport = require('gulp-sizereport');
 
 // ## Environment Config
 
@@ -23,12 +24,13 @@ const config = require('../config');
 gulp.task('deploy', callback => {
     //runSequence support is only for gulp 3.x, 4.x natively support this functionalty
     return runSequence(
-        ['cleanDeploy'],
+        ['cleanDeploy', 'cleanTemplate'],
         ['data'],
         ['markup', 'style', 'script', 'documentation'],
         ['accessibility'],
         ['copyRoot', 'copyReport', 'copyFonts', 'minifyMarkup', 'copyData', 'minifyStyle', 'minifyScript',
             'minifyImage', 'sitemap'],
+        ['sizeReportCSS', 'sizeReportJS', 'sizeReportImage'],
         callback
     );
 });
@@ -179,4 +181,46 @@ gulp.task('minifyImage', () => {
         }))
         .pipe(gulp.dest(config.path.build + config.path.release.destination + config.path.version + '/' +
             config.path.image.destination));
+});
+
+// ## CSS Size Report Task
+// check to see how big the files being created are
+gulp.task('sizeReportCSS', () => {
+    return gulp.src(config.path.build + config.path.release.destination + config.path.version + '/' +
+        config.path.style.destination.release + '/*.css')
+        .pipe(plumber())
+        .pipe(sizereport({
+            gzip: true,
+            '*': {
+                'maxGzippedSize': 25000
+            }
+        }));
+});
+
+// ## JS Size Report Task
+// check to see how big the files being created are
+gulp.task('sizeReportJS', () => {
+    return gulp.src(config.path.build + config.path.release.destination + config.path.version + '/' +
+        config.path.script.destination + '/*.js')
+        .pipe(plumber())
+        .pipe(sizereport({
+            gzip: true,
+            '*': {
+                'maxGzippedSize': 200000
+            }
+        }));
+});
+
+// ## Markup Size Report Task
+// check to see how big the files being created are
+gulp.task('sizeReportImage', () => {
+    return gulp.src(config.path.build + config.path.release.destination + config.path.version + '/' +
+        config.path.image.destination + '/**')
+        .pipe(plumber())
+        .pipe(sizereport({
+            gzip: true,
+            '*': {
+                'maxGzippedSize': 1000000
+            }
+        }));
 });

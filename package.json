@@ -89,6 +89,7 @@
     "gulp-sass": "x.x.x",
     "gulp-sass-lint": "x.x.x",
     "gulp-sitemap": "x.x.x",
+    "gulp-sizereport": "x.x.x",
     "gulp-sourcemaps": "x.x.x",
     "gulp-strip-debug": "x.x.x",
     "gulp-uglify": "x.x.x",
@@ -126,5 +127,7 @@
     "yargs": "x.x.x",
     "yeoman-generator": "x.x.x",
     "yosay": "x.x.x"
+  },
+  "devDependencies": {
   }
 }

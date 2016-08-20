@@ -73,7 +73,7 @@ gulp.task('markup', () => {
 // ## markupTemplate Task
 // create precomiled .js templates that return DOM objects
 
-gulp.task('markupTemplate', ['cleanTemplate'], () => {
+gulp.task('markupTemplate', () => {
     'use strict';
     return gulp.src(config.path.markup.partials.watch)
         //support for better error handling
