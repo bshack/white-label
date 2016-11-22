@@ -36,7 +36,12 @@
         }
     },
     "styles":{
-        "global":"assets/style/global.css"
+        "all":{
+            "global":"assets/style/global.css"
+        },
+        "print":{
+            "global":"assets/style/print.css"
+        }
     },
     "scripts":{
         "global":"assets/script/global.compiled.js"

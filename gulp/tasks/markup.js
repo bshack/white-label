@@ -27,30 +27,36 @@ gulp.task('markup', () => {
         .pipe(plumber())
         .pipe(data((file) => {
 
-            let data;
+            let configDataPath = '../../' + config.path.data.globalConfigFile;
+            let globalDataPath = '../../' + config.path.data.source + '/' + config.path.data.pageDirectory +
+                config.path.data.pageDefaultData;
+            let pageData;
+
             // page specific json files are optional
             try {
 
-                let jsonFilePath = '../../app/' +
+                pageData = '../../app/' +
                     config.path.data.destination + '/' + config.path.data.pageDirectory +
                     file.path.split(config.path.root).pop().replace('.handlebars', '.json');
 
                 // prevent node from giving you back cached data, make it go to the disk.
-                delete require.cache[require.resolve(jsonFilePath)];
+                delete require.cache[require.resolve(pageData)];
 
-                data = require(jsonFilePath);
+                pageData = require(pageData);
 
             } catch(err) {
-                data = {};
+                pageData = {};
             }
+
+            delete require.cache[require.resolve(configDataPath)];
+            delete require.cache[require.resolve(globalDataPath)];
 
             //return the data
             return _.extend(
                 {},
-                require('../../' + config.path.data.globalConfigFile),
-                require('../../' + config.path.data.source + '/' + config.path.data.pageDirectory +
-                    config.path.data.pageDefaultData),
-                data
+                require(configDataPath),
+                require(globalDataPath),
+                pageData
             );
 
         }))

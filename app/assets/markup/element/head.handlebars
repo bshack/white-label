@@ -63,10 +63,16 @@
     {{#if link.author}}
     <link rel="author" href="{{link.author}}">
     {{/if}}
-    {{#if styles.global}}
-    <link rel="stylesheet" type="text/css" media="all" href="{{cdn}}{{styles.global}}">
+    {{#if styles.all.global}}
+    <link rel="stylesheet" type="text/css" media="all" href="{{cdn}}{{styles.all.global}}">
     {{/if}}
-    {{#if styles.section}}
-    <link rel="stylesheet" type="text/css" media="all" href="{{cdn}}{{styles.section}}">
+    {{#if styles.all.section}}
+    <link rel="stylesheet" type="text/css" media="all" href="{{cdn}}{{styles.all.section}}">
+    {{/if}}
+    {{#if styles.print.global}}
+    <link rel="stylesheet" type="text/css" media="print" href="{{cdn}}{{styles.print.global}}">
+    {{/if}}
+    {{#if styles.print.section}}
+    <link rel="stylesheet" type="text/css" media="print" href="{{cdn}}{{styles.print.section}}">
     {{/if}}
 </head>
