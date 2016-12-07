@@ -19,7 +19,7 @@ const config = require('../config');
 // ## Markup Task
 // create .html files written to app root
 
-gulp.task('markup', () => {
+gulp.task('markup', ['cleanHTML'], () => {
     'use strict';
     //task
     return gulp.src(config.path.markup.source)

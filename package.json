@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "2.2.22",
+  "version": "2.2.23",
   "contributors": [
     {
       "name": "Bill Shackelford",
@@ -87,6 +87,7 @@
     "gulp-notify": "x.x.x",
     "gulp-plumber": "x.x.x",
     "gulp-rename": "x.x.x",
+    "gulp-rimraf": "x.x.x",
     "gulp-sass": "x.x.x",
     "gulp-sass-lint": "x.x.x",
     "gulp-sitemap": "x.x.x",
@@ -116,7 +117,6 @@
     "path": "x.x.x",
     "phantomjs-prebuilt": "x.x.x",
     "require-dir": "x.x.x",
-    "rimraf": "x.x.x",
     "run-sequence": "x.x.x",
     "shrinkwrap": "x.x.x",
     "watchify": "x.x.x",
@@ -128,6 +128,5 @@
     "yeoman-generator": "x.x.x",
     "yosay": "x.x.x"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
