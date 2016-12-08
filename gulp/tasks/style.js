@@ -30,7 +30,9 @@ const styleCompile = () => {
             sourceComments: true
         }).on('error', sass.logError))
         //add browser prefixes
-        .pipe(autoprefixer())
+        .pipe(autoprefixer({
+            browsers: ['last 3 versions']
+        }))
         .pipe(gulp.dest(config.path.style.destination.watch))
         .on('error', notify.onError('style: <%= error.message %>'));
 };
