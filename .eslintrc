@@ -10,9 +10,13 @@
     "globals":{
     },
     "plugins":[
+        "react"
     ],
     "parserOptions":{
-        "sourceType":"module"
+        "sourceType":"module",
+        "ecmaFeatures":{
+            "jsx": true
+        }
     },
     "rules":{
         "no-console":1,

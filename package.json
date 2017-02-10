@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "2.2.23",
+  "version": "2.2.24",
   "contributors": [
     {
       "name": "Bill Shackelford",
@@ -57,6 +57,7 @@
     "babel-plugin-transform-es2015-modules-umd": "x.x.x",
     "babel-polyfill": "x.x.x",
     "babel-preset-es2015": "x.x.x",
+    "babel-preset-react": "x.x.x",
     "babelify": "x.x.x",
     "bootstrap": "4.0.0-alpha.6",
     "browser-sync": "x.x.x",
@@ -66,6 +67,7 @@
     "chalk": "x.x.x",
     "dom-delegate": "x.x.x",
     "eslint": "x.x.x",
+    "eslint-plugin-react": "x.x.x",
     "factor-bundle": "x.x.x",
     "glob": "x.x.x",
     "gulp": "x.x.x",
@@ -116,6 +118,8 @@
     "numeraljs": "x.x.x",
     "path": "x.x.x",
     "phantomjs-prebuilt": "x.x.x",
+    "react": "x.x.x",
+    "react-dom": "x.x.x",
     "require-dir": "x.x.x",
     "run-sequence": "x.x.x",
     "shrinkwrap": "x.x.x",
