@@ -1,6 +1,7 @@
 // ## Load Modules
 
 const gulp = require('gulp');
+const prettify = require('gulp-prettify');
 const handlebars = require('handlebars');
 const handlebarsToHTML = require('gulp-compile-handlebars');
 const handlebarsToJS = require('gulp-handlebars');
@@ -72,6 +73,8 @@ gulp.task('markup', ['cleanHTML'], () => {
         .pipe(rename((path) => {
             path.extname = '.html';
         }))
+        //validate markup
+        .pipe(prettify())
         .pipe(gulp.dest(config.path.root))
         .on('error', notify.onError('markup: <%= error.message %>'));
 });

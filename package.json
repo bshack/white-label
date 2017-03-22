@@ -88,6 +88,7 @@
     "gulp-jsdoc3": "x.x.x",
     "gulp-notify": "x.x.x",
     "gulp-plumber": "x.x.x",
+    "gulp-prettify": "x.x.x",
     "gulp-rename": "x.x.x",
     "gulp-rimraf": "x.x.x",
     "gulp-sass": "x.x.x",
