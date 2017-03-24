@@ -38,7 +38,7 @@ gulp.task('markup', ['cleanHTML'], () => {
 
                 pageData = '../../app/' +
                     config.path.data.destination + '/' + config.path.data.pageDirectory +
-                    file.path.split(config.path.root).pop().replace('.handlebars', '.json');
+                    file.path.split(config.path.root).pop().replace('.hbs', '.json');
 
                 // prevent node from giving you back cached data, make it go to the disk.
                 delete require.cache[require.resolve(pageData)];
@@ -69,7 +69,7 @@ gulp.task('markup', ['cleanHTML'], () => {
         .pipe(htmllint({
             config: config.path.markup.htmlLint
         }))
-        //switch the file extension from .handlebars to .html
+        //switch the file extension from .hbs to .html
         .pipe(rename((path) => {
             path.extname = '.html';
         }))

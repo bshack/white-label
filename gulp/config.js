@@ -86,6 +86,7 @@
                 htmlLint: '.htmllintrc',
                 // glob of handlebars templates
                 source: [
+                    'app/**/*.hbs',
                     'app/**/*.handlebars',
                     '!app/assets/**',
                     '!app/report/**',
