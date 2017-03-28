@@ -1,36 +1,17 @@
-import View from 'white-label-view';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 (() => {
     'use strict';
-    module.exports = class extends View {
-        initialize(parentElement) {
-            //setup the view
-            this.element = this.template();
-            this.parentElement = parentElement;
-            this.model = {
-                foo: 'bar'
-            }
-            return this;
-        }
-        destroy() {
-            //tear down the view
-            return this;
-        }
-        template() {
-            //holds the client side template, currently just stubed out to return main
-            return document.querySelector('main');
+    module.exports = class Greeting extends React.Component {
+        constructor(props) {
+            super(props);
+            this.props = {
+                color: 'blue'
+            };
         }
         render() {
-            //render html changes
-            return this;
-        }
-        addListeners() {
-            //bind events
-            return this;
-        }
-        removeListeners() {
-            //unbind events
-            return this;
+            return <h1>Hello, {this.props.color}</h1>;
         }
     };
 })();

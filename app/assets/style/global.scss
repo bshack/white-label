@@ -1,10 +1,12 @@
 @charset 'UTF-8';
 
-// ## rem-calc
-@import 'base/utilities/functions';
-
 // ## Vendors
-@import 'base/vendor/bootstrap';
+
+// ## foundation
+@import '../../../node_modules/foundation-sites/scss/foundation';
+@include foundation-global-styles;
+//@include foundation-grid;
+@include foundation-flex-grid;
 
 // ## Define Fonts
 @import '../font/opensans/stylesheet';
