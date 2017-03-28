@@ -3,15 +3,9 @@ import ReactDOM from 'react-dom';
 
 (() => {
     'use strict';
-    module.exports = class Greeting extends React.Component {
-        constructor(props) {
-            super(props);
-            this.props = {
-                color: 'blue'
-            };
-        }
+    module.exports = class HelloMessage extends React.Component {
         render() {
-            return <h1>Hello, {this.props.color}</h1>;
+            return <div>Hello {this.props.name}</div>;
         }
     };
 })();

@@ -67,6 +67,7 @@
     "dom-delegate": "x.x.x",
     "eslint": "x.x.x",
     "eslint-plugin-react": "x.x.x",
+    "events": "x.x.x",
     "factor-bundle": "x.x.x",
     "foundation-sites": "x.x.x",
     "glob": "x.x.x",
@@ -125,10 +126,7 @@
     "run-sequence": "x.x.x",
     "shrinkwrap": "x.x.x",
     "watchify": "x.x.x",
-    "white-label-mediator": "x.x.x",
     "white-label-model": "x.x.x",
-    "white-label-router": "x.x.x",
-    "white-label-view": "x.x.x",
     "yargs": "x.x.x",
     "yeoman-generator": "x.x.x",
     "yosay": "x.x.x"

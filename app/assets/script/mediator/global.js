@@ -1,3 +1,5 @@
-import WLMediator from 'white-label-mediator';
+import Events from 'events';
 
-module.exports = new WLMediator();
+(() => {
+    module.exports = new Events();
+})();
