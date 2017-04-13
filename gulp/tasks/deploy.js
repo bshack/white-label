@@ -23,7 +23,7 @@ const config = require('../config');
 gulp.task('deploy', callback => {
     //runSequence support is only for gulp 3.x, 4.x natively support this functionalty
     return runSequence(
-        ['cleanDeploy', 'cleanTemplate'],
+        ['cleanDeploy'],
         ['data'],
         ['markup', 'style', 'script', 'documentation'],
         ['accessibility'],
