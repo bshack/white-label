@@ -128,7 +128,6 @@
                     '*.js',
                     'gulp/tasks/*.js',
                     'gulp/*.js',
-                    'grunt/tasks/*.js',
                     'gulp/options/.js',
                     'app/assets/script/**',
                     'app/assets/test/spec/*.js',
@@ -140,9 +139,7 @@
                 gulp: [
                     '*.js',
                     'gulp/tasks/*.js',
-                    'gulp/*.js',
-                    'grunt/tasks/*.js',
-                    'gulp/options/.js'
+                    'gulp/*.js'
                 ],
                 // glob of only application files for documentation task
                 source: [

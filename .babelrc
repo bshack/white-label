@@ -1,4 +1,7 @@
 {
     "presets": ["es2015", "react"],
-    "plugins": ["transform-es2015-modules-umd"]
+    "plugins": [
+        "transform-es2015-modules-umd",
+        "transform-es2015-modules-commonjs"
+    ]
 }

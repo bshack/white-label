@@ -119,24 +119,3 @@ gulp.task('markupTemplate', () => {
         }))
         .pipe(gulp.dest(config.path.markup.partials.destination));
 });
-
-const babel = require('gulp-babel');
-const renderReact = require('gulp-render-react');
-const JSXLocation = 'app/*.jsx';
-const compliedJSXLocation = 'app/';
-const compiledJSXGlob = 'app/*.js';
-const compliedHTMLLocation = 'app/';
-
-gulp.task('compileJSX', () => {
-    return gulp.src(JSXLocation)
-        .pipe(babel())
-        .pipe(gulp.dest(compliedJSXLocation));
-});
-
-gulp.task('markupTemplateJSX', ['compileJSX'], () => {
-    return gulp.src(compiledJSXGlob, {read: false})
-        .pipe(renderReact({
-            type: 'markup'
-        }))
-        .pipe(gulp.dest(compliedHTMLLocation));
-});

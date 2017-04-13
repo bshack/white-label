@@ -6,7 +6,6 @@ const gulp = require('gulp');
 const htmlmin = require('gulp-htmlmin');
 const sourcemaps = require('gulp-sourcemaps');
 const imagemin = require('gulp-imagemin');
-const stripDebug = require('gulp-strip-debug');
 const uglify = require('gulp-uglify');
 const plumber = require('gulp-plumber');
 const sitemap = require('gulp-sitemap');
@@ -124,8 +123,6 @@ gulp.task('minifyScript', () => {
         //support for better error handling
         .pipe(plumber())
         .pipe(sourcemaps.init())
-        //remove console.log and alert
-        .pipe(stripDebug())
         //minify
         .pipe(uglify())
         //write sourcemaps

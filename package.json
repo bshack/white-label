@@ -54,6 +54,7 @@
     ]
   },
   "dependencies": {
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.0",
     "babel-plugin-transform-es2015-modules-umd": "x.x.x",
     "babel-polyfill": "x.x.x",
     "babel-preset-es2015": "x.x.x",
@@ -74,7 +75,6 @@
     "gulp": "x.x.x",
     "gulp-accessibility": "x.x.x",
     "gulp-autoprefixer": "x.x.x",
-    "gulp-babel": "x.x.x",
     "gulp-callback": "x.x.x",
     "gulp-compile-handlebars": "x.x.x",
     "gulp-concat": "x.x.x",
@@ -92,14 +92,12 @@
     "gulp-plumber": "x.x.x",
     "gulp-prettify": "x.x.x",
     "gulp-rename": "x.x.x",
-    "gulp-render-react": "x.x.x",
     "gulp-rimraf": "x.x.x",
     "gulp-sass": "x.x.x",
     "gulp-sass-lint": "x.x.x",
     "gulp-sitemap": "x.x.x",
     "gulp-sizereport": "x.x.x",
     "gulp-sourcemaps": "x.x.x",
-    "gulp-strip-debug": "x.x.x",
     "gulp-uglify": "x.x.x",
     "gulp-watch": "x.x.x",
     "gulp-wrapper": "x.x.x",
@@ -133,5 +131,6 @@
     "yeoman-generator": "x.x.x",
     "yosay": "x.x.x"
   },
-  "devDependencies": {}
+  "devDependencies": {
+  }
 }
