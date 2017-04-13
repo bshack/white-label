@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "2.2.25",
+  "version": "3.0.0",
   "contributors": [
     {
       "name": "Bill Shackelford",
@@ -54,7 +54,7 @@
     ]
   },
   "dependencies": {
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "x.x.x",
     "babel-plugin-transform-es2015-modules-umd": "x.x.x",
     "babel-polyfill": "x.x.x",
     "babel-preset-es2015": "x.x.x",
