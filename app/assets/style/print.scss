@@ -1,7 +1,9 @@
 @charset 'UTF-8';
 
-// ## rem-calc
-@import 'base/utilities/functions';
+// ## Vendors
+
+// ## foundation
+@import '../../../node_modules/foundation-sites/scss/foundation';
 
 // ## toolkit
 @import 'base/toolkit';

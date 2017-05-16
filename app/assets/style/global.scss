@@ -20,6 +20,90 @@ body {
     @extend %text-1;
 }
 
+.anchor-1 {
+    @extend %anchor-1;
+}
+
+.button-1 {
+    @extend %button-1;
+}
+
+.footer-1 {
+    @extend %footer-1;
+}
+
+.fieldset-1 {
+    @extend %fieldset-1;
+}
+
+.image-1 {
+    @extend %image-1;
+}
+
+.input-checkbox-1 {
+    @extend %input-checkbox-1;
+}
+
+.input-error-1 {
+    @extend %input-error-1;
+}
+
+.input-radio-1 {
+    @extend %input-radio-1;
+}
+
+.input-text-1 {
+    @extend %input-text-1;
+}
+
+.label-1 {
+    @extend %label-1;
+}
+
+.legend-1 {
+    @extend %legend-1;
+}
+
+.list-1 {
+    @extend %list-1;
+}
+
+.picture-1 {
+    @extend %picture-1;
+}
+
+.select-1 {
+    @extend %select-1;
+}
+
+.table-1 {
+    @extend %table-1;
+}
+
+.textarea-1 {
+    @extend %textarea-1;
+}
+
 .heading-1 {
     @extend %heading-1;
+}
+
+.modal-1 {
+    @extend %modal-1;
+}
+
+.modal-1-open {
+    @extend %modal-1-open;
+}
+
+.sticky-1 {
+    @extend %sticky-1;
+}
+
+.accessibility-skip-to-element-1 {
+    @extend %accessibility-skip-to-element-1;
+}
+
+.staggered-1 {
+    @extend %staggered-1;
 }

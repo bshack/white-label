@@ -6,3 +6,69 @@
     padding: 0;
 
 }
+
+// ## input checkboxes
+
+%input-checkbox-1 {
+    @extend %input-base-1;
+}
+
+// ## input errors
+
+%input-error-1 {
+
+    @extend %input-base-1;
+
+    background-color: $red-1;
+    color: $white-1;
+    font-weight: 700;
+    margin-top: rem-calc(5);
+    padding: rem-calc(10);
+
+    strong {
+        font-weight: 700;
+    }
+
+}
+
+// ## input radio buttons
+
+%input-radio-1 {
+    @extend %input-base-1;
+}
+
+// ## input text boxes
+
+%input-text-1 {
+
+    @extend %input-base-1;
+
+    display: block;
+    min-height: rem-calc(45);
+    padding: 0 rem-calc(5);
+    width: 100%;
+
+}
+
+// ## textareas
+
+%textarea-1 {
+
+    @extend %input-base-1;
+
+    display: block;
+    min-height: rem-calc(45);
+    padding: rem-calc(5);
+    width: 100%;
+
+}
+
+// ## select menus
+
+%select-1 {
+
+    @extend %input-base-1;
+
+    height: rem-calc(45);
+
+}

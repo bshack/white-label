@@ -1,4 +1,8 @@
-%image-base-1 {
+%image-1 {
+    border: 0;
     margin: 0;
-    padding: 0;
+}
+
+%picture-1 {
+    @extend %image-1;
 }
