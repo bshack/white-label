@@ -22,7 +22,4 @@ gulp.task('jsdoc', (callback) => {
 gulp.task('documentation', [
     'jsdoc',
     'unit'
-], () => {
-    'use strict';
-    return;
-});
+]);
