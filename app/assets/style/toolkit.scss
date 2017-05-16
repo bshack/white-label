@@ -10,7 +10,63 @@
 
 .toolkit {
 
-    // styles only for the toolkit section of the site.
+    // styles only for the toolkit guide.
+    &-arial-regular {
+        @extend %arial-regular;
+    }
+
+    &-arial-italic {
+        @extend %arial-italic;
+    }
+
+    &-arial-bold {
+        @extend %arial-bold;
+    }
+
+    &-arial-bold-italic {
+        @extend %arial-bold-italic;
+    }
+
+    &-open-sans-bold {
+        @extend %open-sans-bold;
+    }
+
+    &-open-sans-bold-italic {
+        @extend %open-sans-bold-italic;
+    }
+
+    &-open-sans-extra-bold {
+        @extend %open-sans-extra-bold;
+    }
+
+    &-open-sans-extra-bold-italic {
+        @extend %open-sans-extra-bold-italic;
+    }
+
+    &-open-sans-italic {
+        @extend %open-sans-italic;
+    }
+
+    &-open-sans-light {
+        @extend %open-sans-light;
+    }
+
+    &-open-sans-light-italic {
+        @extend %open-sans-light-italic;
+    }
+
+    &-open-sans-regular {
+        @extend %open-sans-regular;
+    }
+
+    &-open-sans-semi-bold {
+        @extend %open-sans-semi-bold;
+    }
+
+    &-open-sans-semi-bold-italic {
+        @extend %open-sans-semi-bold-italic;
+    }
+
     &-heading-1,
     &-heading-2,
     &-heading-3,

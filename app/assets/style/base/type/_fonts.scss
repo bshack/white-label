@@ -6,6 +6,39 @@
     text-rendering: optimizeLegibility;
 }
 
+%arial-regular {
+
+    @extend %font-base-1;
+
+    font-family: 'arial';
+
+}
+
+%arial-italic {
+
+    @extend %arial-regular;
+
+    font-style: italic;
+
+}
+
+%arial-bold {
+
+    @extend %arial-regular;
+
+    font-weight: 700;
+
+}
+
+%arial-bold-italic {
+
+    @extend %arial-regular;
+
+    font-style: italic;
+    font-weight: 700;
+
+}
+
 %open-sans-bold {
 
     @extend %font-base-1;
