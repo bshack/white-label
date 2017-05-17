@@ -78,6 +78,7 @@
 
         background-color: $grey-2;
         color: $white-1;
+        font-size: rem-calc(22);
         margin: 0 0 rem-calc(60);
         padding: rem-calc(87) 0 rem-calc(40);
         text-align: center;
@@ -90,11 +91,13 @@
     }
 
     &-heading-2 {
+        font-size: rem-calc(18);
         margin-bottom: rem-calc(60);
         text-align: center;
     }
 
     &-heading-3 {
+        font-size: rem-calc(16);
         margin-bottom: rem-calc(20);
         margin-top: rem-calc(60);
 

@@ -1,7 +1,33 @@
 %heading-base-1 {
+
     @extend %open-sans-bold;
+
 }
 
 %heading-1 {
     @extend %heading-base-1;
+}
+
+%heading-2 {
+
+    @extend %heading-base-1;
+
+    font-size: rem-calc(14);
+
+}
+
+%heading-3 {
+
+    @extend %heading-base-1;
+
+    font-size: rem-calc(12);
+
+}
+
+%heading-4 {
+
+    @extend %heading-base-1;
+
+    font-size: rem-calc(10);
+
 }
