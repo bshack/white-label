@@ -1,0 +1,38 @@
+{
+    "title":"Components - Toolkit",
+    "styles":{
+        "all":{
+            "global":"assets/style/global.css",
+            "section":"assets/style/toolkit.css"
+        },
+        "print":{
+            "global":"assets/style/print.css"
+        }
+    },
+    "accessible-ajax-1":"New content has been added to the page, now the screen reader will read it.",
+    "select-1":{
+        "data":[
+            {
+                "value":"",
+                "name":"choose",
+                "selected":true
+            },
+            {
+                "value":"option-1",
+                "name":"car"
+            },
+            {
+                "value":"option-2",
+                "name":"truck"
+            },
+            {
+                "value":"option-3",
+                "name":"suv"
+            }
+        ]
+    },
+    "scripts":{
+        "global":"assets/script/global.compiled.js",
+        "section":"assets/script/toolkit.compiled.js"
+    }
+}

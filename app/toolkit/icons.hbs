@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html id="toolkit-colors" lang="en-US" dir="ltr">
+    {{> element/head secondaryCSS='toolkit'}}
+    <body itemscope itemtype="http://schema.org/WebPage">
+
+        <div id="wrapper">
+
+            {{>toolkit/accessibility-skip-to-element-1 id='skip-to-content' url='#main' title='skip to content'}}
+
+            <header class="toolkit-header-1">
+                <button aria-expanded="false">main menu toggle</button>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <a href="{{www}}toolkit">Toolkit</a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="sticky-1">
+                <div class="sticky-1-wrapper">
+                    <nav class="toolkit-nav-1" tabindex="-1">
+                        <a href="{{www}}toolkit">Home</a>
+                        <a href="{{www}}toolkit/grids.html">Grids</a>
+                        <a href="{{www}}toolkit/colors.html">Colors</a>
+                        <a href="{{www}}toolkit/type.html">Type</a>
+                        <a class="selected" href="{{www}}toolkit/icons.html">Icons</a>
+                        <a href="{{www}}toolkit/elements.html">Elements</a>
+                        <a href="{{www}}toolkit/components.html">Components</a>
+                    </nav>
+                </div>
+            </div>
+
+            <main id="main" tabindex="-1">
+                <section>
+                    <h1 class="toolkit-heading-1">Sprites</h1>
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <table class="table-1">
+                                <caption>sprite contents</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">image</th>
+                                        <th scope="col">scss</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="toolkit-graphic-css3-1">css3 graphic</span></td>
+                                        <td>%graphic-css3</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="toolkit-graphic-html5-1">html5 graphic</span></td>
+                                        <td>%graphic-html5</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2">
+                                            <p><strong>Source Code</strong></p>
+                                            <p>style: <a href="{{webRepo}}app/assets/style/base/sprites/_sprites.scss">_sprites.scss</a></p>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <hr class="toolkit-rule-1">
+
+            {{>toolkit/footer-1}}
+
+        </div>
+
+        {{#if scripts.global}}
+        {{> element/script script=scripts.global}}
+        {{/if}}
+        {{#if scripts.section}}
+        {{> element/script script=scripts.section}}
+        {{/if}}
+        {{#if scripts.page}}
+        {{> element/script script=scripts.page}}
+        {{/if}}
+
+    </body>
+</html>

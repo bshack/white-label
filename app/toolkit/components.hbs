@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html id="toolkit-components" lang="en-US" dir="ltr">
+    {{> element/head secondaryCSS='toolkit'}}
+    <body itemscope itemtype="http://schema.org/WebPage">
+
+        <div class="wrapper">
+
+            {{>toolkit/accessibility-skip-to-element-1 id='skip-to-content' url='#main' title='skip to content'}}
+
+            <header class="toolkit-header-1">
+                <button aria-expanded="false">main menu toggle</button>
+                <div class="row">
+                    <div class="small-12 columns">
+                        <a href="{{www}}toolkit">Toolkit</a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="sticky-1">
+                <div class="sticky-1-wrapper">
+                    <nav class="toolkit-nav-1" tabindex="-1">
+                        <a href="{{www}}toolkit">Home</a>
+                        <a href="{{www}}toolkit/grids.html">Grids</a>
+                        <a href="{{www}}toolkit/colors.html">Colors</a>
+                        <a href="{{www}}toolkit/type.html">Type</a>
+                        <a href="{{www}}toolkit/icons.html">Icons</a>
+                        <a href="{{www}}toolkit/elements.html">Elements</a>
+                        <a class="selected" href="{{www}}toolkit/components.html">Components</a>
+                    </nav>
+                </div>
+            </div>
+
+            <main id="main" tabindex="-1">
+                <section>
+                    <h1 class="toolkit-heading-1">Components</h1>
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <h2 class="toolkit-heading-2">Forms</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-12 medium-7 columns">
+                            <h3 class="toolkit-heading-3">form-1</h3>
+                            <form class="form-1" id="form-1-example" name="form-1-example">
+                                <fieldset class="fieldset-1">
+                                    <legend class="legend-1">Tell us about your vehicle</legend>
+                                    <p>{{> toolkit/label-1 title='What is the make of the vehicle?' for='input-text-1-example'}}</p>
+                                    <p>{{> toolkit/input-text-1 id='input-text-1-example' name='input-text-1-example' placeholder='i.e. Buick' type='text' required=true}}</p>
+                                    <p>{{> toolkit/label-1 title='what type of vehicle is it?' for='select-1-example'}}</p>
+                                    <p>{{> toolkit/select-1 select-1 id='select-1-example' name='select-1-example' required=true}}</p>
+                                    <p id="radio-group-label">Do you own or lease the vehicle?</p>
+                                    <p>{{> toolkit/label-1 title='own' for='input-radio-1-example-1'}}</p>
+                                    <p>{{> toolkit/input-radio-1 id='input-radio-1-example-1' name='radio-example' labelledby='radio-group-label'}}</p>
+                                    <p>{{> toolkit/label-1 title='lease' for='input-radio-1-example-2'}}</p>
+                                    <p>{{> toolkit/input-radio-1 id='input-radio-1-example-2' name='radio-example' labelledby='radio-group-label'}}</p>
+                                    <p>{{> toolkit/label-1 title='please provide any additonal comments:' for='textarea-1-example'}}</p>
+                                    <p>{{> toolkit/textarea-1 id='textarea-1-example' name='textarea-1-example' placeholder='please be detailed' required=true}}</p>
+                                </fieldset>
+                                <fieldset class="fieldset-1">
+                                    <legend class="legend-1">Agree to terms</legend>
+                                    <p>{{> toolkit/label-1 title='I agree to terms and conditions.' for='input-checkbox-1-example'}}</p>
+                                    <p>{{> toolkit/input-checkbox-1 id='input-checkbox-1-example' name='checkbox-example' checked=true required=true}}</p>
+                                </fieldset>
+                                <p>{{> toolkit/button-1 id='button-1' type='submit' title='save your changes'}}</p>
+                            </form>
+                            <h4 class="toolkit-heading-4">Source Code</h4>
+                            <ul class="list-1">
+                                <li>script: <a href="{{webRepo}}app/assets/script/view/toolkit/components/form-1.js">form-1.js</a></li>
+                            </ul>
+                        </div>
+                        <aside class="small-12 medium-5 columns">
+                            <h3 class="toolkit-heading-3">Accessibility</h3>
+                            <h4 class="toolkit-heading-4">Gherkin</h4>
+                            <div class="toolkit-gherkin-1">
+                                <p>GIVEN I am a screen reader user<br>
+                                WHEN I submit a form with validation errors<br>
+                                THEN I will be focused on the first form field in error state<br>
+                                THEN I will hear the label for that form field<br>
+                                THEN I will hear if the form field is required<br>
+                                THEN I will hear a description of how to fix the error.
+                                </p>
+                            </div>
+                        </aside>
+                    </div>
+                    <hr class="toolkit-rule-1">
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <h2 class="toolkit-heading-2">Modals</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-12 medium-7 columns">
+                            <h3 class="toolkit-heading-3">modal-1</h3>
+                            <p><button class="button-1" data-modal-open="modal-example-1">view disclosures</button></p>
+                            <h4 class="toolkit-heading-4">Source Code</h4>
+                            <ul class="list-1">
+                                <li>style: <a href="{{webRepo}}app/assets/style/base/components/_modal-1.scss">_modal-1.scss</a></li>
+                                <li>script: <a href="{{webRepo}}app/assets/script/view/toolkit/components/modal-open-1.js">modal-open-1.js</a>, <a href="{{webRepo}}app/assets/script/view/toolkit/components/modal-1.js">modal-1.js</a></li>
+                            </ul>
+                        </div>
+                        <aside class="small-12 medium-5 columns">
+                            <h3 class="toolkit-heading-3">Accessibility</h3>
+                            <h4 class="toolkit-heading-4">Gherkin</h4>
+                            <div class="toolkit-gherkin-1">
+                                <p>GIVEN I am a screen reader user<br>
+                                WHEN I activate a button to call a dialog (the control is NOT a link)<br>
+                                THEN the keyboard focus goes to the active dialog<br>
+                                AND I hear the screen reader read the title of the dialog<br>
+                                (AND the button in default focus, if applicable)<br>
+                                AND I cannot escape the dialog with the tab key<br>
+                                AND I can escape the dialog with the escape key<br>
+                                AND WHEN I close the dialog, the focus goes back to the original button<br>
+                                (OR to the most appropriate place, if the button is not appropriate)</p>
+                            </div>
+                        </aside>
+                    </div>
+                    <hr class="toolkit-rule-1">
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <h2 class="toolkit-heading-2">Tab Panels</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-12 medium-7 columns">
+                            <h3 class="toolkit-heading-3">tabpanel-1</h3>
+                            <div class="tabpanel-1">
+                                <ul role="tablist">
+                                    <li id="tab-1" role="tab" aria-controls="panel-1" aria-selected="true" tabindex="0">dashboard</a></li>
+                                    <li id="tab-2" role="tab" aria-controls="panel-2" aria-selected="false" tabindex="-1">account</a></li>
+                                    <li id="tab-3" role="tab" aria-controls="panel-3" aria-selected="false" tabindex="-1">services</a></li>
+                                </ul>
+                                <div id="panel-1" aria-labelledby="tab-1" role="tabpanel" aria-hidden="false">
+                                    <p>dashboard landing content</p>
+                                </div>
+                                <div id="panel-2" aria-labelledby="tab-2" role="tabpanel" aria-hidden="true">
+                                    <p>account content</p>
+                                </div>
+                                <div id="panel-3" aria-labelledby="tab-3" role="tabpanel" aria-hidden="true">
+                                    <p>services content</p>
+                                </div>
+                            </div>
+                            <h4 class="toolkit-heading-4">Source Code</h4>
+                            <ul class="list-1">
+                                <li>style: <a href="{{webRepo}}app/assets/style/base/components/_tabpanel-base-1.scss">_tabpanel-base-1.scss</a>, <a href="{{webRepo}}app/assets/style/base/components/_tabpanel-1.scss">_tabpanel-1.scss</a></li>
+                                <li>script: <a href="{{webRepo}}app/assets/script/view/toolkit/components/tabpanel-1.js">tabpanel-1.js</a></li>
+                            </ul>
+                            <h3 class="toolkit-heading-3">tabpanel-2</h3>
+                            <div class="tabpanel-2">
+                                <div role="tablist">
+                                    <a id="tab-4" role="tab" aria-controls="panel-4" aria-selected="true" tabindex="0">dashboard</a>
+                                    <div id="panel-4" aria-labelledby="tab-4" role="tabpanel" aria-hidden="false">
+                                        <p>dashboard landing content</p>
+                                    </div>
+                                    <a id="tab-5" role="tab" aria-controls="panel-5" aria-selected="false" tabindex="-1">account</a>
+                                    <div id="panel-5" aria-labelledby="tab-5" role="tabpanel" aria-hidden="true">
+                                        <p>account content</p>
+                                    </div>
+                                    <a id="tab-6" role="tab" aria-controls="panel-6" aria-selected="false" tabindex="-1">services</a>
+                                    <div id="panel-6" aria-labelledby="tab-6" role="tabpanel" aria-hidden="true">
+                                        <p>services content</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="toolkit-heading-4">Source Code</h4>
+                            <ul class="list-1">
+                                <li>style: <a href="{{webRepo}}app/assets/style/base/components/_tabpanel-base-1.scss">_tabpanel-base-1.scss</a>, <a href="{{webRepo}}app/assets/style/base/components/_tabpanel-2.scss">_tabpanel-2.scss</a></li>
+                                <li>script: <a href="{{webRepo}}app/assets/script/view/toolkit/components/tabpanel-1.js">tabpanel-1.js</a></li>
+                            </ul>
+                        </div>
+                        <aside class="small-12 medium-5 columns">
+                            <h3 class="toolkit-heading-3">Accessibility</h3>
+                            <h4 class="toolkit-heading-4">Gherkin</h4>
+                            <div class="toolkit-gherkin-1">
+                                <p>GIVEN I am a screen reader user<br>
+                                WHEN I navigate to a tabpanel widget with the tab key, the focus should land on the active tab.<br>
+                                WHEN I hit tab again, the focus should go past the remaining tabs to the next focusable item (beyond the tablist).<br>
+                                IF I need to navigate within the tabs, when the keyboard focus is on the active tab, I can use the right arrow key to go forward through the tabs, or the left arrow key to go backward through tabs.</p>
+                            </div>
+                            <div class="toolkit-gherkin-1">
+                                <p>GIVEN I am a screen reader user<br>
+                                WHEN I land on the active tab using the tab key, the screen reader reads the label for the tab, it says "tab," it says how many tabs are in the group,<br>
+                                AND which tab it is (e.g. "tab 1 of 4")<br>
+                                AND it says "selected." When I navigate with the arrow keys to other tabs, it says all of the above plus gives the accurate location (e.g. "tab 2 of 4").</p>
+                            </div>
+                        </aside>
+                    </div>
+                    <hr class="toolkit-rule-1">
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <h2 class="toolkit-heading-2">Accessible Ajax</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-12 medium-7 columns">
+                            <h3 class="toolkit-heading-3">accessiblity-ajax-1</h3>
+                            <p><button id="accessible-ajax-example-button" class="button-1">click to load asynchronous content</button></p>
+                            <h4 class="toolkit-heading-4">Source Code</h4>
+                            <ul class="list-1">
+                                <li>script: <a href="{{webRepo}}app/assets/script/view/toolkit/utilities/accessiblity-ajax-1.js">accessiblity-ajax-1.js</a>, <a href="{{webRepo}}app/assets/script/view/toolkit/utilities/accessiblity-speaker-1.js">accessiblity-speaker-1.js</a></li>
+                            </ul>
+                        </div>
+                        <aside class="small-12 medium-5 columns">
+                            <h3 class="toolkit-heading-3">Accessibility</h3>
+                            <h4 class="toolkit-heading-4">Gherkin</h4>
+                            <div class="toolkit-gherkin-1">
+                                <p>GIVEN I am a screen reader user<br>
+                                WHEN I click a button with that executes an ajax request<br>
+                                THEN IF the request response is slow I will hear that content is loading before the request is complete<br>
+                                THEN I will hear a message that content has been loaded after the request is complete<br>
+                                AND I will see focus visual change<br>
+                                AND I will hear the new content added to the page</p>
+                            </div>
+                        </aside>
+                    </div>
+                    <hr class="toolkit-rule-1">
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <h2 class="toolkit-heading-2">Video Players</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-12 medium-7 columns">
+                            <h3 class="toolkit-heading-3">youtube-player-1</h3>
+                            {{> toolkit/youtube-player-1 widescreen=true}}
+                            <h4 class="toolkit-heading-4">Source Code</h4>
+                            <ul class="list-1">
+                                <li>script: <a href="{{webRepo}}app/assets/script/view/toolkit/api/youtube-api-1.js">youtube-api-1.js</a>, <a href="{{webRepo}}app/assets/script/view/toolkit/components/youtube-player-1.js">youtube-player-1.js</a></li>
+                            </ul>
+                        </div>
+                        <aside class="small-12 medium-5 columns">
+                            <h3 class="toolkit-heading-3">Accessibility</h3>
+                            <h4 class="toolkit-heading-4">Gherkin</h4>
+                            <div class="toolkit-gherkin-1">
+                                <p>GIVEN I am a screen reader user<br>
+                                WHEN I navigate to the iframe with my keyboard<br>
+                                THEN I will hear 'YouTube video player'<br>
+                                AND I will be able to navigate the iframe content</p>
+                            </div>
+                        </aside>
+                    </div>
+                </section>
+            </main>
+
+            <hr class="toolkit-rule-1">
+
+            {{>toolkit/footer-1}}
+
+        </div>
+
+        {{#if scripts.global}}
+        {{> element/script script=scripts.global}}
+        {{/if}}
+        {{#if scripts.section}}
+        {{> element/script script=scripts.section}}
+        {{/if}}
+        {{#if scripts.page}}
+        {{> element/script script=scripts.page}}
+        {{/if}}
+
+    </body>
+</html>

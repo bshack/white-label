@@ -37,7 +37,7 @@
     {{> element/meta property='og:url' content=og.url}}
     {{/if}}
     {{#if og.image}}
-    <meta property="og:image" content="{{cdn}}assets/image/{{og.image}}">
+    <meta content="{{cdn}}assets/image/{{og.image}}" property="og:image">
     {{/if}}
     {{#if og.site_name}}
     {{> element/meta property='og:site_name' content=og.site_name}}

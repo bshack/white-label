@@ -1,0 +1,16 @@
+{
+    "title":"Icons - Toolkit",
+    "styles":{
+        "all":{
+            "global":"assets/style/global.css",
+            "section":"assets/style/toolkit.css"
+        },
+        "print":{
+            "global":"assets/style/print.css"
+        }
+    },
+    "scripts":{
+        "global":"assets/script/global.compiled.js",
+        "section":"assets/script/toolkit.compiled.js"
+    }
+}
