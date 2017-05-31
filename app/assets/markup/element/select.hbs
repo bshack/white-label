@@ -1,0 +1,35 @@
+<select
+    {{#if this.id}}
+    id="{{this.id}}"
+    {{/if}}
+    {{#if this.name}}
+    name="{{this.name}}"
+    {{/if}}
+    {{#if this.class}}
+    class="{{this.class}}"
+    {{/if}}
+    {{#if this.required}}
+    required
+    aria-required="true"
+    {{/if}}
+    {{#if this.multiple}}
+    multiple='multiple'
+    {{/if}}
+    {{#if this.disabled}}
+    disabled
+    aria-disabled="true"
+    {{/if}}
+    {{#if this.aria-label}}
+    aria-label="{{this.aria-label}}"
+    {{/if}}
+>
+    {{#if this.default}}
+    <option value="{{this.default.value}}">{{this.default.name}}</option>
+    <option value="" disabled>--</option>
+    {{else}}
+    <option value="">please make a selection</option>
+    {{/if}}
+    {{#each this.data}}
+    <option value="{{this.value}}"{{#if this.selected}} selected{{/if}}>{{this.name}}</option>
+    {{/each}}
+</select>

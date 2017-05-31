@@ -84,13 +84,31 @@
             markup: {
                 // htmllint config file
                 htmlLint: '.htmllintrc',
+                // glob of handlebars templates
+                source: [
+                    'app/**/*.hbs',
+                    'app/**/*.handlebars',
+                    '!app/assets/**',
+                    '!app/report/**',
+                    '!app/service/**'
+                ],
                 // glob of generated html files
                 destination: [
                     'app/**/*.html',
                     '!app/assets/**',
                     '!app/report/**',
                     '!app/service/**'
-                ]
+                ],
+                partials: {
+                    //glob of handlebars partials
+                    source: [
+                        'app/assets/markup'
+                    ],
+                    // glob of handlebars partials, needed for watch task
+                    watch: 'app/assets/markup/**',
+                    // where to save generated js templates
+                    destination: 'app/assets/script/template'
+                }
             },
             // ### font
             font: {
@@ -110,7 +128,6 @@
                     '*.js',
                     'gulp/tasks/*.js',
                     'gulp/*.js',
-                    'gulp/options/.js',
                     'app/assets/script/**',
                     'app/assets/test/spec/*.js',
                     'app/assets/test/*.js',

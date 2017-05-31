@@ -16,3 +16,19 @@ gulp.task('cleanDeploy', (done) => {
     return gulp.src(config.path.build, {read: false})
         .pipe(rimraf());
 });
+
+// ## cleanTemplate Task
+
+gulp.task('cleanTemplate', (done) => {
+    'use strict';
+    return gulp.src(config.path.markup.partials.destination, {read: false})
+       .pipe(rimraf());
+});
+
+// ## cleanHTML Task
+
+gulp.task('cleanHTML', (done) => {
+    'use strict';
+    return gulp.src(config.path.markup.destination, {read: false})
+       .pipe(rimraf());
+});

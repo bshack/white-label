@@ -6,6 +6,7 @@ const gulp = require('gulp');
 const htmlmin = require('gulp-htmlmin');
 const sourcemaps = require('gulp-sourcemaps');
 const imagemin = require('gulp-imagemin');
+const stripDebug = require('gulp-strip-debug');
 const uglify = require('gulp-uglify');
 const plumber = require('gulp-plumber');
 const sitemap = require('gulp-sitemap');
@@ -23,7 +24,7 @@ const config = require('../config');
 gulp.task('deploy', callback => {
     //runSequence support is only for gulp 3.x, 4.x natively support this functionalty
     return runSequence(
-        ['cleanDeploy'],
+        ['cleanDeploy', 'cleanTemplate'],
         ['data'],
         ['markup', 'style', 'script', 'documentation'],
         ['accessibility'],
@@ -123,6 +124,8 @@ gulp.task('minifyScript', () => {
         //support for better error handling
         .pipe(plumber())
         .pipe(sourcemaps.init())
+        //remove console.log and alert
+        .pipe(stripDebug())
         //minify
         .pipe(uglify())
         //write sourcemaps
