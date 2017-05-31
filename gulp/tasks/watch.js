@@ -22,7 +22,6 @@ const reload = () => {
 gulp.task('markup-watch', ['markup', 'script'], reload);
 gulp.task('style-watch', ['style'], reload);
 gulp.task('script-watch', ['script'], reload);
-gulp.task('partials-watch', ['script', 'markup'], reload);
 gulp.task('image-watch', reload);
 gulp.task('data-watch', ['markup', 'script'], reload);
 
@@ -66,7 +65,7 @@ gulp.task('watch', ['build'], () => {
     // watch handlebars partials
     gulp.watch(
         config.path.markup.partials.watch,
-        ['partials-watch']
+        ['markup-watch']
     );
 
     //watch images

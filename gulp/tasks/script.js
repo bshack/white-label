@@ -34,7 +34,7 @@ gulp.task('scriptLint', () => {
 // ## Script Task
 // complile the modules together, first lint .js files, then build modernizr and compile clientside templates
 
-gulp.task('script', ['scriptLint', 'scriptModernizr'], callback => {
+gulp.task('script', ['scriptLint', 'markupTemplate', 'scriptModernizr'], callback => {
 
     const entries = [];
     const entriesDestination = [];
