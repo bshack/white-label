@@ -7,8 +7,6 @@ import View from 'white-label-view';
         constructor() {
             super();
             this.parentElement = document.querySelector('body');
-            //this.template = myTemplate;
-            console.log(this);
         }
         initialize() {
         }

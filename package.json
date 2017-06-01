@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "contributors": [
     {
       "name": "Bill Shackelford",
@@ -90,6 +90,7 @@
     "gulp-notify": "x.x.x",
     "gulp-plumber": "x.x.x",
     "gulp-prettify": "x.x.x",
+    "gulp-rename": "x.x.x",
     "gulp-rimraf": "x.x.x",
     "gulp-sass": "x.x.x",
     "gulp-sass-lint": "x.x.x",
