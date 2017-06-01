@@ -1,5 +1,4 @@
 import View from 'white-label-view';
-// import myTemplate from '../template/element/a';
 
 (() => {
     'use strict';

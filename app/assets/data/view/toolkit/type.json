@@ -1,5 +1,6 @@
 {
     "title":"Type - Toolkit",
+    "webRepo": "https://github.com/bshack/white-label",
     "styles":{
         "all":{
             "global":"assets/style/global.css",

@@ -114,6 +114,7 @@
     "karma-jasmine": "x.x.x",
     "karma-phantomjs-launcher": "x.x.x",
     "karma-safari-launcher": "x.x.x",
+    "lodash": "x.x.x",
     "modernizr": "x.x.x",
     "moment": "x.x.x",
     "numeraljs": "x.x.x",
