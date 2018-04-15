@@ -1,7 +1,9 @@
 %font-base-1 {
     color: $black-1;
     font-size: rem-calc(16);
+    // sass-lint:disable no-misspelled-properties
     font-smoothing: antialiased;
+    // sass-lint:enable no-misspelled-properties
     font-style: normal;
     text-rendering: optimizeLegibility;
 }

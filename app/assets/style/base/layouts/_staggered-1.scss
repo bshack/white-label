@@ -7,7 +7,7 @@
 
         > div {
             border: rem-calc(2) solid $black-1;
-            column-break-inside: avoid;
+            break-inside: avoid;
             display: inline-block;
             padding: rem-calc(10);
             width: 100%;

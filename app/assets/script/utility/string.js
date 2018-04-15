@@ -20,7 +20,7 @@ const parser = new DOMParser();
 
         //qet data from url query string
         getQueryStringParamater(name, url) {
-            name = name.replace(/[\[\]]/g, '\\$&');
+            name = name.replace(/[[\]]/g, '\\$&');
             let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
             let results = regex.exec(url);
             if (!results) {

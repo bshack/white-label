@@ -172,7 +172,7 @@
                         'app/assets/style/*.scss',
                         'app/assets/style/**/*.scss'
                     ],
-                     // glob of all css files
+                    // glob of all css files
                     css: [
                         'app/assets/style/*.css'
                     ]

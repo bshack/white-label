@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "homepage": "https://github.com/bshack/white-label",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "contributors": [
     {
       "name": "Bill Shackelford",
@@ -10,8 +10,8 @@
     }
   ],
   "engines": {
-    "node": ">=4.0",
-    "npm": ">=2.0"
+    "node": ">=8.0",
+    "npm": ">=5.0"
   },
   "description": "Scaffolding for developing and deploying sites.",
   "main": "app/index.html",
@@ -54,10 +54,12 @@
     ]
   },
   "dependencies": {
+    "aws-sdk": "x.x.x",
+    "babel-core": "^6.26.0",
     "babel-plugin-transform-es2015-modules-commonjs": "x.x.x",
     "babel-plugin-transform-es2015-modules-umd": "x.x.x",
     "babel-polyfill": "x.x.x",
-    "babel-preset-es2015": "x.x.x",
+    "babel-preset-env": "x.x.x",
     "babel-preset-react": "x.x.x",
     "babelify": "x.x.x",
     "browser-sync": "x.x.x",
@@ -65,16 +67,19 @@
     "browserify-istanbul": "x.x.x",
     "browserify-shim": "x.x.x",
     "chalk": "x.x.x",
+    "dw-utils": "x.x.x",
     "eslint": "x.x.x",
     "eslint-plugin-react": "x.x.x",
     "events": "x.x.x",
     "factor-bundle": "x.x.x",
+    "fastclick": "x.x.x",
     "foundation-sites": "x.x.x",
     "glob": "x.x.x",
     "gulp": "x.x.x",
     "gulp-accessibility": "x.x.x",
     "gulp-autoprefixer": "x.x.x",
     "gulp-callback": "x.x.x",
+    "gulp-cli": "^1.4.0",
     "gulp-compile-handlebars": "x.x.x",
     "gulp-concat": "x.x.x",
     "gulp-cssnano": "x.x.x",
@@ -103,8 +108,11 @@
     "gulp-wrapper": "x.x.x",
     "handlebars": "x.x.x",
     "http-proxy-middleware": "x.x.x",
+    "imagesloaded": "x.x.x",
     "istanbul": "x.x.x",
     "jasmine-core": "x.x.x",
+    "jquery": "x.x.x",
+    "jquery-validation": "x.x.x",
     "karma": "x.x.x",
     "karma-browserify": "x.x.x",
     "karma-chrome-launcher": "x.x.x",
@@ -120,17 +128,20 @@
     "numeraljs": "x.x.x",
     "path": "x.x.x",
     "phantomjs-prebuilt": "x.x.x",
+    "picturefill": "x.x.x",
+    "raven-js": "x.x.x",
     "react": "x.x.x",
     "react-dom": "x.x.x",
     "require-dir": "x.x.x",
     "run-sequence": "x.x.x",
-    "shrinkwrap": "x.x.x",
+    "slick-carousel": "1.6.x",
     "watchify": "x.x.x",
     "white-label-model": "x.x.x",
     "white-label-view": "x.x.x",
     "yargs": "x.x.x",
     "yeoman-generator": "x.x.x",
-    "yosay": "x.x.x"
+    "yosay": "x.x.x",
+    "zenscroll": "x.x.x"
   },
   "devDependencies": {}
 }

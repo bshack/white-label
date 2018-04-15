@@ -22,7 +22,7 @@ gulp.task('cleanDeploy', (done) => {
 gulp.task('cleanTemplate', (done) => {
     'use strict';
     return gulp.src(config.path.markup.partials.destination, {read: false})
-       .pipe(rimraf());
+        .pipe(rimraf());
 });
 
 // ## cleanHTML Task
@@ -30,5 +30,5 @@ gulp.task('cleanTemplate', (done) => {
 gulp.task('cleanHTML', (done) => {
     'use strict';
     return gulp.src(config.path.markup.destination, {read: false})
-       .pipe(rimraf());
+        .pipe(rimraf());
 });

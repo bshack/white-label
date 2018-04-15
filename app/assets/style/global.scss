@@ -3,11 +3,12 @@
 // ## Vendors
 
 // ## foundation
+$grid-row-width: 100%;
+$breakpoint-classes: (small medium large xlarge);
 @import '../../../node_modules/foundation-sites/scss/foundation';
 @include foundation-global-styles;
-//@include foundation-grid;
 @include foundation-flex-grid;
-
+@include foundation-xy-grid-classes;
 // ## Define Fonts
 @import '../font/opensans/stylesheet';
 
