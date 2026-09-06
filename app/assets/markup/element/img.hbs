@@ -11,5 +11,20 @@
     {{#if this.image}}
     src="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.image}}"
     {{/if}}
+    {{#if this.width}}
+    width="{{this.width}}"
+    {{/if}}
+    {{#if this.height}}
+    height="{{this.height}}"
+    {{/if}}
+    {{#if this.loading}}
+    loading="{{this.loading}}"
+    {{/if}}
+    {{#if this.decoding}}
+    decoding="{{this.decoding}}"
+    {{/if}}
+    {{#if this.fetchpriority}}
+    fetchpriority="{{this.fetchpriority}}"
+    {{/if}}
     alt="{{#if this.alt}}{{this.alt}}{{/if}}"
 >

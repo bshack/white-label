@@ -1,3 +1,8 @@
+@use "../colors/colors";
+@use '../utilities/functions' as *;
+@use '../type/text' as *;
+@use '../utilities/accessibility' as *;
+
 // ## modals
 
 %modal-1 {
@@ -17,7 +22,7 @@
 
     > .modal-1-content {
 
-        background-color: $white-1;
+        background-color: colors.$white-1;
         height: 100%;
         margin: 0 auto;
         position: absolute;
@@ -30,7 +35,7 @@
         }
 
         > * {
-            background-color: $white-1;
+            background-color: colors.$white-1;
         }
 
     }
@@ -39,7 +44,7 @@
 
         @extend %accessibility-hidden-text-1;
 
-        background-color: $grey-1;
+        background-color: colors.$grey-1;
         display: block;
         height: 100%;
         left: 0;

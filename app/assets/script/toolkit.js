@@ -1,12 +1,9 @@
-import 'babel-polyfill';
-import modernizr from 'modernizr';
-import mediator from './mediator/global';
 import APIYoutube from './api/youtube';
-import ViewYoutubePlayer1 from './view/toolkit/youtube-player-1';
-
-const apiYoutube = new APIYoutube();
 
 (function() {
     'use strict';
-    apiYoutube.initialize();
+    // Avoid downloading the third-party API on toolkit pages that have no player.
+    if (document.querySelector('.youtube-player-1')) {
+        new APIYoutube().initialize();
+    }
 })();

@@ -1,12 +1,12 @@
+@use "base/colors/colors";
+
 @charset 'UTF-8';
 
 // ## Vendors
 
-// ## foundation
-@import '../../../node_modules/foundation-sites/scss/foundation';
-
 // ## toolkit
-@import 'base/toolkit';
+@use 'base/toolkit' as *;
+@use 'base/utilities/functions' as *;
 
 .toolkit {
 
@@ -76,8 +76,8 @@
 
     &-heading-1 {
 
-        background-color: $grey-2;
-        color: $white-1;
+        background-color: colors.$grey-2;
+        color: colors.$white-1;
         font-size: rem-calc(22);
         margin: 0 0 rem-calc(60);
         padding: rem-calc(87) 0 rem-calc(40);
@@ -102,7 +102,7 @@
         margin-top: rem-calc(60);
 
         span {
-            color: $grey-3;
+            color: colors.$grey-3;
         }
 
     }
@@ -118,14 +118,14 @@
 
     &-header-1 {
 
-        background-color: $black-1;
+        background-color: colors.$black-1;
         position: fixed;
         top: 0;
         width: 100%;
         z-index: 5;
 
         @include breakpoint(medium up) {
-            background-color: $white-1;
+            background-color: colors.$white-1;
             position: static;
         }
 
@@ -136,7 +136,7 @@
             &:active,
             &:focus,
             &:hover {
-                background-color: $grey-2;
+                background-color: colors.$grey-2;
             }
 
             @include breakpoint(medium up) {
@@ -146,7 +146,7 @@
         }
 
         a {
-            color: $white-1;
+            color: colors.$white-1;
             display: block;
             font-size: rem-calc(18);
             font-weight: 700;
@@ -157,18 +157,18 @@
 
             &:hover,
             &:focus {
-                color: $grey-5;
+                color: colors.$grey-5;
             }
 
             @include breakpoint(medium up) {
-                color: $black-1;
+                color: colors.$black-1;
                 font-size: rem-calc(30);
                 line-height: rem-calc(30);
                 margin: rem-calc(52) 0;
 
                 &:hover,
                 &:focus {
-                    color: $grey-2;
+                    color: colors.$grey-2;
                 }
 
             }
@@ -179,10 +179,10 @@
 
     &-nav-1 {
 
-        background-color: $black-1;
-        border-bottom: rem-calc(1) solid $black-1;
-        border-top: rem-calc(1) solid $black-1;
-        color: $white-1;
+        background-color: colors.$black-1;
+        border-bottom: rem-calc(1) solid colors.$black-1;
+        border-top: rem-calc(1) solid colors.$black-1;
+        color: colors.$white-1;
         display: none;
         height: 100%;
         position: fixed;
@@ -210,8 +210,8 @@
 
         a {
 
-            background-color: $black-1;
-            color: $white-1;
+            background-color: colors.$black-1;
+            color: colors.$white-1;
             display: inline-block;
             line-height: rem-calc(45);
             padding: 0 rem-calc(15);
@@ -222,8 +222,8 @@
             &.selected,
             &:hover,
             &:focus {
-                background-color: $white-1;
-                color: $black-1;
+                background-color: colors.$white-1;
+                color: colors.$black-1;
             }
 
             @include breakpoint(medium up) {
@@ -239,8 +239,8 @@
             }
 
             &[aria-selected='true'] {
-                background-color: $white-1;
-                color: $black-1;
+                background-color: colors.$white-1;
+                color: colors.$black-1;
             }
 
         }
@@ -257,39 +257,39 @@
         height: rem-calc(125);
 
         &.black-1 {
-            background-color: $black-1;
+            background-color: colors.$black-1;
         }
 
         &.grey-1 {
-            background-color: $grey-1;
+            background-color: colors.$grey-1;
         }
 
         &.grey-2 {
-            background-color: $grey-2;
+            background-color: colors.$grey-2;
         }
 
         &.grey-3 {
-            background-color: $grey-3;
+            background-color: colors.$grey-3;
         }
 
         &.grey-4 {
-            background-color: $grey-4;
+            background-color: colors.$grey-4;
         }
 
         &.grey-5 {
-            background-color: $grey-5;
+            background-color: colors.$grey-5;
         }
 
         &.grey-6 {
-            background-color: $grey-6;
+            background-color: colors.$grey-6;
         }
 
         &.white-1 {
-            background-color: $white-1;
+            background-color: colors.$white-1;
         }
 
         &.red-1 {
-            background-color: $red-1;
+            background-color: colors.$red-1;
         }
 
     }
@@ -299,11 +299,11 @@
         overflow: auto;
 
         .row {
-            background-color: $grey-6;
+            background-color: colors.$grey-6;
         }
 
-        .columns {
-            border: rem-calc(2) $black-1 solid;
+        [class*='col-'] {
+            border: rem-calc(2) colors.$black-1 solid;
             padding: rem-calc(10);
         }
 
@@ -325,7 +325,7 @@
 
             > .panel-content {
 
-                color: $white-1;
+                color: colors.$white-1;
                 padding-top: 50vh;
                 text-align: center;
                 text-transform: uppercase;

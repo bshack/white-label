@@ -1,3 +1,6 @@
+@use "../colors/colors";
+@use 'functions' as *;
+
 // ## accessibility hidden text
 // hide text off screen for sighted users and leave accessible for screen readers
 
@@ -38,8 +41,8 @@
 
     @extend %accessibility-focus-1;
 
-    background-color: $white-1;
-    color: $black-1;
+    background-color: colors.$white-1;
+    color: colors.$black-1;
     display: block;
     padding: rem-calc(10);
     text-align: center;
