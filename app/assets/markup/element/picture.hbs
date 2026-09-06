@@ -9,17 +9,47 @@
     {{/if}}
     alt="{{#if this.alt}}{{this.alt}}{{/if}}"
     >
+    {{#if this.imageSmallAvif}}
+    <source type="image/avif" media="(max-width: 40rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageSmallAvif}}">
+    {{/if}}
+    {{#if this.imageSmallWebp}}
+    <source type="image/webp" media="(max-width: 40rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageSmallWebp}}">
+    {{/if}}
     {{#if this.imageSmall}}
     <source media="(max-width: 40rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageSmall}}">
+    {{/if}}
+    {{#if this.imageMediumAvif}}
+    <source type="image/avif" media="(max-width: 64rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageMediumAvif}}">
+    {{/if}}
+    {{#if this.imageMediumWebp}}
+    <source type="image/webp" media="(max-width: 64rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageMediumWebp}}">
     {{/if}}
     {{#if this.imageMedium}}
     <source media="(max-width: 64rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageMedium}}">
     {{/if}}
+    {{#if this.imageLargeAvif}}
+    <source type="image/avif" media="(max-width: 75rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageLargeAvif}}">
+    {{/if}}
+    {{#if this.imageLargeWebp}}
+    <source type="image/webp" media="(max-width: 75rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageLargeWebp}}">
+    {{/if}}
     {{#if this.imageLarge}}
     <source media="(max-width: 75rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageLarge}}">
     {{/if}}
+    {{#if this.imageXLargeAvif}}
+    <source type="image/avif" media="(max-width: 90rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageXLargeAvif}}">
+    {{/if}}
+    {{#if this.imageXLargeWebp}}
+    <source type="image/webp" media="(max-width: 90rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageXLargeWebp}}">
+    {{/if}}
     {{#if this.imageXLarge}}
     <source media="(max-width: 90rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageXLarge}}">
+    {{/if}}
+    {{#if this.imageXXLargeAvif}}
+    <source type="image/avif" media="(min-width: 90.001rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageXXLargeAvif}}">
+    {{/if}}
+    {{#if this.imageXXLargeWebp}}
+    <source type="image/webp" media="(min-width: 90.001rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageXXLargeWebp}}">
     {{/if}}
     {{#if this.imageXXLarge}}
     <source media="(min-width: 90.001rem)" srcset="{{#unless this.external}}{{this.cdn}}{{/unless}}{{this.imageXXLarge}}">
