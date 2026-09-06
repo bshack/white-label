@@ -15,6 +15,11 @@ The new build uses:
 - esbuild for JavaScript and JSX bundles
 - Node's built-in test runner
 
+Version 4 replaces Foundation with Bootstrap 5.3.8 and migrates grid markup to
+Bootstrap's `row` and responsive `col-*` classes. Project styles use Sass
+modules, while Bootstrap's compiled CSS is included directly so builds do not
+emit third-party Sass deprecation warnings.
+
 The Yeoman generator no longer installs dependencies automatically. This gives
 you an opportunity to review the generated `package.json` before running
 `npm install`.

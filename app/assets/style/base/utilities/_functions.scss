@@ -1,31 +1,84 @@
+@use "sass:list";
+@use "sass:math";
+@use "sass:meta";
 /// Remove the unit of a length
 /// @param {Number} $number - Number to remove unit from
 /// @return {Number} - Unitless number
 
 $rem-base: 16px;
+$responsive-embed-margin-bottom: 1rem;
+
+/// Contain floated children.
+@mixin clearfix {
+    &::before,
+    &::after {
+        content: ' ';
+        display: table;
+        flex-basis: 0;
+        order: 1;
+    }
+
+    &::after {
+        clear: both;
+    }
+}
+
+/// Create a responsive 4:3 media container.
+@mixin responsive-embed {
+    height: 0;
+    margin-bottom: $responsive-embed-margin-bottom;
+    overflow: hidden;
+    padding-bottom: 75%;
+    position: relative;
+
+    iframe,
+    object,
+    embed,
+    video {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+}
+
+/// Apply content at the Bootstrap breakpoints used by the project templates.
+/// @param {String} $query - Supported query: small only, medium up, or large up
+@mixin breakpoint($query) {
+    @if $query == (small only) {
+        @media print, screen and (max-width: 47.99875em) { @content; }
+    } @else if $query == (medium up) {
+        @media print, screen and (min-width: 48em) { @content; }
+    } @else if $query == (large up) {
+        @media print, screen and (min-width: 62em) { @content; }
+    } @else {
+        @error 'Unsupported breakpoint: #{$query}';
+    }
+}
 
 @function strip-unit($number) {
-    @if type-of($number) == 'number' and not unitless($number) {
-        @return $number / ($number * 0 + 1);
+    @if meta.type-of($number) == 'number' and not math.is-unitless($number) {
+        @return math.div($number, $number * 0 + 1);
     }
 
     @return $number;
 }
 
 @function convert-to-rem($value, $base-value: $rem-base) {
-    $value: strip-unit($value) / strip-unit($base-value) * 1rem;
+    $value: math.div(strip-unit($value), strip-unit($base-value)) * 1rem;
     //@if ($value == 0rem) { $value: 0; } // Turn 0rem into 0
     @return $value;
 }
 
 @function rem-calc($values, $base-value: $rem-base) {
-    $max: length($values);
+    $max: list.length($values);
 
-    @if $max == 1 { @return convert-to-rem(nth($values, 1), $base-value); }
+    @if $max == 1 { @return convert-to-rem(list.nth($values, 1), $base-value); }
 
     $rem-values: ();
     @for $i from 1 through $max {
-        $rem-values: append($rem-values, convert-to-rem(nth($values, $i), $base-value));
+        $rem-values: list.append($rem-values, convert-to-rem(list.nth($values, $i), $base-value));
     }
     @return $rem-values;
 }
@@ -33,13 +86,13 @@ $rem-base: 16px;
 @function em-calc($values) {
     $rem-values: rem-calc($values);
 
-    $max: length($rem-values);
+    $max: list.length($rem-values);
 
-    @if $max == 1 { @return strip-unit(nth($rem-values, 1)) * 1em; }
+    @if $max == 1 { @return strip-unit(list.nth($rem-values, 1)) * 1em; }
 
     $em-values: ();
     @for $i from 1 through $max {
-        $em-values: append($em-values, strip-unit(nth($rem-values, $i)) * 1em);
+        $em-values: list.append($em-values, strip-unit(list.nth($rem-values, $i)) * 1em);
     }
     @return $em-values;
 }

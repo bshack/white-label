@@ -1,3 +1,6 @@
+@use '../utilities/functions' as *;
+@use 'fonts' as *;
+
 %heading-base-1 {
 
     @extend %open-sans-bold;

@@ -2,8 +2,5 @@
 
 // ## Vendors
 
-// ## foundation
-@import '../../../node_modules/foundation-sites/scss/foundation';
-
 // ## toolkit
-@import 'base/toolkit';
+@use 'base/toolkit' as *;

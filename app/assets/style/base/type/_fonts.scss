@@ -1,5 +1,8 @@
+@use "../colors/colors";
+@use '../utilities/functions' as *;
+
 %font-base-1 {
-    color: $black-1;
+    color: colors.$black-1;
     font-size: rem-calc(16);
     // sass-lint:disable no-misspelled-properties
     font-smoothing: antialiased;

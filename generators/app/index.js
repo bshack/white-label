@@ -24,7 +24,7 @@ export default class extends Generator {
             dependencies: {
                 esbuild: '0.28.2',
                 events: '3.3.0',
-                'foundation-sites': '6.9.0',
+                'bootstrap': '5.3.8',
                 handlebars: '4.7.9',
                 lodash: '4.18.1',
                 moment: '2.30.1',

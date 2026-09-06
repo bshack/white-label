@@ -78,7 +78,17 @@ async function compileStyles(outputAssets, production) {
         });
         const destination = path.join(outputAssets, 'style', `${name}.css`);
         await fs.mkdir(path.dirname(destination), {recursive: true});
-        await fs.writeFile(destination, result.css);
+        // Bootstrap publishes compiled CSS, so consuming it avoids recompiling third-party
+        // Sass and keeps dependency deprecation warnings out of project builds.
+        const bootstrapSource = name === 'global'
+            ? (await fs.readFile(
+                path.join(projectRoot, 'node_modules/bootstrap/dist/css/bootstrap.css'), 'utf8'
+            )).replace(/\/\*# sourceMappingURL=bootstrap\.css\.map \*\//, '')
+            : '';
+        const bootstrapCss = production && bootstrapSource
+            ? sass.compileString(bootstrapSource, {style: 'compressed', syntax: 'css'}).css
+            : bootstrapSource;
+        await fs.writeFile(destination, `${bootstrapCss}${bootstrapCss ? '\n' : ''}${result.css}`);
     }
 }
 

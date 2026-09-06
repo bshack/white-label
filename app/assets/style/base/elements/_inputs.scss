@@ -1,3 +1,7 @@
+@use "../colors/colors";
+@use '../utilities/functions' as *;
+@use '../type/text' as *;
+
 %input-base-1 {
 
     @extend %text-1;
@@ -19,8 +23,8 @@
 
     @extend %input-base-1;
 
-    background-color: $red-1;
-    color: $white-1;
+    background-color: colors.$red-1;
+    color: colors.$white-1;
     font-weight: 700;
     margin-top: rem-calc(5);
     padding: rem-calc(10);

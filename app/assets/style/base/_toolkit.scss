@@ -1,39 +1,39 @@
 // ## colors
-@import 'colors/colors';
+@forward 'colors/colors';
 
 // ## fonts
-@import 'type/fonts';
-@import 'type/text';
-@import 'type/headings';
+@forward 'type/fonts';
+@forward 'type/text';
+@forward 'type/headings';
 
 
 // ## utilities
-@import 'utilities/accessibility';
-@import 'utilities/scroll';
-@import 'utilities/type';
+@forward 'utilities/accessibility';
+@forward 'utilities/scroll';
+@forward 'utilities/type';
 
 // ## elements
-@import 'elements/anchors';
-@import 'elements/buttons';
-@import 'elements/fieldsets';
-@import 'elements/inputs';
-@import 'elements/labels';
-@import 'elements/landmarks';
-@import 'elements/legends';
-@import 'elements/lists';
-@import 'elements/pictures';
-@import 'elements/images';
-@import 'elements/tables';
+@forward 'elements/anchors';
+@forward 'elements/buttons';
+@forward 'elements/fieldsets';
+@forward 'elements/inputs';
+@forward 'elements/labels';
+@forward 'elements/landmarks';
+@forward 'elements/legends';
+@forward 'elements/lists';
+@forward 'elements/pictures';
+@forward 'elements/images';
+@forward 'elements/tables';
 
 // ## components
 
-@import 'components/modal-1';
-@import 'components/sticky-1';
-@import 'components/tabpanel-base-1';
-@import 'components/tabpanel-1';
-@import 'components/tabpanel-2';
-@import 'components/youtube-player-1';
+@forward 'components/modal-1';
+@forward 'components/sticky-1';
+@forward 'components/tabpanel-base-1';
+@forward 'components/tabpanel-1';
+@forward 'components/tabpanel-2';
+@forward 'components/youtube-player-1';
 
 // ## layouts
 
-@import 'layouts/staggered-1';
+@forward 'layouts/staggered-1';

@@ -1,3 +1,5 @@
+@use '../type/text' as *;
+
 %label-base-1 {
 
     @extend %text-1;
