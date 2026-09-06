@@ -18,6 +18,8 @@ The project separates source files by responsibility:
 
 The build renders Handlebars pages, compiles Sass, bundles JavaScript with esbuild, copies static assets, and writes the deployment configuration to `assets/data/config.json`. `global.css` includes the complete compiled Bootstrap CSS followed by the project's styles.
 
+Generated formatting utilities use native `Intl` and `Date` APIs, so new projects do not need Lodash, Moment, or Numeral for the included examples.
+
 ## Requirements
 
 - Node.js 20 or newer
@@ -129,6 +131,8 @@ npm run audit
 ## Version 4 migration notes
 
 Version 4 intentionally replaced the unsupported Gulp 3, Babel 6, PhantomJS, Karma, Bower, and legacy plugin pipeline. It also replaced Foundation with Bootstrap 5.3.8 and migrated the grid markup to Bootstrap `row` and responsive `col-*` classes. Projects upgrading from an older major version should treat the build tooling, supported Node.js versions, CSS framework, and generated markup as breaking changes.
+
+Version 4.1 removes Lodash, Moment, and Numeral from generated projects. If application code added its own imports from those packages, either retain the dependency in that application or migrate those calls before upgrading.
 
 ## Related packages
 

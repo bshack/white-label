@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 (() => {
     'use strict';
     module.exports = class {

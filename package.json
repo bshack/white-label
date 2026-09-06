@@ -1,6 +1,6 @@
 {
   "name": "generator-white-label",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "Scaffolding for developing and building static sites.",
   "type": "module",
   "main": "generators/app/index.js",
@@ -23,9 +23,6 @@
     "esbuild": "0.28.2",
     "events": "3.3.0",
     "handlebars": "4.7.9",
-    "lodash": "4.18.1",
-    "moment": "2.30.1",
-    "numeral": "2.0.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sass": "1.104.0",
