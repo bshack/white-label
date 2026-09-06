@@ -49,7 +49,7 @@ async function renderMarkup(config, outputRoot) {
     const pages = (await filesUnder(path.join(projectRoot, 'app')))
         .filter((file) => file.endsWith('.hbs') && !file.includes(`${path.sep}assets${path.sep}`));
 
-    for (const page of pages) {
+    await Promise.all(pages.map(async (page) => {
         const relative = path.relative(path.join(projectRoot, 'app'), page);
         const pageDataPath = path.join(
             projectRoot, 'app/assets/data/view', relative.replace(/\.hbs$/, '.json')
@@ -66,12 +66,12 @@ async function renderMarkup(config, outputRoot) {
         const destination = path.join(outputRoot, relative.replace(/\.hbs$/, '.html'));
         await fs.mkdir(path.dirname(destination), {recursive: true});
         await fs.writeFile(destination, template({...globalData, ...pageData, ...config}));
-    }
+    }));
 }
 
 async function compileStyles(outputAssets, production) {
     const styleRoot = path.join(projectRoot, 'app/assets/style');
-    for (const name of ['global', 'print', 'toolkit']) {
+    await Promise.all(['global', 'print', 'toolkit'].map(async (name) => {
         const result = sass.compile(path.join(styleRoot, `${name}.scss`), {
             loadPaths: [path.join(projectRoot, 'node_modules')],
             style: production ? 'compressed' : 'expanded'
@@ -89,7 +89,7 @@ async function compileStyles(outputAssets, production) {
             ? sass.compileString(bootstrapSource, {style: 'compressed', syntax: 'css'}).css
             : bootstrapSource;
         await fs.writeFile(destination, `${bootstrapCss}${bootstrapCss ? '\n' : ''}${result.css}`);
-    }
+    }));
 }
 
 async function compileScripts(outputAssets, production) {
