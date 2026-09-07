@@ -2,7 +2,7 @@
 export interface BuildConfig {
     cdn: string;
     production: boolean;
-    service: string;
+    siteUrl: string;
     version: string;
     www: string;
 }

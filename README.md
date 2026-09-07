@@ -1,195 +1,114 @@
-# white-label
+# generator-white-label
 
-`white-label` is a Yeoman generator and build system for creating static websites. It provides a working project structure with Handlebars templates, Sass styles, Bootstrap, responsive images, and TypeScript sources compiled to bundled JavaScript.
+`generator-white-label` creates a small, production-oriented static TypeScript site. Version 6 uses Eta templates, Sass, the complete Bootstrap stylesheet, and the white-label model, view, router, and mediator packages. It renders meaningful HTML during the build so content does not depend on JavaScript for accessibility or search discovery.
 
-Use it when you want a small, understandable static-site foundation that you can brand and extend without adopting a full application framework.
-
-## What it builds
-
-The project separates source files by responsibility:
-
-- `app/*.hbs` contains pages.
-- `app/assets/markup` contains reusable Handlebars partials.
-- `app/assets/data/view` contains global and page-specific JSON data.
-- `app/assets/style` contains Sass entry points and partials.
-- `app/assets/script` contains TypeScript and TSX entry points.
-- `app/assets/image` and `app/assets/font` contain static assets.
-- `scripts/build.ts` turns those sources into a deployable `_deploy` directory.
-
-The build renders Handlebars pages, compiles Sass, bundles JavaScript with esbuild, copies static assets, and writes the deployment configuration to `assets/data/config.json`. `global.css` includes the complete compiled Bootstrap CSS followed by the project's styles.
-
-Generated formatting utilities use native `Intl` and `Date` APIs, so new projects do not need Lodash, Moment, or Numeral for the included examples.
+The generated example is the Gold North historical site. It is deliberately substantial enough to exercise the complete stack; replace its editorial content while retaining the tested structure and conventions.
 
 ## Requirements
 
-- Node.js 20 or newer
+- Node.js `^22.18.0` or `>=24.11.0`
 - npm 10 or newer
 
-## Generate a new site
-
-Install Yeoman and the generator, then run it in an empty project directory:
+## Create a site
 
 ```sh
 npm install --global yo generator-white-label
-mkdir my-site
-cd my-site
+mkdir my-site && cd my-site
 yo white-label
-```
-
-The generator copies the `app` and `scripts` directories and creates a project `package.json`. It intentionally does not install dependencies automatically, so you can review that manifest first:
-
-```sh
 npm install
 npm test
 ```
 
-## Build the site
+The generated manifest is intentionally reviewable before installation. Runtime application libraries are in `dependencies`; compilers, Bootstrap source CSS, validation tools, test DOM, and type declarations are in `devDependencies`.
 
-A build with defaults is enough for local inspection:
+## Source layout
 
-```sh
-npm run build
+| Path | Purpose |
+| --- | --- |
+| `app/*.eta` | Eta page templates rendered to HTML |
+| `app/assets/data/view/*.json` | Global and page-specific rendering data |
+| `app/assets/script/*.ts` | Strict browser TypeScript bundled by esbuild |
+| `app/assets/style/*.scss` | Site and print styles built with full Bootstrap CSS |
+| `scripts/build.ts` | Static build, robots, canonical and sitemap generation |
+| `test/` | Integration, WCAG-oriented and search-indexability checks |
+
+No web fonts or font files are included. The starter uses Bootstrap's native system font stack, avoiding a blocking font request and preserving the user's platform typography.
+
+## Eta templates
+
+Eta escapes interpolated values by default:
+
+```eta
+<h1><%= it.title %></h1>
+<p><%= it.description %></p>
 ```
 
-The generated site is written to `_deploy`. Each asset build is placed under `_deploy/release/<version>/assets`; when no version is supplied, the build uses the current Unix timestamp.
+Only use Eta's raw-output tag (`<%~ ... %>`) for trusted, application-authored markup such as serialized structured data. Never treat user-controlled text as a template. See [Eta's security guidance](https://eta.js.org/docs/4.x.x/intro/security).
 
-For a deployment build, pass explicit values after `--`:
+## Build and preview
+
+Development builds default to `http://localhost:8080`:
+
+```sh
+npm run build -- --version=local
+python3 -m http.server 8080 --directory _deploy
+```
+
+Production builds require the public HTTPS origin so canonical, Open Graph, robots, and sitemap URLs are correct:
 
 ```sh
 npm run build -- \
-  --www=https://www.example.com \
-  --cdn=https://cdn.example.com \
-  --service=https://api.example.com \
-  --version=2026.09.06 \
-  --production=true
+  --version=2026.09.07 \
+  --production=true \
+  --site-url=https://www.example.com \
+  --www=/ \
+  --cdn=/
 ```
 
-| Option | Default | Purpose |
-| --- | --- | --- |
-| `--www` | `/` | Public website base URL exposed to templates and configuration. |
-| `--cdn` | `/` | Asset base URL exposed to templates and configuration. |
-| `--service` | `/service-endpoint` | Backend service URL exposed to the site. |
-| `--version` | Current Unix timestamp | Directory name used for versioned assets. |
-| `--production` | `false` | Minifies CSS and JavaScript when set to `true`. |
+The build creates `_deploy/index.html`, `_deploy/404.html`, `_deploy/robots.txt`, `_deploy/sitemap.xml`, and versioned assets beneath `_deploy/release/<version>/assets`.
 
-The version may contain only letters, numbers, dots, underscores, and hyphens. This prevents it from escaping the deployment directory.
-
-## Add a page
-
-Create `app/about.hbs`:
-
-```handlebars
-{{> element/head}}
-<main>
-    <h1>{{title}}</h1>
-    <p>{{introduction}}</p>
-</main>
-```
-
-Then create matching data at `app/assets/data/view/about.json`:
-
-```json
-{
-  "title": "About us",
-  "introduction": "A short description of the organization."
-}
-```
-
-Global data from `app/assets/data/view/global.json`, page data, and build options are merged before the template is rendered. Page-specific values take precedence over global values, and build options take precedence over both.
-
-## Responsive images
-
-The included `picture` partial supports AVIF and WebP sources at each responsive breakpoint, with an ordinary image as the final fallback:
-
-```handlebars
-{{> element/picture
-    imageFallback='assets/image/hero/fallback.jpg'
-    imageSmallAvif='assets/image/hero/small.avif'
-    imageSmallWebp='assets/image/hero/small.webp'
-    imageLargeAvif='assets/image/hero/large.avif'
-    imageLargeWebp='assets/image/hero/large.webp'
-    width='2048'
-    height='1600'
-    loading='lazy'
-    decoding='async'
-    alt='A human-readable description of the image'
-}}
-```
-
-Browsers choose the first supported source whose media query matches. Browsers without AVIF or WebP support use `imageFallback`. Supplying width and height also reserves layout space and helps avoid content movement while the image loads.
-
-## Development checks
-
-Run the same basic checks before proposing a change:
+## Accessibility and search verification
 
 ```sh
-npm run build
-npm run typecheck
 npm test
-npm run coverage
 npm run audit
 ```
 
-## Version 4 migration notes
+Generated tests validate HTML, run axe rules tagged for WCAG 2.0/2.1/2.2 Level A and AA, require crawlable links and initial HTML content, parse structured data, and verify canonical, robots, and sitemap signals. Custom browser integration has 100% line, branch, and function coverage.
 
-Version 4 intentionally replaced the unsupported Gulp 3, Babel 6, PhantomJS, Karma, Bower, and legacy plugin pipeline. It also replaced Foundation with Bootstrap 5.3.8 and migrated the grid markup to Bootstrap `row` and responsive `col-*` classes. Projects upgrading from an older major version should treat the build tooling, supported Node.js versions, CSS framework, and generated markup as breaking changes.
+Automated testing cannot establish every WCAG success criterion. Before deployment, manually verify at minimum:
 
-Version 4.1 removes Lodash, Moment, and Numeral from generated projects. If application code added its own imports from those packages, either retain the dependency in that application or migrate those calls before upgrading.
+1. Keyboard-only operation, focus order, and focus not being obscured at responsive sizes.
+2. 200% text resize and 400% zoom/reflow without loss of content or function.
+3. Screen-reader names, landmarks, headings, status messages, and reading order.
+4. Text and non-text contrast in actual supported browsers, including forced-colors mode.
+5. Reduced-motion behavior and pointer targets of at least 24 by 24 CSS pixels, with 44 by 44 preferred.
+6. Accuracy of alternative text, page titles, descriptions, canonical URLs, and structured data.
 
-## Related packages
+For indexing, deploy public pages with successful `200` responses, do not add `noindex`, keep assets crawlable, serve `robots.txt` and `sitemap.xml` from the origin root, and verify the deployed URL in the search engine's inspection tool. A sitemap assists discovery but does not guarantee indexing.
 
-- [`white-label-model`](https://github.com/bshack/white-label-model) provides event-emitting models and collections.
-- [`white-label-view`](https://github.com/bshack/white-label-view) renders templates and manages delegated DOM events.
-- [`white-label-router`](https://github.com/bshack/white-label-router) provides History API navigation.
-- [`white-label-mediator`](https://github.com/bshack/white-label-mediator) provides shared application messaging.
-- [`white-label-service`](https://github.com/bshack/white-label-service) provides an authenticated JSON service backed by MySQL.
+## Integrated package example
 
-## TypeScript development and version 5.0.0 migration
+The generated browser entry demonstrates:
 
-Implementation code now uses strict TypeScript. Builds emit JavaScript, source maps with embedded source, and `.d.ts` declarations into `dist`. JavaScript callers can still use the package without compiling TypeScript themselves. JSDoc comments describe parameters, return values, lifecycle behavior, and validation at the implementation, and are retained in declarations.
+- `white-label-model`: observable filter state and collection lifecycle.
+- `white-label-view`: DOM lifecycle and model-driven rendering.
+- `white-label-mediator`: decoupled selection and navigation events.
+- `white-label-router`: crawlable query-string navigation with History API enhancement.
+- Eta: escaped server/build-time pages and client-side view markup.
 
-```ts
-// app/assets/script/profile.ts
-import User from './model/user.js';
+`white-label-service` remains independent and is not required by the static example.
 
-const profile = new User({name: 'Ada'});
-console.log(profile.get().name);
-```
+## Version 6 migration
 
-Write implementation files as `.ts`, or `.tsx` for React markup. Keep `.js` extensions on relative imports: TypeScript resolves them to source files and emits imports usable by Node. Every top-level script entry is bundled, except declaration-only `.d.ts` files. The build checks all sample modules, including modules not imported by an entry point.
+Version 6 is a SemVer major release because template files and APIs change:
 
-The generated project uses the current typed releases of `white-label-model` and `white-label-view`. The `types.d.ts` file declares only the optional SDK callbacks placed on `window`; package API types come directly from those dependencies.
+- Rename page templates from `.hbs` to `.eta`.
+- Replace Handlebars expressions and partials with Eta syntax.
+- Remove React components and return a DOM node or Eta-rendered HTML from `white-label-view` templates.
+- Remove local font assets and `@font-face` declarations.
+- Supply `--site-url=https://your-origin.example` for production builds.
 
-Version 5 is a major release because generated projects now contain TypeScript and use a two-stage TypeScript/esbuild pipeline. Use Node.js 24 for development and CI. Existing generated sites are not changed automatically: migrate their script files, copy the new build configuration, and resolve strict type errors before deploying. The small `generators/app/index.js` file is only Yeoman's discovery bridge to compiled TypeScript.
+## License
 
-The generated project includes its own README. Full Bootstrap CSS remains included. Old inactive Gulp and Karma configuration has been removed; all historical share-URL assertions now run in the active Node test suite.
-
-### Sample utility reference
-
-| Module | Functionality and example |
-| --- | --- |
-| `utility/ajax.ts` | `getScript('/sdk.js')` appends an asynchronous script; call it only when needed. |
-| `utility/form.ts` | Read multiselect values, select or find an option, decorate/split metadata, and build named options: `buildOptions([{id: 1, name: 'Ada'}], 1)`. Metadata helpers mutate their supplied arrays. |
-| `utility/string.ts` | Parse trusted HTML, read query values, format local dates, numbers and USD currency, and create phone/email links: `formatCurrency(12.5)` returns `$12.50`. `getQueryStringParamater` retains its historical spelling. |
-| `utility/share.ts` | Construct encoded Facebook, Twitter, LinkedIn and email URLs. Missing required values return `false`. Twitter retains its legacy 140-character rule; Google Plus support is a deprecated URL formatter for a discontinued service. |
-| `utility/regex.ts` | Legacy presentation-validation expressions for dates, passwords, phone numbers, ZIP codes, length and currency. These are not substitutes for server validation or a modern password policy. |
-| `model/user.ts` | An extendable observable object model. Country/state singletons contain the bundled JSON data. The global model starts with local URL defaults; the build separately writes deployment settings to `assets/data/config.json`. |
-| `api/facebook.ts`, `api/youtube.ts` | Optional SDK adapters that emit readiness events through the shared mediator. They are tested with local browser doubles, not live provider accounts. Review provider configuration before enabling them in a real site. |
-| `view/default.tsx` | A React greeting component: `<HelloMessage name="Ada" />`. |
-| `view/toolkit/youtube-player-1.ts` | An extension skeleton for a concrete player, with the legacy `removeListners` hook retained. |
-
-### Verification and coverage
-
-```sh
-npm ci --ignore-scripts
-npm run typecheck
-npm test
-npm run coverage
-npm pack --dry-run
-```
-
-`npm test` builds the code, checks TypeScript consumer examples against the emitted declarations, and runs the tests. `npm run coverage` additionally enforces **100% statements, branches, functions, and lines for each implementation file**. Unexecuted implementation files count toward the result; declaration-only files contain no executable code and are excluded. Reports are written to `coverage`, including `lcov.info` for coverage viewers. CI runs the same gate and checks committed build output for drift.
-
-Tests exercise the compiled JavaScript interface used by downstream callers. Coverage is an execution metric, not proof that all possible inputs or external integrations are correct. Tests for third-party SDKs use local doubles. No live provider requests are needed.
-
-To undo this migration, revert its commit and run `npm ci` from the restored lockfile. No npm release, database migration, or production deployment is performed by these development changes.
+MIT
