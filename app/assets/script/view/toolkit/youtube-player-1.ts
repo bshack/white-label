@@ -12,15 +12,17 @@ import View from 'white-label-view';
         }
         /**
          * Extension hook for initializing a concrete YouTube player implementation.
-         * @returns No value.
+         * @returns This view instance for lifecycle chaining.
          */
         initialize() {
+            return this;
         }
         /**
          * Lifecycle hook for attaching listeners owned by a subclass.
-         * @returns No value.
+         * @returns This view instance for lifecycle chaining.
          */
         addListeners() {
+            return this;
         }
         /**
          * Legacy misspelled extension hook retained for compatibility with existing sample subclasses.

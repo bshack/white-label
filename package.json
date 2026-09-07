@@ -1,11 +1,11 @@
 {
   "name": "generator-white-label",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Scaffolding for developing and building static sites.",
   "type": "module",
   "main": "dist/generators/app/index.js",
   "engines": {
-    "node": ">=20.0",
+    "node": "^22.18.0 || >=24.11.0",
     "npm": ">=10.0"
   },
   "scripts": {
@@ -44,6 +44,8 @@
   },
   "homepage": "https://github.com/bshack/white-label",
   "dependencies": {
+    "@types/node": "24.13.3",
+    "@yeoman/adapter": "5.0.0",
     "bootstrap": "5.3.8",
     "chalk": "6.0.0",
     "esbuild": "0.28.2",
@@ -52,12 +54,10 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sass": "1.104.0",
-    "white-label-model": "1.0.37",
-    "white-label-view": "2.0.3",
+    "white-label-model": "3.0.0",
+    "white-label-view": "4.0.0",
     "yeoman-generator": "8.3.1",
-    "yosay": "3.0.0",
-    "@types/node": "24.13.3",
-    "@yeoman/adapter": "5.0.0"
+    "yosay": "3.0.0"
   },
   "devDependencies": {
     "@types/react": "19.2.18",
