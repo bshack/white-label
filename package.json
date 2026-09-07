@@ -1,21 +1,47 @@
 {
   "name": "generator-white-label",
-  "version": "4.1.0",
+  "version": "5.0.0",
   "description": "Scaffolding for developing and building static sites.",
   "type": "module",
-  "main": "generators/app/index.js",
-  "engines": {"node": ">=20.0", "npm": ">=10.0"},
-  "scripts": {
-    "build": "node scripts/build.js",
-    "test": "node --test test/*.test.js",
-    "audit": "npm audit --audit-level=low"
+  "main": "dist/generators/app/index.js",
+  "engines": {
+    "node": ">=20.0",
+    "npm": ">=10.0"
   },
-  "files": ["app", "generators", "scripts", "README.md"],
-  "keywords": ["handlebars", "sass", "esbuild", "yeoman-generator"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node dist/scripts/build.js",
+    "test": "npm run compile && npm run test:types && npm run test:unit",
+    "audit": "npm audit --audit-level=low",
+    "compile": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:unit": "node --test test/*.test.js",
+    "coverage": "npm run compile && npm run test:types && c8 npm run test:unit",
+    "prepack": "npm run compile",
+    "test:types": "tsc -p tsconfig.consumer.json"
+  },
+  "files": [
+    "app",
+    "generators",
+    "scripts",
+    "README.md",
+    "dist",
+    "tsconfig.site.json"
+  ],
+  "keywords": [
+    "handlebars",
+    "sass",
+    "esbuild",
+    "yeoman-generator"
+  ],
   "author": "Bill Shackelford",
   "license": "MIT",
-  "repository": {"type": "git", "url": "git+https://github.com/bshack/white-label.git"},
-  "bugs": {"url": "https://github.com/bshack/white-label/issues"},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bshack/white-label.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bshack/white-label/issues"
+  },
   "homepage": "https://github.com/bshack/white-label",
   "dependencies": {
     "bootstrap": "5.3.8",
@@ -29,6 +55,43 @@
     "white-label-model": "1.0.37",
     "white-label-view": "2.0.3",
     "yeoman-generator": "8.3.1",
-    "yosay": "3.0.0"
+    "yosay": "3.0.0",
+    "@types/node": "24.13.3",
+    "@yeoman/adapter": "5.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "@types/yosay": "2.0.3",
+    "c8": "12.0.0",
+    "jsdom": "30.0.1",
+    "typescript": "7.0.2",
+    "yeoman-environment": "7.0.0"
+  },
+  "types": "dist/generators/app/index.d.ts",
+  "c8": {
+    "all": true,
+    "include": [
+      "scripts/**/*.ts",
+      "generators/**/*.ts",
+      "app/assets/script/**/*.ts",
+      "app/assets/script/**/*.tsx"
+    ],
+    "reporter": [
+      "text",
+      "json",
+      "json-summary",
+      "lcov"
+    ],
+    "excludeAfterRemap": true,
+    "checkCoverage": true,
+    "lines": 100,
+    "functions": 100,
+    "branches": 100,
+    "statements": 100,
+    "perFile": true,
+    "exclude": [
+      "**/*.d.ts"
+    ]
   }
 }

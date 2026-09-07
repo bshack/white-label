@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {readFile, stat} from 'node:fs/promises';
 import test from 'node:test';
-import {parseArguments} from '../scripts/build.js';
+import {parseArguments} from '../dist/scripts/build.js';
 
 const require = createRequire(import.meta.url);
 
@@ -50,9 +50,9 @@ test('responsive demo images prefer modern formats while retaining a JPEG fallba
     assert.ok(sizes.reduce((total, size) => total + size, 0) < 1267178);
 });
 
-test('generated string utilities retain their human-readable output without legacy libraries', function() {
+test('generated string utilities retain their human-readable output without legacy libraries', async function() {
     global.DOMParser = class {};
-    const StringUtility = require('../app/assets/script/utility/string.js');
+    const {default: StringUtility} = await import('../dist/app/assets/script/utility/string.js');
     const utility = new StringUtility();
 
     assert.equal(utility.formatDate('2026-09-06T00:00:00'), '2026-09-06');
@@ -64,7 +64,7 @@ test('generated string utilities retain their human-readable output without lega
 });
 
 test('generator manifest omits utilities replaced by browser-native APIs', async function() {
-    const generator = await readFile('generators/app/index.js', 'utf8');
+    const generator = await readFile('generators/app/index.ts', 'utf8');
 
     assert.doesNotMatch(generator, /\b(?:lodash|moment|numeral):/);
 });

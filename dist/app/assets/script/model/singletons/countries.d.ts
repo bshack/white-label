@@ -1,0 +1,20 @@
+declare const _default: {
+    get(): unknown[];
+    [EventEmitter.captureRejectionSymbol]?<K>(error: Error, event: string | symbol, ...args: any[]): void;
+    addListener<K>(eventName: string | symbol, listener: (...args: any[]) => void): /*elided*/ any;
+    on<K>(eventName: string | symbol, listener: (...args: any[]) => void): /*elided*/ any;
+    once<K>(eventName: string | symbol, listener: (...args: any[]) => void): /*elided*/ any;
+    removeListener<K>(eventName: string | symbol, listener: (...args: any[]) => void): /*elided*/ any;
+    off<K>(eventName: string | symbol, listener: (...args: any[]) => void): /*elided*/ any;
+    removeAllListeners(eventName?: string | symbol | undefined): /*elided*/ any;
+    setMaxListeners(n: number): /*elided*/ any;
+    getMaxListeners(): number;
+    listeners<K>(eventName: string | symbol): Function[];
+    rawListeners<K>(eventName: string | symbol): Function[];
+    emit<K>(eventName: string | symbol, ...args: any[]): boolean;
+    listenerCount<K>(eventName: string | symbol, listener?: Function | undefined): number;
+    prependListener<K>(eventName: string | symbol, listener: (...args: any[]) => void): /*elided*/ any;
+    prependOnceListener<K>(eventName: string | symbol, listener: (...args: any[]) => void): /*elided*/ any;
+    eventNames(): (string | symbol)[];
+};
+export default _default;
