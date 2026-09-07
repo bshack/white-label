@@ -1,7 +1,25 @@
-import moment from 'moment';
-import numeraljs from 'numeraljs';
-
 const parser = new DOMParser();
+
+const integerFormatter = new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: 0
+});
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    style: 'currency'
+});
+
+function pad(number) {
+    return String(number).padStart(2, '0');
+}
+
+function dateParts(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return null;
+    }
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
 
 (() => {
 
@@ -34,16 +52,17 @@ const parser = new DOMParser();
 
         // 2014-11-10
         formatDate(unformattedDate) {
-            return moment(unformattedDate).format('YYYY-MM-DD');
+            return dateParts(unformattedDate) || 'Invalid date';
         }
 
         //format the api accepts back
         formatDateAPI(unformattedDate) {
-            return moment(unformattedDate, 'YYYY-MM-DD').format('YYYY-MM-DDThh:mm');
+            const formattedDate = dateParts(`${unformattedDate}T00:00:00`);
+            return formattedDate ? `${formattedDate}T12:00` : 'Invalid date';
         }
 
         formatNumber(unformattedNumber) {
-            return numeraljs(unformattedNumber).format('0,0');
+            return integerFormatter.format(Number(unformattedNumber));
         }
 
         unformatNumber(formattedNumber) {
@@ -51,11 +70,12 @@ const parser = new DOMParser();
         }
 
         formatCurrency(unformattedCurrency) {
-            return numeraljs(unformattedCurrency).format('$0,0.00');
+            return currencyFormatter.format(Number(unformattedCurrency));
         }
 
         unformatCurrency(formattedCurrency) {
-            return numeraljs(formattedCurrency).format('00.00');
+            const number = Number(String(formattedCurrency).replace(/[^0-9.-]/g, ''));
+            return Number.isFinite(number) ? number.toFixed(2) : '0.00';
         }
 
         formatPhoneLink(unformattedPhoneNumber) {
