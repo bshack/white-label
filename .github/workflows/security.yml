@@ -21,6 +21,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm test
+      - run: npm run compile && git diff --exit-code -- dist
+      - run: npm run typecheck
+      - run: npm run coverage
       - run: npm run build -- --version=ci --production=true
       - run: npm audit --audit-level=low

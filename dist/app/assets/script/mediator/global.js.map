@@ -1,0 +1,1 @@
+{"version":3,"file":"global.js","sourceRoot":"","sources":["../../../../../app/assets/script/mediator/global.ts"],"names":[],"mappings":"AAAA,gDAAgD;AAChD,OAAO,MAAM,MAAM,QAAQ,CAAC;AAE5B,eAAe,IAAI,MAAM,EAAE,CAAC","sourcesContent":["/** @module app/assets/script/mediator/global */\nimport Events from 'events';\n\nexport default new Events();\n"]}

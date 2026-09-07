@@ -12,3 +12,7 @@ report/
 .sass-cache/
 .DS_Store
 npm-debug.log
+
+# Local test output
+coverage/
+*.tgz
