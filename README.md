@@ -158,7 +158,7 @@ console.log(profile.get().name);
 
 Write implementation files as `.ts`, or `.tsx` for React markup. Keep `.js` extensions on relative imports: TypeScript resolves them to source files and emits imports usable by Node. Every top-level script entry is bundled, except declaration-only `.d.ts` files. The build checks all sample modules, including modules not imported by an entry point.
 
-The `types.d.ts` file documents the subset of older published white-label dependencies used by the scaffold. It also declares optional SDK callbacks on `window`. These are explicit compatibility declarations, not unrestricted `any` modules. New releases of the related packages are not required from npm until they are actually published.
+The generated project uses the current typed releases of `white-label-model` and `white-label-view`. The `types.d.ts` file declares only the optional SDK callbacks placed on `window`; package API types come directly from those dependencies.
 
 Version 5 is a major release because generated projects now contain TypeScript and use a two-stage TypeScript/esbuild pipeline. Use Node.js 24 for development and CI. Existing generated sites are not changed automatically: migrate their script files, copy the new build configuration, and resolve strict type errors before deploying. The small `generators/app/index.js` file is only Yeoman's discovery bridge to compiled TypeScript.
 

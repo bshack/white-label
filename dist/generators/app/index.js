@@ -27,14 +27,14 @@ export default class extends Generator {
             version: '1.0.0',
             private: true,
             type: 'module',
-            engines: { node: '>=20.0', npm: '>=10.0' },
+            engines: { node: '^22.18.0 || >=24.11.0', npm: '>=10.0' },
             scripts: {
                 build: 'tsc -p tsconfig.json && node dist/scripts/build.js',
                 typecheck: 'tsc -p tsconfig.json --noEmit',
                 test: 'npm run build',
                 audit: 'npm audit --audit-level=low'
             },
-            devDependencies: { typescript: '7.0.2', '@types/node': '24.13.3', '@types/react': '^19.0.0' },
+            devDependencies: { typescript: '7.0.2', '@types/node': '24.13.3', '@types/react': '19.2.18' },
             dependencies: {
                 esbuild: '0.28.2',
                 events: '3.3.0',
@@ -43,8 +43,8 @@ export default class extends Generator {
                 react: '19.2.8',
                 'react-dom': '19.2.8',
                 sass: '1.104.0',
-                'white-label-model': '1.0.37',
-                'white-label-view': '2.0.3'
+                'white-label-model': '3.0.0',
+                'white-label-view': '4.0.0'
             }
         });
     }

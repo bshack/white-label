@@ -22,6 +22,10 @@ test('packaged generator creates a strictly typed site that builds in developmen
     await env.run('white-label:app', {skipInstall: true, force: true});
     const manifest = JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8'));
     assert.equal(manifest.type, 'module');
+    assert.equal(manifest.dependencies['white-label-model'], '3.0.0');
+    assert.equal(manifest.dependencies['white-label-view'], '4.0.0');
+    assert.equal(manifest.devDependencies['@types/react'], '19.2.18');
+    assert.equal(manifest.engines.node, '^22.18.0 || >=24.11.0');
     assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), /TypeScript/);
     assert.match(manifest.scripts.typecheck, /tsc/);
     await symlink(path.join(root, 'node_modules'), path.join(destination, 'node_modules'));
