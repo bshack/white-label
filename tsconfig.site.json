@@ -10,11 +10,9 @@
     "inlineSources": true,
     "outDir": "dist",
     "rootDir": ".",
-    "jsx": "react-jsx",
     "resolveJsonModule": true,
     "types": [
-      "node",
-      "react"
+      "node"
     ],
     "noEmitOnError": true
   },

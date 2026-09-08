@@ -1,10 +1,10 @@
 /** Values injected into page templates and the generated config file. */
-export interface BuildConfig {cdn: string; production: boolean; service: string; version: string; www: string}
+export interface BuildConfig {cdn: string; production: boolean; siteUrl: string; version: string; www: string}
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {build as buildJavaScript} from 'esbuild';
-import Handlebars from 'handlebars';
+import {Eta} from 'eta';
 import * as sass from 'sass';
 
 const defaultProjectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -24,10 +24,14 @@ export function parseArguments(argumentsList: string[]): BuildConfig {
     if (!/^[A-Za-z0-9._-]+$/.test(version)) {
         throw new Error('Version may contain only letters, numbers, dots, underscores, and hyphens');
     }
+    const siteUrl = (values['site-url'] || 'http://localhost:8080').replace(/\/$/, '');
+    if (!URL.canParse(siteUrl) || (values.production === 'true' && !siteUrl.startsWith('https://'))) {
+        throw new Error('Production builds require an absolute HTTPS --site-url');
+    }
     return {
         cdn: values.cdn || '/',
         production: values.production === 'true',
-        service: values.service || '/service-endpoint',
+        siteUrl,
         version,
         www: values.www || '/'
     };
@@ -48,31 +52,24 @@ async function filesUnder(directory: string): Promise<string[]> {
 }
 
 /**
- * Register partials and render pages using global, page-specific, and deployment data.
+ * Render Eta pages using global, page-specific, and deployment data.
  * @param config - Validated deployment or database configuration.
  * @param outputRoot - Destination for rendered pages.
  * @param projectRoot - Project containing app sources and installed dependencies.
  * @returns A promise resolving after all pages have been written.
  */
 async function renderMarkup(config: BuildConfig, outputRoot: string, projectRoot: string) {
-    const markupRoot = path.join(projectRoot, 'app/assets/markup');
-    for (const partialPath of await filesUnder(markupRoot)) {
-        if (/\.(hbs|handlebars)$/.test(partialPath)) {
-            const name = path.relative(markupRoot, partialPath).replace(/\\/g, '/').replace(/\.(hbs|handlebars)$/, '');
-            Handlebars.registerPartial(name, await fs.readFile(partialPath, 'utf8'));
-        }
-    }
-
+    const eta = new Eta({autoEscape: true, cache: config.production});
     const globalData = JSON.parse(await fs.readFile(
         path.join(projectRoot, 'app/assets/data/view/global.json'), 'utf8'
     ));
     const pages = (await filesUnder(path.join(projectRoot, 'app')))
-        .filter((file) => file.endsWith('.hbs') && !file.includes(`${path.sep}assets${path.sep}`));
+        .filter((file) => file.endsWith('.eta') && !file.includes(`${path.sep}assets${path.sep}`));
 
     await Promise.all(pages.map(async (page) => {
         const relative = path.relative(path.join(projectRoot, 'app'), page);
         const pageDataPath = path.join(
-            projectRoot, 'app/assets/data/view', relative.replace(/\.hbs$/, '.json')
+            projectRoot, 'app/assets/data/view', relative.replace(/\.eta$/, '.json')
         );
         let pageData = {};
         try {
@@ -82,10 +79,10 @@ async function renderMarkup(config: BuildConfig, outputRoot: string, projectRoot
                 throw error;
             }
         }
-        const template = Handlebars.compile(await fs.readFile(page, 'utf8'));
-        const destination = path.join(outputRoot, relative.replace(/\.hbs$/, '.html'));
+        const template = await fs.readFile(page, 'utf8');
+        const destination = path.join(outputRoot, relative.replace(/\.eta$/, '.html'));
         await fs.mkdir(path.dirname(destination), {recursive: true});
-        await fs.writeFile(destination, template({...globalData, ...pageData, ...config}));
+        await fs.writeFile(destination, eta.renderString(template, {...globalData, ...pageData, ...config}));
     }));
 }
 
@@ -98,7 +95,7 @@ async function renderMarkup(config: BuildConfig, outputRoot: string, projectRoot
  */
 async function compileStyles(outputAssets: string, production: boolean, projectRoot: string) {
     const styleRoot = path.join(projectRoot, 'app/assets/style');
-    await Promise.all(['global', 'print', 'toolkit'].map(async (name) => {
+    await Promise.all(['global', 'print'].map(async (name) => {
         const result = sass.compile(path.join(styleRoot, `${name}.scss`), {
             loadPaths: [path.join(projectRoot, 'node_modules')],
             style: production ? 'compressed' : 'expanded'
@@ -158,16 +155,16 @@ export async function build(config = parseArguments(process.argv.slice(2)), proj
     await fs.rm(outputRoot, {recursive: true, force: true});
     await fs.mkdir(outputAssets, {recursive: true});
 
-    await Promise.all([
-        fs.cp(path.join(projectRoot, 'app/assets/data'), path.join(outputAssets, 'data'), {recursive: true}),
-        fs.cp(path.join(projectRoot, 'app/assets/font'), path.join(outputAssets, 'font'), {recursive: true}),
-        fs.cp(path.join(projectRoot, 'app/assets/image'), path.join(outputAssets, 'image'), {recursive: true})
-    ]);
+    await fs.cp(path.join(projectRoot, 'app/assets/data'), path.join(outputAssets, 'data'), {recursive: true});
     await fs.writeFile(path.join(outputAssets, 'data/config.json'), JSON.stringify(config));
     await renderMarkup(config, outputRoot, projectRoot);
     await compileStyles(outputAssets, config.production, projectRoot);
     await compileScripts(outputAssets, config.production, projectRoot);
-    await fs.copyFile(path.join(projectRoot, 'app/robots.txt'), path.join(outputRoot, 'robots.txt'));
+    const eta = new Eta({autoEscape: true});
+    const robots = eta.renderString(await fs.readFile(path.join(projectRoot, 'app/robots.txt'), 'utf8'), config);
+    await fs.writeFile(path.join(outputRoot, 'robots.txt'), robots);
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${config.siteUrl}/</loc></url></urlset>\n`;
+    await fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap);
 }
 
 if (path.resolve(process.argv[1] || '') === fileURLToPath(import.meta.url)) {

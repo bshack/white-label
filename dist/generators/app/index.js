@@ -21,6 +21,7 @@ export default class extends Generator {
         this.fs.copy(path.join(root, 'app'), this.destinationPath('app'));
         this.fs.copy(path.join(root, 'app/README.md'), this.destinationPath('README.md'));
         this.fs.copy(path.join(root, 'scripts'), this.destinationPath('scripts'));
+        this.fs.copy(path.join(root, 'template-test'), this.destinationPath('test'));
         this.fs.copy(path.join(root, 'tsconfig.site.json'), this.destinationPath('tsconfig.json'));
         this.fs.writeJSON(this.destinationPath('package.json'), {
             name: 'white-label-site',
@@ -31,19 +32,24 @@ export default class extends Generator {
             scripts: {
                 build: 'tsc -p tsconfig.json && node dist/scripts/build.js',
                 typecheck: 'tsc -p tsconfig.json --noEmit',
-                test: 'npm run build',
+                test: 'npm run typecheck && npm run build -- --version=test --production=true --site-url=https://example.com && node --test --experimental-test-coverage --test-coverage-include=dist/app/assets/script/index.js --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 test/*.test.js',
                 audit: 'npm audit --audit-level=low'
             },
-            devDependencies: { typescript: '7.0.2', '@types/node': '24.13.3', '@types/react': '19.2.18' },
-            dependencies: {
-                esbuild: '0.28.2',
-                events: '3.3.0',
+            devDependencies: {
+                '@types/node': '24.13.3',
+                'axe-core': '4.13.0',
                 'bootstrap': '5.3.8',
-                handlebars: '4.7.9',
-                react: '19.2.8',
-                'react-dom': '19.2.8',
-                sass: '1.104.0',
+                'esbuild': '0.28.2',
+                'html-validate': '11.14.0',
+                'jsdom': '30.0.1',
+                'sass': '1.104.0',
+                'typescript': '7.0.2'
+            },
+            dependencies: {
+                eta: '4.6.0',
+                'white-label-mediator': '3.0.0',
                 'white-label-model': '3.0.0',
+                'white-label-router': '4.0.0',
                 'white-label-view': '4.0.0'
             }
         });

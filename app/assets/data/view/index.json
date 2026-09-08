@@ -1,7 +1,15 @@
 {
-    "title": "Home",
+    "title": "Gold North | The American Gold Rush in Alaska",
     "scripts":{
         "global":"assets/script/global.compiled.js",
         "section":"assets/script/index.compiled.js"
+    },
+    "structuredData": {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Gold North: The American Gold Rush in Alaska",
+      "description": "A sourced history of how American gold rushes reshaped Alaska.",
+      "author": {"@type": "Organization", "name": "Gold North"},
+      "inLanguage": "en-US"
     }
 }
