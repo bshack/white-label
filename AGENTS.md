@@ -1,5 +1,50 @@
 # AI Coding Agent Instructions
 
+# Repository Guide — white-label
+
+Yeoman generator for static TypeScript sites using Eta, Sass, Bootstrap, esbuild, and the White Label browser packages.
+
+Verified against `package.json`, `README.md`, and `.github/workflows/security.yml` on September 9, 2026. Recheck those files when commands or supported environments change.
+
+## Code map
+
+`generators/` contains the generator; `app/` contains site templates, browser TypeScript, styles, and data; `scripts/build.ts` builds the site; `test/` holds tests; `dist/` contains compiled code. The package entry is `dist/generators/app/index.js`.
+
+## Toolchain and checks
+
+Use npm >=10.0 and Node.js `^22.18.0 || >=24.11.0`; CI uses Node 24. Run from the repository root:
+
+```sh
+npm ci --ignore-scripts
+npm run typecheck
+npm test
+npm run coverage
+npm run audit
+```
+
+`npm test` compiles implementation code, checks consumer types, and runs Node tests. `npm run coverage` enforces 100% statements, branches, functions, and lines per included implementation file. CI also runs `npm run compile` and `git diff --exit-code -- dist` to detect committed-output drift.
+
+No dedicated lint or format script is defined in the reviewed manifest. Inspect existing configuration before adding tools; report unperformed checks accurately.
+
+For one Node test file, first run `npm run compile`, then `node --test test/path-to-existing.test.js`. Substitute an existing file; this focused run does not replace the complete suite.
+
+## Local environment and generated files
+
+```sh
+npm run build -- --version=local
+python3 -m http.server 8080 --directory _deploy
+```
+
+Preview at `http://localhost:8080`; Python 3 is required only for this preview command. Build flags configure the static site without production credentials. Builds regenerate `_deploy/`; keep user-authored files outside generated output. Production builds require the intended HTTPS `--site-url`; `--version` is an asset-directory label, not an npm version bump.
+
+Edit TypeScript sources and regenerate tracked `dist/` output with the existing compiler; do not hand-edit compiled JavaScript or declarations. Review generated diffs with the source changes.
+
+## Architectural boundaries
+
+Preserve initial rendered HTML, escaped Eta interpolation, and the independent service boundary. Changes to generator templates affect generated applications: validate both generator behavior and generated output. The starter uses system fonts.
+
+---
+
 ## AI Agent Behavioral Contract
 
 These are the fundamental rules for all AI agents working in this repository.
@@ -28,6 +73,10 @@ For routine, low-risk, reversible details that are clearly supported by reposito
 ---
 
 # 1. User Intent and Control
+
+## Approval Scope and Continuity
+
+Explicit approval already given for a defined action remains valid within that scope. Do not ask again merely because the task spans multiple steps or turns. Ask again if the action, target environment, affected data, access, cost, or risk materially changes, or if the user withdraws approval. Approval to prepare a change does not automatically authorize publishing, merging, deployment, or unrelated external actions. Follow any tool or platform requirement for confirmation at action time.
 
 The user remains the final decision-maker.
 
@@ -589,6 +638,25 @@ Identify unavoidable breaking changes before implementation.
 Clearly document any required migration or compatibility considerations.
 
 Determine relevant supported browsers, operating systems, language runtimes, database versions, and deployment targets from repository evidence. Do not use unsupported platform features without an established transpilation, polyfill, fallback, or migration path.
+
+---
+
+# 23A. Versioning and Release Metadata
+
+For packages using [Semantic Versioning](https://semver.org/spec/v2.0.0.html), classify changes against the documented public API:
+
+- PATCH: compatible bug fixes.
+- MINOR: compatible additions or public API deprecations.
+- MAJOR: incompatible public API changes; reset minor and patch numbers.
+- Before 1.0, follow the project's documented stability policy.
+- Prereleases precede their corresponding stable release; build metadata does not determine precedence.
+- Never replace the contents of an already released version.
+
+Treat public types, exports, runtime requirements, configuration, and generated templates as compatibility surfaces when users depend on them. Explain the proposed release impact; do not infer it from diff size.
+
+Change versions only when requested or required by the established release workflow. Documentation-only work does not automatically require a bump. Use existing release tooling; keep applicable manifests, lockfile metadata, changelog/release notes, and compatibility documentation consistent. Preserve historical version references. Do not hand-edit generated lockfile data or introduce release tooling without need.
+
+Keep package versions distinct from deployment asset labels. Do not synchronize independently versioned packages or upgrade consumers automatically. Tagging, publishing, merging, and deployment require their own applicable authorization.
 
 ---
 
