@@ -6,6 +6,12 @@ const markup = `<!doctype html><html><body><main></main><span data-reading-progr
 function install(markupValue = markup) {
     const dom = new JSDOM(markupValue, {url: 'https://example.com/', pretendToBeVisual: true});
     Object.assign(globalThis, {window: dom.window, document: dom.window.document, DOMParser: dom.window.DOMParser, Element: dom.window.Element, Node: dom.window.Node});
+    let nextFrame = 0;
+    const frames = new Map();
+    dom.window.requestAnimationFrame = callback => {const id = ++nextFrame; frames.set(id, callback); return id;};
+    dom.window.cancelAnimationFrame = id => frames.delete(id);
+    dom.flushFrames = () => {const pending = [...frames.values()]; frames.clear(); for (const callback of pending) callback();};
+    dom.pendingFrames = () => frames.size;
     return dom;
 }
 const boot = install();
@@ -25,6 +31,7 @@ test('generated example integrates model, view, mediator, router, and Eta', () =
     for (const scrollY of [-10, 3000]) {
         dom.window.scrollY = scrollY;
         dom.window.dispatchEvent(new dom.window.Event('scroll'));
+        dom.flushFrames();
     }
     application.destroy();
     assert.equal(application.collection.get().length, 0);
@@ -43,4 +50,22 @@ test('generated example covers optional and invalid environments', () => {
 test.after(() => {
     boot.window.close();
     for (const key of ['window', 'document', 'DOMParser', 'Element', 'Node']) delete globalThis[key];
+});
+
+test('progress updates coalesce, react to resize and cancel during teardown', () => {
+    const dom = install();
+    const app = initializeGoldRushPage(dom.window.document);
+    dom.window.dispatchEvent(new dom.window.Event('scroll'));
+    dom.window.dispatchEvent(new dom.window.Event('scroll'));
+    assert.equal(dom.pendingFrames(), 1);
+    dom.flushFrames();
+    assert.equal(dom.pendingFrames(), 0);
+    dom.window.dispatchEvent(new dom.window.Event('resize'));
+    assert.equal(dom.pendingFrames(), 1);
+    app.destroy();
+    assert.equal(dom.pendingFrames(), 0);
+    dom.window.dispatchEvent(new dom.window.Event('scroll'));
+    dom.window.dispatchEvent(new dom.window.Event('resize'));
+    assert.equal(dom.pendingFrames(), 0);
+    dom.window.close();
 });

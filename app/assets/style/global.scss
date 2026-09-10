@@ -9,7 +9,7 @@ a:hover { color: #805b00; }
 .skip-link { position: fixed; top: .5rem; left: .5rem; z-index: 100; padding: .75rem 1rem; background: var(--snow); transform: translateY(-150%); }
 .skip-link:focus { transform: none; }
 .reading-progress { position: fixed; inset: 0 0 auto; z-index: 90; height: 4px; background: transparent; }
-.reading-progress span { display: block; width: 0; height: 100%; background: var(--gold); }
+.reading-progress span { display: block; width: 100%; transform: scaleX(0); transform-origin: left; height: 100%; background: var(--gold); }
 .site-header { position: sticky; top: 0; z-index: 80; border-bottom: 1px solid rgba(255,255,255,.12); background: rgba(23,32,29,.96); color: #fff; }
 .site-header__inner { display: flex; align-items: center; justify-content: space-between; min-height: 4.25rem; gap: 2rem; }
 .wordmark { font-weight: 800; letter-spacing: .13em; text-decoration: none; text-transform: uppercase; }
