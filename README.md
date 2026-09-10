@@ -112,3 +112,9 @@ Version 6 is a SemVer major release because template files and APIs change:
 ## License
 
 MIT
+
+## Unreleased performance changes
+
+The generated stylesheet includes Bootstrap's reset, theme variables, visually-hidden helper, and the flex/wrap/gap utilities used by the starter. Other Bootstrap components are no longer bundled by default. Add their Sass imports in `app/assets/style/bootstrap.scss` when adding those components. Bootstrap's MIT attribution is retained.
+
+The status template is compiled once. Scroll progress uses a coalesced animation frame and a transform; resize and route changes refresh it, and teardown cancels pending work. Runtime Eta compilation still occurs at initialization, so this is not a change to strict CSP compatibility. Published library versions remain pinned until their fixes are released and explicitly adopted.

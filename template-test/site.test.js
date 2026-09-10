@@ -15,6 +15,12 @@ function installBrowser(markup = applicationMarkup) {
     globalThis.DOMParser = dom.window.DOMParser;
     globalThis.Element = dom.window.Element;
     globalThis.Node = dom.window.Node;
+    let nextFrame = 0;
+    const frames = new Map();
+    dom.window.requestAnimationFrame = callback => {const id = ++nextFrame; frames.set(id, callback); return id;};
+    dom.window.cancelAnimationFrame = id => frames.delete(id);
+    dom.flushFrames = () => {const pending = [...frames.values()]; frames.clear(); for (const callback of pending) callback();};
+    dom.pendingFrames = () => frames.size;
     return dom;
 }
 
@@ -64,13 +70,16 @@ test('all client packages cooperate through a crawlable routed filter', () => {
     application.mediator.emit('era:selected', 'unsupported');
     assert.deepEqual(application.model.get(), {selected: 'all', visible: 2});
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
-    assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.width, '25%');
+        dom.flushFrames();
+    assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(0.25)');
     dom.window.scrollY = -10;
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
-    assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.width, '0%');
+        dom.flushFrames();
+    assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(0)');
     dom.window.scrollY = 3000;
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
-    assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.width, '100%');
+        dom.flushFrames();
+    assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(1)');
     application.destroy();
     assert.equal(application.collection.get().length, 0);
     assert.equal(application.mediator.listenerCount('era:selected'), 0);
@@ -79,7 +88,7 @@ test('all client packages cooperate through a crawlable routed filter', () => {
 test('integration handles progress boundaries and optional output elements', () => {
     const dom = installBrowser('<!doctype html><html><body><main></main><span data-reading-progress></span></body></html>');
     const application = initializeGoldRushPage(dom.window.document);
-    assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.width, '0%');
+    assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(0)');
     application.destroy();
     const noProgress = installBrowser('<!doctype html><html><body><main></main></body></html>');
     initializeGoldRushPage(noProgress.window.document).destroy();
@@ -96,4 +105,22 @@ test.after(() => {
     delete globalThis.DOMParser;
     delete globalThis.Element;
     delete globalThis.Node;
+});
+
+test('progress updates coalesce, react to resize and cancel during teardown', () => {
+    const dom = installBrowser();
+    const app = initializeGoldRushPage(dom.window.document);
+    dom.window.dispatchEvent(new dom.window.Event('scroll'));
+    dom.window.dispatchEvent(new dom.window.Event('scroll'));
+    assert.equal(dom.pendingFrames(), 1);
+    dom.flushFrames();
+    assert.equal(dom.pendingFrames(), 0);
+    dom.window.dispatchEvent(new dom.window.Event('resize'));
+    assert.equal(dom.pendingFrames(), 1);
+    app.destroy();
+    assert.equal(dom.pendingFrames(), 0);
+    dom.window.dispatchEvent(new dom.window.Event('scroll'));
+    dom.window.dispatchEvent(new dom.window.Event('resize'));
+    assert.equal(dom.pendingFrames(), 0);
+    dom.window.close();
 });

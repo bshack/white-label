@@ -40,7 +40,11 @@ test('packaged generator creates a strictly typed site that builds in developmen
     // Run the imported build too so its coverage maps to the repository's source.
     await build(parseArguments(['--version=development']), destination);
     const css = await readFile(path.join(destination, '_deploy/release/development/assets/style/global.css'), 'utf8');
-    assert.match(css, /Bootstrap\s+v5/); assert.match(css, /\.btn/);
+    assert.match(css, /Bootstrap\s+v5/); assert.match(css, /\.visually-hidden/);
+    assert.match(css, /\.d-flex/);
+    assert.match(css, /\.flex-wrap/);
+    assert.match(css, /\.gap-4/);
+    assert.doesNotMatch(css, /\.btn/);
     await build(parseArguments(['--version=production', '--production=true', '--site-url=https://example.com']), destination);
     assert.ok((await readFile(path.join(destination, '_deploy/release/production/assets/style/global.css'), 'utf8')).length < css.length);
     await writeFile(path.join(destination, 'app/no-data.eta'), '<p><%= it.www %></p>');

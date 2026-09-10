@@ -19,6 +19,7 @@ export function initializeGoldRushPage(documentRoot) {
     const cards = [...documentRoot.querySelectorAll('[data-era]')];
     const status = documentRoot.querySelector('[data-filter-status]');
     const eta = new Eta({ autoEscape: true });
+    const statusTemplate = eta.compile('<p>Showing <%= it.visible %> <%= it.visible === 1 ? "era" : "eras" %>.</p>');
     const mediator = new Mediator().initialize();
     const collection = new Collection(cards.map(card => card.dataset.era)).initialize();
     const model = new Model({ selected: 'all', visible: cards.length });
@@ -29,9 +30,26 @@ export function initializeGoldRushPage(documentRoot) {
         model,
         template(data) {
             const state = data;
-            return eta.renderString('<p>Showing <%= it.visible %> <%= it.visible === 1 ? "era" : "eras" %>.</p>', state);
+            return eta.render(statusTemplate, state);
         }
     }).initialize();
+    let progressFrame;
+    /** Coalesce scroll and resize work into one read/write pass per animation frame. */
+    const updateProgress = () => {
+        progressFrame = undefined;
+        if (!progress)
+            return;
+        const available = documentRoot.documentElement.scrollHeight - windowRoot.innerHeight;
+        const ratio = available > 0 ? Math.min(1, Math.max(0, windowRoot.scrollY / available)) : 0;
+        progress.style.transform = `scaleX(${ratio})`;
+    };
+    const scheduleProgress = () => {
+        if (progressFrame === undefined)
+            progressFrame = windowRoot.requestAnimationFrame(updateProgress);
+    };
+    windowRoot.addEventListener('scroll', scheduleProgress, { passive: true });
+    windowRoot.addEventListener('resize', scheduleProgress);
+    updateProgress();
     /** Apply route state to visible content and its crawlable filter links. */
     const selectEra = (selectedValue) => {
         const selected = normalizeEra(selectedValue);
@@ -49,6 +67,7 @@ export function initializeGoldRushPage(documentRoot) {
                 visible += 1;
         }
         model.set({ selected, visible });
+        scheduleProgress();
     };
     mediator.on('era:selected', selectEra);
     const router = new Router();
@@ -59,16 +78,6 @@ export function initializeGoldRushPage(documentRoot) {
     };
     router.routes = { '/': route, defaultRoute: route };
     router.initialize();
-    /** Recalculate the percentage of the document already read. */
-    const updateProgress = () => {
-        if (!progress)
-            return;
-        const available = documentRoot.documentElement.scrollHeight - windowRoot.innerHeight;
-        const percentage = available > 0 ? Math.min(100, Math.max(0, windowRoot.scrollY / available * 100)) : 0;
-        progress.style.width = `${percentage}%`;
-    };
-    windowRoot.addEventListener('scroll', updateProgress, { passive: true });
-    updateProgress();
     return {
         collection,
         mediator,
@@ -76,10 +85,14 @@ export function initializeGoldRushPage(documentRoot) {
         router,
         view,
         destroy() {
-            windowRoot.removeEventListener('scroll', updateProgress);
+            windowRoot.removeEventListener('scroll', scheduleProgress);
+            windowRoot.removeEventListener('resize', scheduleProgress);
+            if (progressFrame !== undefined)
+                windowRoot.cancelAnimationFrame(progressFrame);
             router.destroy();
             view.destroy();
             collection.destroy();
+            model.destroy();
             mediator.destroy();
         }
     };

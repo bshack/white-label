@@ -1,0 +1,20 @@
+/*! Bootstrap v5.3.8 (https://getbootstrap.com/)
+ * Copyright 2011-2025 The Bootstrap Authors
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+// Bootstrap 5.3 (MIT): retain reset, theme variables, accessibility and used utilities.
+// Add component imports here when introducing new Bootstrap components.
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/helpers/visually-hidden";
+$utilities: (
+  "display": (property: display, class: d, values: (flex: flex)),
+  "flex-wrap": (property: flex-wrap, class: flex, values: (wrap: wrap)),
+  "gap": (property: gap, class: gap, values: (4: map-get($spacers, 4)))
+);
+@import "bootstrap/scss/utilities/api";

@@ -76,7 +76,7 @@ async function renderMarkup(config, outputRoot, projectRoot) {
     }));
 }
 /**
- * Compile project Sass and include the full published Bootstrap stylesheet.
+ * Compile project Sass and the explicitly selected Bootstrap components.
  * @param outputAssets - Destination for compiled asset directories.
  * @param production - Enable compressed output and omit development source maps.
  * @param projectRoot - Project containing app sources and installed dependencies.
@@ -91,14 +91,13 @@ async function compileStyles(outputAssets, production, projectRoot) {
         });
         const destination = path.join(outputAssets, 'style', `${name}.css`);
         await fs.mkdir(path.dirname(destination), { recursive: true });
-        // Bootstrap publishes compiled CSS, so consuming it avoids recompiling third-party
-        // Sass and keeps dependency deprecation warnings out of project builds.
-        const bootstrapSource = name === 'global'
-            ? (await fs.readFile(path.join(projectRoot, 'node_modules/bootstrap/dist/css/bootstrap.css'), 'utf8')).replace(/\/\*# sourceMappingURL=bootstrap\.css\.map \*\//, '')
+        // Compile the explicit site subset; dynamic utility classes are retained in bootstrap.scss.
+        const bootstrapCss = name === 'global'
+            ? sass.compile(path.join(styleRoot, 'bootstrap.scss'), {
+                loadPaths: [path.join(projectRoot, 'node_modules')],
+                style: production ? 'compressed' : 'expanded'
+            }).css
             : '';
-        const bootstrapCss = production && bootstrapSource
-            ? sass.compileString(bootstrapSource, { style: 'compressed', syntax: 'css' }).css
-            : bootstrapSource;
         await fs.writeFile(destination, `${bootstrapCss}${bootstrapCss ? '\n' : ''}${result.css}`);
     }));
 }
