@@ -26,7 +26,7 @@ export function normalizeEra(value: string | undefined): string {
 /** Initialize the Eta, model, view, mediator, and router integration. */
 export function initializeGoldRushPage(documentRoot: Document): GoldRushApplication {
     const windowRoot = documentRoot.defaultView;
-    if (!windowRoot) throw new TypeError('Gold North requires a browser document');
+    if (!windowRoot) {throw new TypeError('Gold North requires a browser document');}
 
     const progress = documentRoot.querySelector<HTMLElement>('[data-reading-progress]');
     const links = [...documentRoot.querySelectorAll<HTMLAnchorElement>('[data-era-filter]')];
@@ -37,7 +37,7 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
     const mediator = new Mediator().initialize();
     const collection = new Collection(cards.map(card => card.dataset.era)).initialize();
     const model = new Model({selected: 'all', visible: cards.length});
-    if (status) status.replaceChildren();
+    if (status) {status.replaceChildren();}
     const view = new View({
         parentElement: status ?? undefined,
         model,
@@ -51,13 +51,13 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
     /** Coalesce scroll and resize work into one read/write pass per animation frame. */
     const updateProgress = (): void => {
         progressFrame = undefined;
-        if (!progress) return;
+        if (!progress) {return;}
         const available = documentRoot.documentElement.scrollHeight - windowRoot.innerHeight;
         const ratio = available > 0 ? Math.min(1, Math.max(0, windowRoot.scrollY / available)) : 0;
         progress.style.transform = `scaleX(${ratio})`;
     };
     const scheduleProgress = (): void => {
-        if (progressFrame === undefined) progressFrame = windowRoot.requestAnimationFrame(updateProgress);
+        if (progressFrame === undefined) {progressFrame = windowRoot.requestAnimationFrame(updateProgress);}
     };
     windowRoot.addEventListener('scroll', scheduleProgress, {passive: true});
     windowRoot.addEventListener('resize', scheduleProgress);
@@ -69,13 +69,13 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
         const selected = normalizeEra(selectedValue);
         let visible = 0;
         for (const link of links) {
-            if (link.dataset.eraFilter === selected) link.setAttribute('aria-current', 'page');
-            else link.removeAttribute('aria-current');
+            if (link.dataset.eraFilter === selected) {link.setAttribute('aria-current', 'page');}
+            else {link.removeAttribute('aria-current');}
         }
         for (const card of cards) {
             const show = selected === 'all' || card.dataset.era === selected;
             card.hidden = !show;
-            if (show) visible += 1;
+            if (show) {visible += 1;}
         }
         model.set({selected, visible});
         scheduleProgress();
@@ -101,7 +101,7 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
         destroy() {
             windowRoot.removeEventListener('scroll', scheduleProgress);
             windowRoot.removeEventListener('resize', scheduleProgress);
-            if (progressFrame !== undefined) windowRoot.cancelAnimationFrame(progressFrame);
+            if (progressFrame !== undefined) {windowRoot.cancelAnimationFrame(progressFrame);}
             router.destroy();
             view.destroy();
             collection.destroy();

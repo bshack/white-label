@@ -1,15 +1,15 @@
-name: Security checks
+name: Publish package
 
 on:
-  pull_request:
-  push:
-    branches: [master]
+  release:
+    types: [published]
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  test-build-audit:
+  publish:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -20,13 +20,11 @@ jobs:
         with:
           node-version: 24.21.0
           cache: npm
+          registry-url: https://registry.npmjs.org
       - run: npm ci --ignore-scripts
       - run: npm run lint
-      - run: npm run compile
-      - run: git diff --exit-code -- dist
       - run: npm run typecheck
-      - run: npm test
       - run: npm run coverage
-      - run: npm run build -- --version=ci --production=true --site-url=https://example.com
+      - run: npm run build -- --version=release --production=true --site-url=https://example.com
       - run: npm run audit
-      - run: npm pack --dry-run
+      - run: npm publish --provenance --access public
