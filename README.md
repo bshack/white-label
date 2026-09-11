@@ -9,6 +9,10 @@ The generated example is the Gold North historical site. It is deliberately subs
 - Node.js `^22.18.0` or `>=24.11.0`
 - npm 10 or newer
 
+## Versioning policy
+
+White Label does not preserve old APIs or generated-project behavior with compatibility aliases, deprecated signatures, sentinel arguments, duplicate code paths, or other runtime shims. When a public generator contract or generated application API changes incompatibly, that change is communicated with a Semantic Versioning major release and migration notes. Generated projects should use the current documented contracts directly rather than carrying forward compatibility code for earlier major versions.
+
 ## Create a site
 
 ```sh
