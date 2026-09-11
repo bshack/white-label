@@ -14,7 +14,11 @@
     "types": [
       "node"
     ],
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true
   },
   "include": [
     "scripts/**/*.ts",

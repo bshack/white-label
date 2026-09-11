@@ -6,7 +6,7 @@
   "main": "dist/generators/app/index.js",
   "engines": {
     "node": "^22.18.0 || >=24.11.0",
-    "npm": ">=10.0"
+    "npm": ">=11.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node dist/scripts/build.js",
@@ -17,7 +17,9 @@
     "test:unit": "node --test test/*.test.js",
     "coverage": "npm run compile && npm run test:types && c8 npm run test:unit",
     "prepack": "npm run compile",
-    "test:types": "tsc -p tsconfig.consumer.json"
+    "test:types": "tsc -p tsconfig.consumer.json",
+    "lint": "eslint \"scripts/**/*.ts\" \"generators/**/*.ts\" \"app/assets/script/**/*.{ts,tsx}\" --max-warnings=0",
+    "lint:fix": "npm run lint -- --fix"
   },
   "files": [
     "app",
@@ -67,7 +69,12 @@
     "white-label-model": "3.0.0",
     "white-label-router": "4.0.0",
     "white-label-view": "4.0.0",
-    "yeoman-environment": "7.0.0"
+    "yeoman-environment": "7.0.0",
+    "@babel/core": "8.0.5",
+    "@babel/eslint-parser": "8.0.5",
+    "@babel/preset-typescript": "8.0.1",
+    "@eslint/js": "10.0.1",
+    "eslint": "10.10.0"
   },
   "types": "dist/generators/app/index.d.ts",
   "c8": {
@@ -94,5 +101,13 @@
     "exclude": [
       "**/*.d.ts"
     ]
-  }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/generators/app/index.d.ts",
+      "import": "./dist/generators/app/index.js",
+      "default": "./dist/generators/app/index.js"
+    }
+  },
+  "packageManager": "npm@11.19.1"
 }
