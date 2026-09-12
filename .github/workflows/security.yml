@@ -30,3 +30,13 @@ jobs:
       - run: npm run build -- --version=ci --production=true --site-url=https://example.com
       - run: npm run audit
       - run: npm pack --dry-run
+      - name: Verify packed install and CLI
+        run: |
+          PACKAGE="$(npm pack --silent)"
+          TEMP="$(mktemp -d)"
+          cd "$TEMP"
+          npm init -y >/dev/null
+          npm install --ignore-scripts "$GITHUB_WORKSPACE/$PACKAGE" >/dev/null
+          node --input-type=module -e "const scaffold=await import('generator-white-label/scaffold'); if (typeof scaffold.createSite !== 'function') process.exit(1)"
+          ./node_modules/.bin/white-label --help | grep -q "white-label create <directory>"
+          rm "$GITHUB_WORKSPACE/$PACKAGE"
