@@ -1,9 +1,9 @@
 {
-  "title": "Gold North | The American Gold Rush in Alaska",
-  "meta": {"description": "A sourced, accessible history of how American gold rushes moved north and reshaped Juneau, Skagway, Dyea, Nome, and Fairbanks.", "apple-mobile-web-app-title": "Gold North"},
+  "title": "White Label | TypeScript Web Starter",
+  "meta": {"description": "A production-minded TypeScript web starter demonstrating static rendering, progressive enhancement, accessible UI, routing, state, and reusable White Label packages.", "apple-mobile-web-app-title": "White Label"},
   "link": {},
-  "twitter": {"card": "summary", "title": "Gold North", "description": "The American Gold Rush in Alaska"},
-  "og": {"title": "Gold North", "type": "article", "site_name": "Gold North", "description": "The American Gold Rush in Alaska", "locale": "en_US"},
+  "twitter": {"card": "summary", "title": "White Label", "description": "A modular TypeScript web stack and starter generator."},
+  "og": {"title": "White Label", "type": "website", "site_name": "White Label", "description": "A modular TypeScript web stack and starter generator.", "locale": "en_US"},
   "styles": {"all": {"global": "assets/style/global.css"}, "print": {"global": "assets/style/print.css"}},
   "scripts": {"global": "assets/script/global.compiled.js"}
 }
