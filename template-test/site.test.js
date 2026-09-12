@@ -5,7 +5,7 @@ import axe from 'axe-core';
 import {HtmlValidate} from 'html-validate';
 import {JSDOM} from 'jsdom';
 
-const applicationMarkup = `<!doctype html><html><body><main></main><span data-reading-progress></span><div data-filter-status></div><nav><a href="/?era=all#alaska" data-era-filter="all" data-pushstate></a><a href="/?era=gateway#alaska" data-era-filter="gateway" data-pushstate></a></nav><article data-era="southeast"></article><article data-era="gateway"></article></body></html>`;
+const applicationMarkup = `<!doctype html><html><body><main></main><span data-reading-progress></span><div data-filter-status></div><nav><a href="/?feature=all#features" data-feature-filter="all" data-pushstate></a><a href="/?feature=runtime#features" data-feature-filter="runtime" data-pushstate></a></nav><article data-feature="core"></article><article data-feature="runtime"></article></body></html>`;
 
 /** Install one JSDOM window as the browser globals consumed by the packages. */
 function installBrowser(markup = applicationMarkup) {
@@ -25,7 +25,7 @@ function installBrowser(markup = applicationMarkup) {
 }
 
 const bootDom = installBrowser();
-const {initializeGoldRushPage, normalizeEra} = await import('../dist/app/assets/script/index.js');
+const {initializeWhiteLabelPage, normalizeFeature} = await import('../dist/app/assets/script/index.js');
 
 test('production output is valid, accessible static HTML', async () => {
     const html = await readFile('_deploy/index.html', 'utf8');
@@ -46,7 +46,7 @@ test('production output is crawlable and supplies complete SEO signals', async (
     assert.match(root.querySelector('meta[name="robots"]').content, /^index,follow/);
     assert.ok(root.querySelector('title').textContent.length > 20);
     assert.ok(root.querySelector('meta[name="description"]').content.length > 50);
-    assert.equal(JSON.parse(root.querySelector('script[type="application/ld+json"]').textContent)['@type'], 'Article');
+    assert.equal(JSON.parse(root.querySelector('script[type="application/ld+json"]').textContent)['@type'], 'WebPage');
     assert.ok([...root.querySelectorAll('a')].every(link => link.hasAttribute('href')));
     assert.match(robots, /User-agent: \*\nAllow: \//);
     assert.match(robots, /Sitemap: https:\/\/example\.com\/sitemap\.xml/);
@@ -59,43 +59,43 @@ test('all client packages cooperate through a crawlable routed filter', () => {
     Object.defineProperty(dom.window.document.documentElement, 'scrollHeight', {value: 2000});
     Object.defineProperty(dom.window, 'innerHeight', {value: 1000});
     Object.defineProperty(dom.window, 'scrollY', {value: 250, writable: true});
-    const application = initializeGoldRushPage(dom.window.document);
-    assert.equal(application.eraIndex.get().length, 2);
+    const application = initializeWhiteLabelPage(dom.window.document);
+    assert.equal(application.featureIndex.get().length, 2);
     assert.deepEqual(application.model.get(), {selected: 'all', visible: 2});
-    assert.match(dom.window.document.querySelector('[data-filter-status]').textContent, /Showing 2 eras/);
-    dom.window.document.querySelector('[data-era-filter="gateway"]').dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
-    assert.deepEqual(application.model.get(), {selected: 'gateway', visible: 1});
-    assert.equal(dom.window.document.querySelector('[data-era="southeast"]').hidden, true);
-    assert.equal(dom.window.document.querySelector('[data-era-filter="gateway"]').getAttribute('aria-current'), 'page');
-    application.mediator.emit('era:selected', 'unsupported');
+    assert.match(dom.window.document.querySelector('[data-filter-status]').textContent, /Showing 2 features/);
+    dom.window.document.querySelector('[data-feature-filter="runtime"]').dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
+    assert.deepEqual(application.model.get(), {selected: 'runtime', visible: 1});
+    assert.equal(dom.window.document.querySelector('[data-feature="core"]').hidden, true);
+    assert.equal(dom.window.document.querySelector('[data-feature-filter="runtime"]').getAttribute('aria-current'), 'page');
+    application.mediator.emit('feature:selected', 'unsupported');
     assert.deepEqual(application.model.get(), {selected: 'all', visible: 2});
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
-        dom.flushFrames();
+    dom.flushFrames();
     assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(0.25)');
     dom.window.scrollY = -10;
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
-        dom.flushFrames();
+    dom.flushFrames();
     assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(0)');
     dom.window.scrollY = 3000;
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
-        dom.flushFrames();
+    dom.flushFrames();
     assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(1)');
     application.destroy();
-    assert.equal(application.eraIndex.get().length, 0);
-    assert.equal(application.mediator.listenerCount('era:selected'), 0);
+    assert.equal(application.featureIndex.get().length, 0);
+    assert.equal(application.mediator.listenerCount('feature:selected'), 0);
 });
 
 test('integration handles progress boundaries and optional output elements', () => {
     const dom = installBrowser('<!doctype html><html><body><main></main><span data-reading-progress></span></body></html>');
-    const application = initializeGoldRushPage(dom.window.document);
+    const application = initializeWhiteLabelPage(dom.window.document);
     assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(0)');
     application.destroy();
     const noProgress = installBrowser('<!doctype html><html><body><main></main></body></html>');
-    initializeGoldRushPage(noProgress.window.document).destroy();
-    assert.equal(normalizeEra(undefined), 'all');
-    assert.equal(normalizeEra('gateway'), 'gateway');
+    initializeWhiteLabelPage(noProgress.window.document).destroy();
+    assert.equal(normalizeFeature(undefined), 'all');
+    assert.equal(normalizeFeature('runtime'), 'runtime');
     const detached = dom.window.document.implementation.createHTMLDocument('detached');
-    assert.throws(() => initializeGoldRushPage(detached), /browser document/);
+    assert.throws(() => initializeWhiteLabelPage(detached), /browser document/);
 });
 
 test.after(() => {
@@ -109,7 +109,7 @@ test.after(() => {
 
 test('progress updates coalesce, react to resize and cancel during teardown', () => {
     const dom = installBrowser();
-    const app = initializeGoldRushPage(dom.window.document);
+    const app = initializeWhiteLabelPage(dom.window.document);
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
     assert.equal(dom.pendingFrames(), 1);
