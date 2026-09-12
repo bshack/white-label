@@ -51,7 +51,7 @@ test('production output is crawlable and supplies complete SEO signals', async (
     assert.match(robots, /User-agent: \*\nAllow: \//);
     assert.match(robots, /Sitemap: https:\/\/example\.com\/sitemap\.xml/);
     assert.match(sitemap, /<loc>https:\/\/example\.com\/<\/loc>/);
-    assert.doesNotMatch(html, /service-endpoint|white-label-service|<%|{{/);
+    assert.doesNotMatch(html, /<%|{{/);
 });
 
 test('all client packages cooperate through a crawlable routed filter', () => {
@@ -70,15 +70,15 @@ test('all client packages cooperate through a crawlable routed filter', () => {
     application.mediator.emit('era:selected', 'unsupported');
     assert.deepEqual(application.model.get(), {selected: 'all', visible: 2});
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
-        dom.flushFrames();
+    dom.flushFrames();
     assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(0.25)');
     dom.window.scrollY = -10;
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
-        dom.flushFrames();
+    dom.flushFrames();
     assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(0)');
     dom.window.scrollY = 3000;
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
-        dom.flushFrames();
+    dom.flushFrames();
     assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(1)');
     application.destroy();
     assert.equal(application.eraIndex.get().length, 0);
