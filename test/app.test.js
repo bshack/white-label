@@ -17,7 +17,7 @@ function install(markupValue = markup) {
 const boot = install();
 const {initializeGoldRushPage, normalizeEra} = await import('../dist/app/assets/script/index.js');
 
-test('generated example integrates model, view, mediator, router, and Eta', () => {
+test('generated example integrates model, view, mediator, router, and JSX', () => {
     const dom = install();
     Object.defineProperty(dom.window.document.documentElement, 'scrollHeight', {value: 2000});
     Object.defineProperty(dom.window, 'innerHeight', {value: 1000});
