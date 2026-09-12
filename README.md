@@ -11,7 +11,7 @@ The generated example is the Gold North historical site. It is deliberately subs
 
 ## Versioning policy
 
-White Label does not preserve old APIs or generated-project behavior with compatibility aliases, deprecated signatures, sentinel arguments, duplicate code paths, or other runtime shims. When a public generator contract or generated application API changes incompatibly, that change is communicated with a Semantic Versioning major release and migration notes outside this README. Generated projects should use the current documented contracts directly rather than carrying forward compatibility code.
+White Label does not preserve superseded APIs or generated-project behavior with compatibility aliases, deprecated signatures, sentinel arguments, duplicate code paths, or other runtime shims. When a public generator contract or generated application API changes incompatibly, that change is communicated with a Semantic Versioning major release and release notes outside this README. Generated projects should use the current documented contracts directly rather than carrying compatibility code.
 
 ## Create a site
 
@@ -110,6 +110,6 @@ MIT
 
 ## Current performance notes
 
-The generated stylesheet includes Bootstrap's reset, theme variables, visually-hidden helper, and the flex/wrap/gap utilities used by the starter. Other Bootstrap components are no longer bundled by default. Add their Sass imports in `app/assets/style/bootstrap.scss` when adding those components. Bootstrap's MIT attribution is retained.
+The generated stylesheet includes Bootstrap's reset, theme variables, visually-hidden helper, and the flex/wrap/gap utilities used by the starter. Other Bootstrap components are not bundled by default. Add their Sass imports in `app/assets/style/bootstrap.scss` when adding those components. Bootstrap's MIT attribution is retained.
 
-The status template is compiled once. Scroll progress uses a coalesced animation frame and a transform; resize and route changes refresh it, and teardown cancels pending work. Runtime Eta compilation still occurs at initialization, so this is not a change to strict CSP compatibility. Runtime library revisions remain explicitly pinned and are adopted through reviewed version or commit updates.
+The status template is compiled once. Scroll progress uses a coalesced animation frame and a transform; resize and route changes refresh it, and teardown cancels pending work. Runtime Eta compilation occurs at initialization, so strict CSP deployments should account for that behavior. Runtime library revisions remain explicitly pinned and are adopted through reviewed version or commit updates.
