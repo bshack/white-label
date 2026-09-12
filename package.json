@@ -4,6 +4,9 @@
   "description": "A production-oriented static TypeScript site generator with accessible HTML, SEO output, Tailwind CSS, and White Label JSX.",
   "type": "module",
   "main": "dist/generators/app/index.js",
+  "bin": {
+    "white-label": "dist/cli/index.js"
+  },
   "engines": {
     "node": "^22.18.0 || >=24.11.0",
     "npm": ">=11.0"
@@ -18,11 +21,12 @@
     "coverage": "npm run compile && npm run test:types && c8 npm run test:unit",
     "prepack": "npm run compile",
     "test:types": "tsc -p tsconfig.consumer.json",
-    "lint": "eslint \"scripts/**/*.ts\" \"scaffold/**/*.ts\" \"generators/**/*.ts\" \"app/**/*.{ts,tsx}\" --max-warnings=0",
+    "lint": "eslint \"cli/**/*.ts\" \"scripts/**/*.ts\" \"scaffold/**/*.ts\" \"generators/**/*.ts\" \"app/**/*.{ts,tsx}\" --max-warnings=0",
     "lint:fix": "npm run lint -- --fix"
   },
   "files": [
     "app",
+    "cli",
     "generators",
     "scaffold",
     "scripts",
@@ -40,6 +44,8 @@
     "esbuild",
     "tailwindcss",
     "jsx",
+    "cli",
+    "scaffolding",
     "yeoman-generator",
     "white-label"
   ],
@@ -85,6 +91,7 @@
   "c8": {
     "all": true,
     "include": [
+      "cli/**/*.ts",
       "scripts/**/*.ts",
       "scaffold/**/*.ts",
       "generators/**/*.ts",
