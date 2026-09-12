@@ -21,8 +21,12 @@ export default class extends Generator {
         await createSite({
             destination: this.destinationRoot(),
             fileSystem: {
-                copy: (source, destination) => this.fs.copy(source, destination),
-                writeJSON: (destination, value) => this.fs.writeJSON(destination, value)
+                copy: (source, destination) => {
+                    this.fs.copy(source, destination);
+                },
+                writeJSON: (destination, value) => {
+                    this.fs.writeJSON(destination, value);
+                }
             }
         });
     }
