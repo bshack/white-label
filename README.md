@@ -1,6 +1,6 @@
 # generator-white-label
 
-`generator-white-label` creates a small, production-oriented static TypeScript site. Version 6 uses Eta templates, Sass, a curated Bootstrap 5.3 stylesheet, and the white-label model, view, router, and mediator packages. It renders meaningful HTML during the build so content does not depend on JavaScript for accessibility or search discovery.
+`generator-white-label` creates a small, production-oriented static TypeScript site. Version 7 uses Eta templates, Sass, a curated Bootstrap 5.3 stylesheet, and the white-label model, view, router, and mediator packages. It renders meaningful HTML during the build so content does not depend on JavaScript for accessibility or search discovery.
 
 The generated example is the Gold North historical site. It is deliberately substantial enough to exercise the complete stack; replace its editorial content while retaining the tested structure and conventions.
 
@@ -96,13 +96,24 @@ For indexing, deploy public pages with successful `200` responses, do not add `n
 
 The generated browser entry demonstrates:
 
-- `white-label-model`: observable object/array/Map state and lifecycle.
+- `white-label-model`: one observable entry point for plain-object, array, and Map state.
 - `white-label-view`: DOM lifecycle and model-driven rendering.
 - `white-label-mediator`: decoupled selection and navigation events.
 - `white-label-router`: crawlable query-string navigation with History API enhancement.
 - Eta: escaped server/build-time pages and client-side view markup.
 
 `white-label-service` remains independent and is not required by the static example.
+
+## Version 7 migration
+
+Version 7 adopts the unified `white-label-model` 6 API and removes the generated application's separate `Collection` contract.
+
+- Import only `Model` from `white-label-model`.
+- Use `new Model(array)` or `new Model(map)` for collection-shaped state.
+- The generated application handle formerly named `collection` is now `eraIndex` and is a `Model` containing the era array.
+- No `Collection` alias or compatibility adapter is generated.
+
+This is a SemVer major release because the generated application's exported handle and type contract change.
 
 ## Version 6 migration
 
@@ -122,4 +133,4 @@ MIT
 
 The generated stylesheet includes Bootstrap's reset, theme variables, visually-hidden helper, and the flex/wrap/gap utilities used by the starter. Other Bootstrap components are no longer bundled by default. Add their Sass imports in `app/assets/style/bootstrap.scss` when adding those components. Bootstrap's MIT attribution is retained.
 
-The status template is compiled once. Scroll progress uses a coalesced animation frame and a transform; resize and route changes refresh it, and teardown cancels pending work. Runtime Eta compilation still occurs at initialization, so this is not a change to strict CSP compatibility. Published library versions remain pinned until their fixes are released and explicitly adopted.
+The status template is compiled once. Scroll progress uses a coalesced animation frame and a transform; resize and route changes refresh it, and teardown cancels pending work. Runtime Eta compilation still occurs at initialization, so this is not a change to strict CSP compatibility. Runtime library revisions remain explicitly pinned and are adopted through reviewed version or commit updates.
