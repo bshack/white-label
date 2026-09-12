@@ -1,0 +1,90 @@
+name: Migrate generator to Model 6
+
+on:
+  push:
+    branches:
+      - chore/model-6-unified-20260911
+    paths:
+      - .github/workflows/model-6-migration.yml
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.21.0
+          cache: npm
+      - name: Apply Model 6 migration
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          model_ref = 'github:bshack/white-label-model#582bef8c70cc246b2cd76b34aeb472ea7fef2f90'
+
+          package = Path('package.json')
+          data = json.loads(package.read_text())
+          data['version'] = '6.1.0'
+          data['devDependencies']['white-label-model'] = model_ref
+          package.write_text(json.dumps(data, indent=2) + '\n')
+
+          generator = Path('generators/app/index.ts')
+          text = generator.read_text()
+          text = text.replace("'white-label-model': '3.0.0'", f"'white-label-model': '{model_ref}'")
+          generator.write_text(text)
+
+          app = Path('app/assets/script/index.ts')
+          text = app.read_text()
+          text = text.replace("import {Collection, Model} from 'white-label-model';", "import {Model} from 'white-label-model';")
+          text = text.replace('    collection: Collection;\n', '    eraIndex: Model<string[]>;\n')
+          text = text.replace('    const collection = new Collection(cards.map(card => card.dataset.era)).initialize();', "    const eraIndex = new Model(cards.map(card => card.dataset.era ?? '')).initialize();")
+          text = text.replace('        collection,\n', '        eraIndex,\n')
+          text = text.replace('            collection.destroy();', '            eraIndex.destroy();')
+          app.write_text(text)
+
+          for name in ['test/app.test.js', 'template-test/site.test.js']:
+              path = Path(name)
+              text = path.read_text().replace('application.collection', 'application.eraIndex')
+              text = text.replace('Model, Collection, View, Mediator, and Router', 'unified Model, View, Mediator, and Router')
+              path.write_text(text)
+
+          generator_test = Path('test/generator.test.js')
+          text = generator_test.read_text().replace("assert.equal(manifest.dependencies['white-label-model'], '3.0.0');", f"assert.equal(manifest.dependencies['white-label-model'], '{model_ref}');")
+          generator_test.write_text(text)
+
+          for name in ['README.md', 'app/README.md']:
+              path = Path(name)
+              text = path.read_text()
+              text = text.replace('Model and Collection', 'the unified Model')
+              text = text.replace('Model/Collection', 'Model')
+              text = text.replace('model and collection', 'model')
+              text = text.replace('model, collection, view, mediator, and router', 'unified model, view, mediator, and router')
+              text = text.replace('observable filter state and collection lifecycle', 'observable object/array/Map state and lifecycle')
+              path.write_text(text)
+          PY
+          if grep -R --line-number --exclude-dir=node_modules --exclude=package-lock.json -E "import \{Collection|\bCollection\b|application\.collection|collection: Collection|new Collection" app generators test template-test README.md; then
+            echo 'Legacy Collection references remain.' >&2
+            exit 1
+          fi
+      - run: npm install --package-lock-only --ignore-scripts
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run coverage
+      - run: npm run audit
+      - run: npm pack --dry-run
+      - name: Commit migration
+        run: |
+          git add package.json package-lock.json generators/app/index.ts app/assets/script/index.ts test/app.test.js template-test/site.test.js test/generator.test.js README.md app/README.md dist
+          git add -u dist
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'Adopt unified Model 6 API'
+          git push
