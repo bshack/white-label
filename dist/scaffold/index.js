@@ -38,9 +38,9 @@ export function createSiteManifest() {
             'typescript': '7.0.2'
         },
         dependencies: {
-            'white-label-mediator': '3.0.0',
-            'white-label-model': 'github:bshack/white-label-model#582bef8c70cc246b2cd76b34aeb472ea7fef2f90',
-            'white-label-router': '4.0.0',
+            'white-label-mediator': 'github:bshack/white-label-mediator#bdfa86b7db8843792e963b5ad38592f55773097e',
+            'white-label-model': 'github:bshack/white-label-model#fb6230fb120a244d80a1edc6908c04519573e3b9',
+            'white-label-router': 'github:bshack/white-label-router#31a48516cebb70af7fa9a681bcf92d84585118a6',
             'white-label-view': 'github:bshack/white-label-view#42b23195e7a1aac91a5e7d969e5c5c88e5b1e691'
         }
     };
