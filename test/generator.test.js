@@ -1,12 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp, rm, symlink, readFile, writeFile, cp} from 'node:fs/promises';
+import {mkdtemp, rm, symlink, readFile, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createEnv} from 'yeoman-environment';
 import {build, parseArguments} from '../dist/scripts/build.js';
+import {createSite, createSiteManifest} from '../dist/scaffold/index.js';
 const root = path.resolve('.');
+
+test('programmatic scaffold API creates the same reviewable site without Yeoman', async t => {
+    const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-scaffold-'));
+    t.after(() => rm(temporary, {recursive: true, force: true}));
+    const destination = path.join(temporary, 'site');
+    await createSite({destination});
+    assert.deepEqual(JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8')), createSiteManifest());
+    assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), /TypeScript/);
+    assert.match(await readFile(path.join(destination, 'tsconfig.json'), 'utf8'), /strict/);
+    assert.match(await readFile(path.join(destination, 'scripts/build.ts'), 'utf8'), /build/);
+    assert.match(await readFile(path.join(destination, 'test/site.test.js'), 'utf8'), /test/);
+});
+
 test('packaged generator creates a strictly typed site that builds in development and production', async t => {
     const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-generator-'));
     t.after(() => rm(temporary, {recursive: true, force: true}));
@@ -21,6 +35,7 @@ test('packaged generator creates a strictly typed site that builds in developmen
     env.register(path.join(temporary, 'package/generators/app/index.js'), {namespace: 'white-label:app'});
     await env.run('white-label:app', {skipInstall: true, force: true});
     const manifest = JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8'));
+    assert.deepEqual(manifest, createSiteManifest());
     assert.equal(manifest.type, 'module');
     assert.equal(manifest.dependencies['white-label-model'], 'github:bshack/white-label-model#582bef8c70cc246b2cd76b34aeb472ea7fef2f90');
     assert.equal(manifest.dependencies['white-label-view'], '4.0.0');
@@ -55,6 +70,7 @@ test('packaged generator creates a strictly typed site that builds in developmen
     await writeFile(path.join(destination, 'app/assets/data/view/no-data.json'), '{invalid');
     await assert.rejects(build(parseArguments(['--version=invalid']), destination), SyntaxError);
 });
+
 test('build default arguments work through the compiled CLI', () => {
     execFileSync(process.execPath, ['dist/scripts/build.js'], {cwd: root, stdio: 'pipe'});
     assert.equal(parseArguments([]).www, '/');
