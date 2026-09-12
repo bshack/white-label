@@ -1,7 +1,7 @@
 /** @module app/assets/script/index */
 import {Eta} from 'eta/core';
 import Mediator from 'white-label-mediator';
-import {Collection, Model} from 'white-label-model';
+import {Model} from 'white-label-model';
 import Router from 'white-label-router';
 import View from 'white-label-view';
 
@@ -11,7 +11,7 @@ interface EraState {selected: string; visible: number}
 /** Public handles used to verify and release every integrated white-label package. */
 export interface GoldRushApplication {
     mediator: Mediator;
-    collection: Collection;
+    eraIndex: Model<Array<string | undefined>>;
     model: Model;
     router: Router;
     view: View;
@@ -35,7 +35,7 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
     const eta = new Eta({autoEscape: true});
     const statusTemplate = eta.compile('<p>Showing <%= it.visible %> <%= it.visible === 1 ? "era" : "eras" %>.</p>');
     const mediator = new Mediator().initialize();
-    const collection = new Collection(cards.map(card => card.dataset.era)).initialize();
+    const eraIndex = new Model(cards.map(card => card.dataset.era)).initialize();
     const model = new Model({selected: 'all', visible: cards.length});
     if (status) {status.replaceChildren();}
     const view = new View({
@@ -93,7 +93,7 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
 
 
     return {
-        collection,
+        eraIndex,
         mediator,
         model,
         router,
@@ -104,7 +104,7 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
             if (progressFrame !== undefined) {windowRoot.cancelAnimationFrame(progressFrame);}
             router.destroy();
             view.destroy();
-            collection.destroy();
+            eraIndex.destroy();
             model.destroy();
             mediator.destroy();
         }

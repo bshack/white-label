@@ -96,7 +96,7 @@ For indexing, deploy public pages with successful `200` responses, do not add `n
 
 The generated browser entry demonstrates:
 
-- `white-label-model`: observable filter state and collection lifecycle.
+- `white-label-model`: observable object/array/Map state and lifecycle.
 - `white-label-view`: DOM lifecycle and model-driven rendering.
 - `white-label-mediator`: decoupled selection and navigation events.
 - `white-label-router`: crawlable query-string navigation with History API enhancement.

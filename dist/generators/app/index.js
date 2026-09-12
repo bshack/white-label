@@ -48,7 +48,7 @@ export default class extends Generator {
             dependencies: {
                 eta: '4.6.0',
                 'white-label-mediator': '3.0.0',
-                'white-label-model': '3.0.0',
+                'white-label-model': 'github:bshack/white-label-model#582bef8c70cc246b2cd76b34aeb472ea7fef2f90',
                 'white-label-router': '4.0.0',
                 'white-label-view': '4.0.0'
             }

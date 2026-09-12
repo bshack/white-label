@@ -1,7 +1,7 @@
 /** @module app/assets/script/index */
 import { Eta } from 'eta/core';
 import Mediator from 'white-label-mediator';
-import { Collection, Model } from 'white-label-model';
+import { Model } from 'white-label-model';
 import Router from 'white-label-router';
 import View from 'white-label-view';
 const eras = new Set(['all', 'southeast', 'gateway', 'far-north']);
@@ -22,7 +22,7 @@ export function initializeGoldRushPage(documentRoot) {
     const eta = new Eta({ autoEscape: true });
     const statusTemplate = eta.compile('<p>Showing <%= it.visible %> <%= it.visible === 1 ? "era" : "eras" %>.</p>');
     const mediator = new Mediator().initialize();
-    const collection = new Collection(cards.map(card => card.dataset.era)).initialize();
+    const eraIndex = new Model(cards.map(card => card.dataset.era)).initialize();
     const model = new Model({ selected: 'all', visible: cards.length });
     if (status) {
         status.replaceChildren();
@@ -86,7 +86,7 @@ export function initializeGoldRushPage(documentRoot) {
     router.routes = { '/': route, defaultRoute: route };
     router.initialize();
     return {
-        collection,
+        eraIndex,
         mediator,
         model,
         router,
@@ -99,7 +99,7 @@ export function initializeGoldRushPage(documentRoot) {
             }
             router.destroy();
             view.destroy();
-            collection.destroy();
+            eraIndex.destroy();
             model.destroy();
             mediator.destroy();
         }

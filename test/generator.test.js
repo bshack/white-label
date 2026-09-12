@@ -22,7 +22,7 @@ test('packaged generator creates a strictly typed site that builds in developmen
     await env.run('white-label:app', {skipInstall: true, force: true});
     const manifest = JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8'));
     assert.equal(manifest.type, 'module');
-    assert.equal(manifest.dependencies['white-label-model'], '3.0.0');
+    assert.equal(manifest.dependencies['white-label-model'], 'github:bshack/white-label-model#582bef8c70cc246b2cd76b34aeb472ea7fef2f90');
     assert.equal(manifest.dependencies['white-label-view'], '4.0.0');
     assert.equal(manifest.dependencies['white-label-router'], '4.0.0');
     assert.equal(manifest.dependencies['white-label-mediator'], '3.0.0');
