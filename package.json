@@ -18,12 +18,13 @@
     "coverage": "npm run compile && npm run test:types && c8 npm run test:unit",
     "prepack": "npm run compile",
     "test:types": "tsc -p tsconfig.consumer.json",
-    "lint": "eslint \"scripts/**/*.ts\" \"generators/**/*.ts\" \"app/assets/script/**/*.{ts,tsx}\" --max-warnings=0",
+    "lint": "eslint \"scripts/**/*.ts\" \"scaffold/**/*.ts\" \"generators/**/*.ts\" \"app/assets/script/**/*.{ts,tsx}\" --max-warnings=0",
     "lint:fix": "npm run lint -- --fix"
   },
   "files": [
     "app",
     "generators",
+    "scaffold",
     "scripts",
     "template-test",
     "README.md",
@@ -83,6 +84,7 @@
     "all": true,
     "include": [
       "scripts/**/*.ts",
+      "scaffold/**/*.ts",
       "generators/**/*.ts",
       "app/assets/script/**/*.ts",
       "app/assets/script/**/*.tsx"
@@ -109,6 +111,11 @@
       "types": "./dist/generators/app/index.d.ts",
       "import": "./dist/generators/app/index.js",
       "default": "./dist/generators/app/index.js"
+    },
+    "./scaffold": {
+      "types": "./dist/scaffold/index.d.ts",
+      "import": "./dist/scaffold/index.js",
+      "default": "./dist/scaffold/index.js"
     }
   },
   "packageManager": "npm@11.19.1"

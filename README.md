@@ -15,6 +15,8 @@ White Label does not preserve superseded APIs or generated-project behavior with
 
 ## Create a site
 
+The Yeoman interface remains available as an optional interactive wrapper:
+
 ```sh
 npm install --global yo generator-white-label
 mkdir my-site && cd my-site
@@ -22,6 +24,18 @@ yo white-label
 npm install
 npm test
 ```
+
+The scaffold can also be called directly from Node without creating a Yeoman environment:
+
+```js
+import {createSite} from 'generator-white-label/scaffold';
+
+await createSite({
+    destination: new URL('./my-site', import.meta.url).pathname
+});
+```
+
+`createSite()` is the canonical scaffold implementation. The Yeoman generator delegates to that API through Yeoman's staged filesystem adapter, so both entry points generate the same files and manifest. Integrations that stage filesystem changes may supply a custom `fileSystem` adapter implementing `copy()` and `writeJSON()`.
 
 The generated manifest is intentionally reviewable before installation. Runtime application libraries are in `dependencies`; compilers, Bootstrap source CSS, validation tools, test DOM, and type declarations are in `devDependencies`.
 
