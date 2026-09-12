@@ -11,10 +11,6 @@ The generated example is the Gold North historical site. It is deliberately subs
 - Node.js `^22.18.0` or `>=24.11.0`
 - npm 11 or newer
 
-## Versioning policy
-
-White Label does not preserve superseded APIs or generated-project behavior with compatibility aliases, deprecated signatures, sentinel arguments, duplicate code paths, or other runtime shims. When a public generator contract or generated application API changes incompatibly, that change is communicated with a Semantic Versioning major release and release notes outside this README. Generated projects should use the current documented contracts directly rather than carrying compatibility code.
-
 ## Create a site
 
 ### First-party CLI
@@ -174,4 +170,4 @@ MIT
 
 Tailwind is compiled to static CSS during the build and emits only detected utilities plus the starter's project-specific CSS. No browser-side Tailwind runtime, Bootstrap JavaScript, web-font request, or template compiler is shipped to the client.
 
-Scroll progress uses a coalesced animation frame and a transform; resize and route changes refresh it, and teardown cancels pending work. JSX rendering uses the White Label runtime directly rather than runtime template compilation, which removes the starter's previous Eta compilation requirement and is friendlier to strict CSP deployments. Runtime library revisions remain explicitly pinned and are adopted through reviewed version or commit updates.
+Scroll progress uses a coalesced animation frame and a transform; resize and route changes refresh it, and teardown cancels pending work. JSX rendering uses the White Label runtime directly rather than runtime template compilation, which removes the starter's previous Eta compilation requirement and is friendlier to strict CSP deployments.
