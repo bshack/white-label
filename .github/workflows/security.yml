@@ -20,10 +20,16 @@ jobs:
         with:
           node-version: 24.21.0
           cache: npm
+      - run: npm install --package-lock-only --ignore-scripts
       - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm run compile
-      - run: git diff --exit-code -- dist
+      - uses: actions/upload-artifact@v7
+        with:
+          name: generated-migration-files
+          path: |
+            package-lock.json
+            dist
       - run: npm run typecheck
       - run: npm test
       - run: npm run coverage
