@@ -4,7 +4,20 @@ This static historical site uses TypeScript and the White Label JSX runtime for 
 
 ## Start developing
 
-Use Node.js `^22.18.0` or `>=24.11.0`, matching the generated `package.json`, with npm 11 or newer. Run `npm ci`, then `npm test`. The build output is `_deploy`; serve that directory with your preferred static server. The test suite checks the narrative, progressive interaction, production build, accessibility/indexability signals, and full coverage for the custom browser code.
+Use Node.js `^22.18.0` or `>=24.11.0`, matching the generated `package.json`, with npm 11 or newer.
+
+```sh
+npm ci
+npm test
+npm run build -- --version=local
+python3 -m http.server 8080 --directory _deploy
+```
+
+Then open `http://localhost:8080/`.
+
+Serve `_deploy` as the web server's document root. Do **not** browse to `_deploy/index.html` through a server rooted at the project directory (for example, `/white-label-site/_deploy/index.html`), because generated asset URLs such as `/release/local/assets/style/global.css` are intentionally rooted at the deployed site's origin and will otherwise return 404 responses.
+
+The build output is `_deploy`. The test suite checks the narrative, progressive interaction, production build, accessibility/indexability signals, and full coverage for the custom browser code.
 
 Pages live in `app/*.tsx`, page data lives in `app/assets/data/view`, browser code lives in `app/assets/script`, and shared styles live in `app/assets/style`. TypeScript is configured with `jsx: react-jsx` and `jsxImportSource: white-label-view`, so JSX does not require React.
 
