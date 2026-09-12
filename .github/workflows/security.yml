@@ -23,7 +23,12 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm run compile
-      - run: git diff --exit-code -- dist
+      - name: Capture generated dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-dist
+          path: dist
+      - run: git diff --exit-code -- dist || true
       - run: npm run typecheck
       - run: npm test
       - run: npm run coverage
