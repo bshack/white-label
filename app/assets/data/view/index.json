@@ -1,15 +1,15 @@
 {
-    "title": "Gold North | The American Gold Rush in Alaska",
+    "title": "White Label | TypeScript Web Starter",
     "scripts":{
         "global":"assets/script/global.compiled.js",
         "section":"assets/script/index.compiled.js"
     },
     "structuredData": {
       "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Gold North: The American Gold Rush in Alaska",
-      "description": "A sourced history of how American gold rushes reshaped Alaska.",
-      "author": {"@type": "Organization", "name": "Gold North"},
+      "@type": "WebPage",
+      "name": "White Label TypeScript Web Starter",
+      "description": "A production-minded starter demonstrating the White Label TypeScript web stack.",
+      "author": {"@type": "Organization", "name": "White Label"},
       "inLanguage": "en-US"
     }
 }

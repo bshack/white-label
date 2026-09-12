@@ -4,23 +4,23 @@ import Mediator from 'white-label-mediator';
 import { Model } from 'white-label-model';
 import Router from 'white-label-router';
 import View from 'white-label-view';
-const eras = new Set(['all', 'southeast', 'gateway', 'far-north']);
-/** Return a supported era, falling back to the complete chronology. */
-export function normalizeEra(value) {
-    return value && eras.has(value) ? value : 'all';
+const features = new Set(['all', 'core', 'runtime', 'tooling']);
+/** Return a supported feature group, falling back to the complete showcase. */
+export function normalizeFeature(value) {
+    return value && features.has(value) ? value : 'all';
 }
 /** Initialize the JSX, model, view, mediator, and router integration. */
-export function initializeGoldRushPage(documentRoot) {
+export function initializeWhiteLabelPage(documentRoot) {
     const windowRoot = documentRoot.defaultView;
     if (!windowRoot) {
-        throw new TypeError('Gold North requires a browser document');
+        throw new TypeError('White Label requires a browser document');
     }
     const progress = documentRoot.querySelector('[data-reading-progress]');
-    const links = [...documentRoot.querySelectorAll('[data-era-filter]')];
-    const cards = [...documentRoot.querySelectorAll('[data-era]')];
+    const links = [...documentRoot.querySelectorAll('[data-feature-filter]')];
+    const cards = [...documentRoot.querySelectorAll('[data-feature]')];
     const status = documentRoot.querySelector('[data-filter-status]');
     const mediator = new Mediator().initialize();
-    const eraIndex = new Model(cards.map(card => card.dataset.era)).initialize();
+    const featureIndex = new Model(cards.map(card => card.dataset.feature)).initialize();
     const model = new Model({ selected: 'all', visible: cards.length });
     if (status) {
         status.replaceChildren();
@@ -30,7 +30,7 @@ export function initializeGoldRushPage(documentRoot) {
         model,
         template(data) {
             const state = data;
-            return _jsxs("p", { children: ["Showing ", state.visible, " ", state.visible === 1 ? 'era' : 'eras', "."] });
+            return _jsxs("p", { children: ["Showing ", state.visible, " ", state.visible === 1 ? 'feature' : 'features', "."] });
         }
     }).initialize();
     let progressFrame;
@@ -51,11 +51,11 @@ export function initializeGoldRushPage(documentRoot) {
     windowRoot.addEventListener('scroll', scheduleProgress, { passive: true });
     windowRoot.addEventListener('resize', scheduleProgress);
     updateProgress();
-    const selectEra = (selectedValue) => {
-        const selected = normalizeEra(selectedValue);
+    const selectFeature = (selectedValue) => {
+        const selected = normalizeFeature(selectedValue);
         let visible = 0;
         for (const link of links) {
-            if (link.dataset.eraFilter === selected) {
+            if (link.dataset.featureFilter === selected) {
                 link.setAttribute('aria-current', 'page');
             }
             else {
@@ -63,7 +63,7 @@ export function initializeGoldRushPage(documentRoot) {
             }
         }
         for (const card of cards) {
-            const show = selected === 'all' || card.dataset.era === selected;
+            const show = selected === 'all' || card.dataset.feature === selected;
             card.hidden = !show;
             if (show) {
                 visible += 1;
@@ -72,17 +72,17 @@ export function initializeGoldRushPage(documentRoot) {
         model.set({ selected, visible });
         scheduleProgress();
     };
-    mediator.on('era:selected', selectEra);
+    mediator.on('feature:selected', selectFeature);
     const router = new Router();
     router.scope = documentRoot.querySelector('main');
     router.mediator = mediator;
     const route = (_scope, location) => {
-        mediator.emit('era:selected', location.data.query.era);
+        mediator.emit('feature:selected', location.data.query.feature);
     };
     router.routes = { '/': route, defaultRoute: route };
     router.initialize();
     return {
-        eraIndex,
+        featureIndex,
         mediator,
         model,
         router,
@@ -95,11 +95,11 @@ export function initializeGoldRushPage(documentRoot) {
             }
             router.destroy();
             view.destroy();
-            eraIndex.destroy();
+            featureIndex.destroy();
             model.destroy();
             mediator.destroy();
         }
     };
 }
-initializeGoldRushPage(document);
+initializeWhiteLabelPage(document);
 //# sourceMappingURL=index.js.map

@@ -3,16 +3,16 @@ import Mediator from 'white-label-mediator';
 import { Model } from 'white-label-model';
 import Router from 'white-label-router';
 import View from 'white-label-view';
-/** Public handles used to verify and release every integrated white-label package. */
-export interface GoldRushApplication {
+/** Public handles used to verify and release every integrated White Label package. */
+export interface WhiteLabelApplication {
     mediator: Mediator;
-    eraIndex: Model<Array<string | undefined>>;
+    featureIndex: Model<Array<string | undefined>>;
     model: Model;
     router: Router;
     view: View;
     destroy(): void;
 }
-/** Return a supported era, falling back to the complete chronology. */
-export declare function normalizeEra(value: string | undefined): string;
+/** Return a supported feature group, falling back to the complete showcase. */
+export declare function normalizeFeature(value: string | undefined): string;
 /** Initialize the JSX, model, view, mediator, and router integration. */
-export declare function initializeGoldRushPage(documentRoot: Document): GoldRushApplication;
+export declare function initializeWhiteLabelPage(documentRoot: Document): WhiteLabelApplication;
