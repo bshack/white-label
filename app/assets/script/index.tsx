@@ -4,43 +4,43 @@ import {Model} from 'white-label-model';
 import Router from 'white-label-router';
 import View from 'white-label-view';
 
-const eras = new Set(['all', 'southeast', 'gateway', 'far-north']);
-interface EraState {selected: string; visible: number}
+const features = new Set(['all', 'core', 'runtime', 'tooling']);
+interface FeatureState {selected: string; visible: number}
 
-/** Public handles used to verify and release every integrated white-label package. */
-export interface GoldRushApplication {
+/** Public handles used to verify and release every integrated White Label package. */
+export interface WhiteLabelApplication {
     mediator: Mediator;
-    eraIndex: Model<Array<string | undefined>>;
+    featureIndex: Model<Array<string | undefined>>;
     model: Model;
     router: Router;
     view: View;
     destroy(): void;
 }
 
-/** Return a supported era, falling back to the complete chronology. */
-export function normalizeEra(value: string | undefined): string {
-    return value && eras.has(value) ? value : 'all';
+/** Return a supported feature group, falling back to the complete showcase. */
+export function normalizeFeature(value: string | undefined): string {
+    return value && features.has(value) ? value : 'all';
 }
 
 /** Initialize the JSX, model, view, mediator, and router integration. */
-export function initializeGoldRushPage(documentRoot: Document): GoldRushApplication {
+export function initializeWhiteLabelPage(documentRoot: Document): WhiteLabelApplication {
     const windowRoot = documentRoot.defaultView;
-    if (!windowRoot) {throw new TypeError('Gold North requires a browser document');}
+    if (!windowRoot) {throw new TypeError('White Label requires a browser document');}
 
     const progress = documentRoot.querySelector<HTMLElement>('[data-reading-progress]');
-    const links = [...documentRoot.querySelectorAll<HTMLAnchorElement>('[data-era-filter]')];
-    const cards = [...documentRoot.querySelectorAll<HTMLElement>('[data-era]')];
+    const links = [...documentRoot.querySelectorAll<HTMLAnchorElement>('[data-feature-filter]')];
+    const cards = [...documentRoot.querySelectorAll<HTMLElement>('[data-feature]')];
     const status = documentRoot.querySelector<HTMLElement>('[data-filter-status]');
     const mediator = new Mediator().initialize();
-    const eraIndex = new Model(cards.map(card => card.dataset.era)).initialize();
+    const featureIndex = new Model(cards.map(card => card.dataset.feature)).initialize();
     const model = new Model({selected: 'all', visible: cards.length});
     if (status) {status.replaceChildren();}
     const view = new View({
         parentElement: status ?? undefined,
         model,
         template(data) {
-            const state = data as EraState;
-            return <p>Showing {state.visible} {state.visible === 1 ? 'era' : 'eras'}.</p>;
+            const state = data as FeatureState;
+            return <p>Showing {state.visible} {state.visible === 1 ? 'feature' : 'features'}.</p>;
         }
     }).initialize();
 
@@ -59,15 +59,15 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
     windowRoot.addEventListener('resize', scheduleProgress);
     updateProgress();
 
-    const selectEra = (selectedValue?: string): void => {
-        const selected = normalizeEra(selectedValue);
+    const selectFeature = (selectedValue?: string): void => {
+        const selected = normalizeFeature(selectedValue);
         let visible = 0;
         for (const link of links) {
-            if (link.dataset.eraFilter === selected) {link.setAttribute('aria-current', 'page');}
+            if (link.dataset.featureFilter === selected) {link.setAttribute('aria-current', 'page');}
             else {link.removeAttribute('aria-current');}
         }
         for (const card of cards) {
-            const show = selected === 'all' || card.dataset.era === selected;
+            const show = selected === 'all' || card.dataset.feature === selected;
             card.hidden = !show;
             if (show) {visible += 1;}
         }
@@ -75,18 +75,18 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
         scheduleProgress();
     };
 
-    mediator.on('era:selected', selectEra);
+    mediator.on('feature:selected', selectFeature);
     const router = new Router();
     router.scope = documentRoot.querySelector('main');
     router.mediator = mediator;
     const route = (_scope: Element | null, location: {data: {query: Record<string, string>}}): void => {
-        mediator.emit('era:selected', location.data.query.era);
+        mediator.emit('feature:selected', location.data.query.feature);
     };
     router.routes = {'/': route, defaultRoute: route};
     router.initialize();
 
     return {
-        eraIndex,
+        featureIndex,
         mediator,
         model,
         router,
@@ -97,11 +97,11 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
             if (progressFrame !== undefined) {windowRoot.cancelAnimationFrame(progressFrame);}
             router.destroy();
             view.destroy();
-            eraIndex.destroy();
+            featureIndex.destroy();
             model.destroy();
             mediator.destroy();
         }
     };
 }
 
-initializeGoldRushPage(document);
+initializeWhiteLabelPage(document);
