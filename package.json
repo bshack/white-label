@@ -76,6 +76,7 @@
     "yeoman-environment": "7.0.0",
     "@babel/core": "8.0.5",
     "@babel/eslint-parser": "8.0.5",
+    "@babel/plugin-syntax-jsx": "8.0.1",
     "@babel/preset-typescript": "8.0.1",
     "@eslint/js": "10.0.1",
     "eslint": "10.10.0"
