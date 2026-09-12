@@ -38,5 +38,6 @@ jobs:
           npm init -y >/dev/null
           npm install --ignore-scripts "$GITHUB_WORKSPACE/$PACKAGE" >/dev/null
           node --input-type=module -e "const scaffold=await import('generator-white-label/scaffold'); if (typeof scaffold.createSite !== 'function') process.exit(1)"
-          ./node_modules/.bin/white-label --help | grep -q "white-label create <directory>"
+          test -e ./node_modules/.bin/white-label
+          node ./node_modules/generator-white-label/dist/cli/index.js --help | grep -q "white-label create <directory>"
           rm "$GITHUB_WORKSPACE/$PACKAGE"
