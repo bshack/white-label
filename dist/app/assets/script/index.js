@@ -102,3 +102,4 @@ export function initializeWhiteLabelPage(documentRoot) {
     };
 }
 initializeWhiteLabelPage(document);
+//# sourceMappingURL=index.js.map
