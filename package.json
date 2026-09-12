@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "version": "7.0.0",
-  "description": "Scaffolding for developing and building static sites.",
+  "description": "A production-oriented static TypeScript site generator with accessible HTML, SEO output, and White Label integration.",
   "type": "module",
   "main": "dist/generators/app/index.js",
   "engines": {
@@ -31,12 +31,14 @@
     "tsconfig.site.json"
   ],
   "keywords": [
-    "eta",
+    "typescript",
+    "static-site-generator",
     "accessibility",
     "seo",
-    "sass",
+    "progressive-enhancement",
     "esbuild",
-    "yeoman-generator"
+    "yeoman-generator",
+    "white-label"
   ],
   "author": "Bill Shackelford",
   "license": "MIT",
