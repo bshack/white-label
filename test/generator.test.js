@@ -37,6 +37,7 @@ async function waitForPreview(origin, process) {
         try {
             const response = await fetch(`${origin}/`);
             if (response.ok) {return response;}
+            await response.arrayBuffer();
         } catch {}
         await new Promise(resolve => setTimeout(resolve, 100));
     }
@@ -66,10 +67,11 @@ async function verifyLocalPreview(destination) {
         for (const url of localUrls) {
             const assetResponse = await fetch(new URL(url, origin));
             assert.equal(assetResponse.status, 200, `${url} should be served from _deploy`);
+            await assetResponse.arrayBuffer();
         }
     } finally {
-        preview.kill('SIGTERM');
-        await new Promise(resolve => preview.once('exit', resolve));
+        if (preview.exitCode === null) {preview.kill('SIGTERM');}
+        await new Promise(resolve => preview.exitCode === null ? preview.once('exit', resolve) : resolve());
     }
 }
 
