@@ -74,7 +74,7 @@ test('packaged generator creates a strictly typed Tailwind and JSX site that bui
     await writeFile(path.join(destination, 'app/no-data.tsx'), "export default function Page(data: Record<string, unknown>) { return <p>{String(data.www)}</p>; }\n");
     compileSite(destination);
     await build(parseArguments(['--version=no-data']), destination);
-    assert.match(await readFile(path.join(destination, '_deploy/no-data.html'), 'utf8'), /<p>\/</p>/);
+    assert.ok((await readFile(path.join(destination, '_deploy/no-data.html'), 'utf8')).includes('<p>/</p>'));
     assert.match(await readFile(path.join(destination, '_deploy/robots.txt'), 'utf8'), /Allow: \//);
     assert.match(await readFile(path.join(destination, '_deploy/sitemap.xml'), 'utf8'), /http:\/\/localhost:8080/);
 
