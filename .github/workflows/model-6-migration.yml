@@ -29,7 +29,7 @@ jobs:
 
           package = Path('package.json')
           data = json.loads(package.read_text())
-          data['version'] = '6.1.0'
+          data['version'] = '7.0.0'
           data['devDependencies']['white-label-model'] = model_ref
           package.write_text(json.dumps(data, indent=2) + '\n')
 
