@@ -11,6 +11,8 @@
     "outDir": "dist",
     "rootDir": ".",
     "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "white-label-view",
     "types": [
       "node"
     ],
@@ -18,7 +20,7 @@
   },
   "include": [
     "scripts/**/*.ts",
-    "app/assets/script/**/*.ts",
-    "app/assets/script/**/*.tsx"
+    "app/**/*.ts",
+    "app/**/*.tsx"
   ]
 }
