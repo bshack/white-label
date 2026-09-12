@@ -25,6 +25,10 @@ function usage() {
     ].join('\n');
 }
 
+export function formatCliError(error: unknown) {
+    return error instanceof Error ? error.message : String(error);
+}
+
 export async function runCli(args: readonly string[], dependencies: CliDependencies = {}) {
     const cwd = dependencies.cwd ?? process.cwd;
     const scaffold = dependencies.createSite ?? createSite;
@@ -48,14 +52,13 @@ export async function runCli(args: readonly string[], dependencies: CliDependenc
     return 0;
 }
 
-const invokedPath = process.argv[1] ? path.resolve(process.argv[1]) : '';
+const invokedPath = path.resolve(process.argv[1] as string);
 const modulePath = fileURLToPath(import.meta.url);
 if (invokedPath === modulePath) {
     runCli(process.argv.slice(2)).then(
         (exitCode) => {process.exitCode = exitCode;},
         (error: unknown) => {
-            const message = error instanceof Error ? error.message : String(error);
-            process.stderr.write(`Unable to create White Label site: ${message}\n`);
+            process.stderr.write(`Unable to create White Label site: ${formatCliError(error)}\n`);
             process.exitCode = 1;
         }
     );
