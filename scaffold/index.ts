@@ -26,17 +26,14 @@ const nodeFileSystem: ScaffoldFileSystem = {
     }
 };
 
-/**
- * Return the package manifest used by generated White Label sites.
- * @returns A fresh manifest object safe for callers to inspect or modify.
- */
+/** Return the package manifest used by generated White Label sites. */
 export function createSiteManifest() {
     return {
         name: 'white-label-site',
         version: '1.0.0',
         private: true,
         type: 'module',
-        engines: {node: '^22.18.0 || >=24.11.0', npm: '>=10.0'},
+        engines: {node: '^22.18.0 || >=24.11.0', npm: '>=11.0'},
         scripts: {
             build: 'tsc -p tsconfig.json && node dist/scripts/build.js',
             typecheck: 'tsc -p tsconfig.json --noEmit',
@@ -44,21 +41,20 @@ export function createSiteManifest() {
             audit: 'npm audit --audit-level=low'
         },
         devDependencies: {
+            '@tailwindcss/cli': '4.3.3',
             '@types/node': '24.13.3',
             'axe-core': '4.13.0',
-            'bootstrap': '5.3.8',
             'esbuild': '0.28.2',
-            'html-validate': '11.14.0',
+            'html-validate': '11.15.0',
             'jsdom': '30.0.1',
-            'sass': '1.104.0',
+            'tailwindcss': '4.3.3',
             'typescript': '7.0.2'
         },
         dependencies: {
-            eta: '4.6.0',
             'white-label-mediator': '3.0.0',
             'white-label-model': 'github:bshack/white-label-model#582bef8c70cc246b2cd76b34aeb472ea7fef2f90',
             'white-label-router': '4.0.0',
-            'white-label-view': '4.0.0'
+            'white-label-view': '5.1.0'
         }
     };
 }
@@ -68,7 +64,6 @@ export function createSiteManifest() {
  *
  * A custom filesystem adapter may be supplied by integrations that stage writes,
  * such as the Yeoman wrapper. Direct callers use Node's filesystem by default.
- * @param options Destination and optional filesystem adapter.
  */
 export async function createSite({destination, fileSystem = nodeFileSystem}: CreateSiteOptions) {
     const copies = [
