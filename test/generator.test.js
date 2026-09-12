@@ -19,7 +19,10 @@ test('programmatic scaffold API creates the same reviewable site without Yeoman'
     const destination = path.join(temporary, 'site');
     await createSite({destination});
     assert.deepEqual(JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8')), createSiteManifest());
-    assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), /TypeScript/);
+    const readme = await readFile(path.join(destination, 'README.md'), 'utf8');
+    assert.match(readme, /TypeScript/);
+    assert.match(readme, /--directory _deploy/);
+    assert.match(readme, /http:\/\/localhost:8080\//);
     assert.match(await readFile(path.join(destination, 'tsconfig.json'), 'utf8'), /jsxImportSource/);
     assert.match(await readFile(path.join(destination, 'scripts/build.ts'), 'utf8'), /tailwindcss/);
     assert.match(await readFile(path.join(destination, 'test/site.test.js'), 'utf8'), /test/);
@@ -41,10 +44,10 @@ test('packaged generator creates a strictly typed Tailwind and JSX site that bui
     const manifest = JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8'));
     assert.deepEqual(manifest, createSiteManifest());
     assert.equal(manifest.type, 'module');
-    assert.equal(manifest.dependencies['white-label-model'], 'github:bshack/white-label-model#582bef8c70cc246b2cd76b34aeb472ea7fef2f90');
+    assert.equal(manifest.dependencies['white-label-mediator'], 'github:bshack/white-label-mediator#bdfa86b7db8843792e963b5ad38592f55773097e');
+    assert.equal(manifest.dependencies['white-label-model'], 'github:bshack/white-label-model#fb6230fb120a244d80a1edc6908c04519573e3b9');
+    assert.equal(manifest.dependencies['white-label-router'], 'github:bshack/white-label-router#31a48516cebb70af7fa9a681bcf92d84585118a6');
     assert.equal(manifest.dependencies['white-label-view'], 'github:bshack/white-label-view#42b23195e7a1aac91a5e7d969e5c5c88e5b1e691');
-    assert.equal(manifest.dependencies['white-label-router'], '4.0.0');
-    assert.equal(manifest.dependencies['white-label-mediator'], '3.0.0');
     assert.equal(manifest.dependencies.eta, undefined);
     assert.equal(manifest.devDependencies.bootstrap, undefined);
     assert.equal(manifest.devDependencies.sass, undefined);
