@@ -2,6 +2,8 @@
 
 `generator-white-label` creates a small, production-oriented static TypeScript site using Tailwind CSS 4, the framework-independent JSX runtime from `white-label-view`, esbuild, and the White Label model, view, router, and mediator packages. It renders meaningful HTML during the build so content does not depend on JavaScript for accessibility or search discovery.
 
+The package now provides three interfaces over one canonical scaffold implementation: the first-party `white-label` CLI, the programmatic `generator-white-label/scaffold` API, and an optional Yeoman compatibility wrapper. New automation does not need a Yeoman environment.
+
 The generated example is the Gold North historical site. It is deliberately substantial enough to exercise the complete stack; replace its editorial content while retaining the tested structure and conventions.
 
 ## Requirements
@@ -15,17 +17,23 @@ White Label does not preserve superseded APIs or generated-project behavior with
 
 ## Create a site
 
-The Yeoman interface remains available as an optional interactive wrapper:
+### First-party CLI
+
+The preferred interactive shell entrypoint is the package's own CLI:
 
 ```sh
-npm install --global yo generator-white-label
-mkdir my-site && cd my-site
-yo white-label
+npm install --global generator-white-label
+white-label create my-site
+cd my-site
 npm install
 npm test
 ```
 
-The scaffold can also be called directly from Node without creating a Yeoman environment:
+Run `white-label --help` for usage. The CLI resolves the destination relative to the current working directory and delegates directly to the same `createSite()` implementation used by every other interface. See `CLI.md` for the complete CLI contract.
+
+### Programmatic API
+
+The scaffold can be called directly from Node without creating a CLI or Yeoman environment:
 
 ```js
 import {createSite} from 'generator-white-label/scaffold';
@@ -35,7 +43,21 @@ await createSite({
 });
 ```
 
-`createSite()` is the canonical scaffold implementation. The Yeoman generator delegates to that API through Yeoman's staged filesystem adapter, so both entry points generate the same files and manifest. Integrations that stage filesystem changes may supply a custom `fileSystem` adapter implementing `copy()` and `writeJSON()`.
+`createSite()` is the canonical scaffold implementation. Integrations that stage filesystem changes may supply a custom `fileSystem` adapter implementing `copy()` and `writeJSON()`.
+
+### Optional Yeoman wrapper
+
+The Yeoman interface remains available for users who already have Yeoman-based workflows:
+
+```sh
+npm install --global yo generator-white-label
+mkdir my-site && cd my-site
+yo white-label
+npm install
+npm test
+```
+
+The Yeoman generator delegates to `createSite()` through Yeoman's staged filesystem adapter. It does not own a second template or scaffolding implementation, and downstream applications do not depend on Yeoman at runtime.
 
 The generated manifest is intentionally reviewable before installation. Runtime application libraries are in `dependencies`; compilers, Tailwind tooling, validation tools, test DOM, and type declarations are in `devDependencies`.
 
@@ -43,13 +65,16 @@ The generated manifest is intentionally reviewable before installation. Runtime 
 
 | Path | Purpose |
 | --- | --- |
+| `cli/index.ts` | First-party `white-label create` command backed by `createSite()` |
+| `scaffold/index.ts` | Canonical Yeoman-independent scaffold API |
+| `generators/app/index.ts` | Optional Yeoman adapter over the scaffold API |
 | `app/*.tsx` | JSX page modules rendered to static HTML |
 | `app/assets/data/view/*.json` | Global and page-specific rendering data |
 | `app/assets/script/*.tsx` | Strict browser TypeScript/JSX bundled by esbuild |
 | `app/assets/style/global.css` | Tailwind entry plus project-specific styles |
 | `app/assets/style/print.css` | Print-only CSS |
 | `scripts/build.ts` | Static JSX rendering, Tailwind compilation, scripts, robots, and sitemap generation |
-| `test/` | Integration, WCAG-oriented, and search-indexability checks |
+| `test/` | CLI, scaffold, integration, WCAG-oriented, and search-indexability checks |
 
 No Bootstrap, Sass, Eta, React, Handlebars, web fonts, or font files are included. The starter retains a system font stack, avoiding a blocking font request and preserving the user's platform typography.
 
@@ -78,7 +103,7 @@ JSX text and attribute expressions are escaped by the White Label runtime. Use `
 
 ## Tailwind CSS
 
-The generated site uses Tailwind CSS 4.3.3 through the first-party CLI. `app/assets/style/global.css` imports Tailwind and explicitly sets the project root as the source-detection base. Tailwind scans the TSX page and browser source files at build time and emits a static stylesheet with no browser-side Tailwind runtime.
+The generated site uses Tailwind CSS 4.3.3 through the first-party Tailwind CLI. `app/assets/style/global.css` imports Tailwind and explicitly sets the project root as the source-detection base. Tailwind scans the TSX page and browser source files at build time and emits a static stylesheet with no browser-side Tailwind runtime.
 
 Project-specific component styles can live alongside Tailwind in `global.css`; prefer normal Tailwind utilities in TSX for new layout and presentation work when they keep the markup readable.
 
@@ -111,10 +136,12 @@ The build creates `_deploy/index.html`, `_deploy/404.html`, `_deploy/robots.txt`
 ```sh
 npm run lint
 npm test
+npm run coverage
 npm run audit
+npm pack --dry-run
 ```
 
-Generated tests validate HTML, run axe rules tagged for WCAG 2.0/2.1/2.2 Level A and AA, require crawlable links and initial HTML content, parse structured data, and verify canonical, robots, and sitemap signals. Custom browser integration has 100% line, branch, and function coverage.
+Generated tests validate HTML, run axe rules tagged for WCAG 2.0/2.1/2.2 Level A and AA, require crawlable links and initial HTML content, parse structured data, and verify canonical, robots, and sitemap signals. Project coverage is enforced at 100% for statements, branches, functions, and lines, including the first-party CLI. CI also packs the npm artifact, installs it into a clean temporary project, verifies the public scaffold import, verifies the `white-label` bin entry, and executes the packed CLI help path.
 
 Automated testing cannot establish every WCAG success criterion. Before deployment, manually verify at minimum:
 

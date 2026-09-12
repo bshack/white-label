@@ -23,6 +23,7 @@
     "noImplicitReturns": true
   },
   "include": [
+    "cli/**/*.ts",
     "scripts/**/*.ts",
     "scaffold/**/*.ts",
     "generators/**/*.ts",
