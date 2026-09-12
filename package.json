@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "version": "8.0.0",
-  "description": "A production-oriented static TypeScript site generator with accessible HTML, SEO output, Tailwind CSS, and White Label JSX.",
+  "description": "A production-oriented static TypeScript site generator with a first-party scaffold CLI, accessible HTML, SEO output, Tailwind CSS, and White Label JSX.",
   "type": "module",
   "main": "dist/generators/app/index.js",
   "bin": {
@@ -32,6 +32,7 @@
     "scripts",
     "template-test",
     "README.md",
+    "CLI.md",
     "dist",
     "tsconfig.site.json"
   ],
