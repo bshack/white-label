@@ -52,7 +52,7 @@
   "homepage": "https://github.com/bshack/white-label",
   "dependencies": {
     "chalk": "6.0.0",
-    "yeoman-generator": "8.3.1",
+    "yeoman-generator": "8.4.0",
     "yosay": "3.0.0"
   },
   "devDependencies": {
