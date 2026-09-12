@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {mkdtemp, rm, symlink, readFile, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import {execFileSync} from 'node:child_process';
+import {execFileSync, spawn} from 'node:child_process';
+import {createServer} from 'node:net';
 import {createEnv} from 'yeoman-environment';
 import {build, parseArguments} from '../dist/scripts/build.js';
 import {createSite, createSiteManifest} from '../dist/scaffold/index.js';
@@ -11,6 +12,67 @@ const root = path.resolve('.');
 
 function compileSite(destination) {
     execFileSync(process.execPath, [path.join(root, 'node_modules/typescript/bin/tsc'), '-p', 'tsconfig.json'], {cwd: destination, stdio: 'pipe'});
+}
+
+async function availablePort() {
+    return new Promise((resolve, reject) => {
+        const probe = createServer();
+        probe.once('error', reject);
+        probe.listen(0, '127.0.0.1', () => {
+            const address = probe.address();
+            if (!address || typeof address === 'string') {
+                probe.close(() => reject(new Error('Unable to allocate a local preview port')));
+                return;
+            }
+            probe.close(error => error ? reject(error) : resolve(address.port));
+        });
+    });
+}
+
+async function waitForPreview(origin, process) {
+    for (let attempt = 0; attempt < 50; attempt += 1) {
+        if (process.exitCode !== null) {
+            throw new Error(`Local preview exited before becoming available with code ${process.exitCode}`);
+        }
+        try {
+            const response = await fetch(`${origin}/`);
+            if (response.ok) {return response;}
+            await response.arrayBuffer();
+        } catch {}
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    throw new Error('Local preview did not become available');
+}
+
+async function verifyLocalPreview(destination) {
+    const port = await availablePort();
+    const origin = `http://127.0.0.1:${port}`;
+    const preview = spawn('python3', ['-m', 'http.server', String(port), '--bind', '127.0.0.1', '--directory', '_deploy'], {
+        cwd: destination,
+        stdio: 'pipe'
+    });
+
+    try {
+        const response = await waitForPreview(origin, preview);
+        assert.equal(response.status, 200);
+        const html = await response.text();
+        const localUrls = [...new Set(
+            [...html.matchAll(/(?:href|src)="([^"]+)"/g)]
+                .map(match => match[1])
+                .filter(url => url.startsWith('/') && !url.startsWith('//'))
+        )];
+        assert.ok(localUrls.some(url => url.includes('/assets/style/global.css')));
+        assert.ok(localUrls.some(url => url.includes('/assets/script/index.compiled.js')));
+
+        for (const url of localUrls) {
+            const assetResponse = await fetch(new URL(url, origin));
+            assert.equal(assetResponse.status, 200, `${url} should be served from _deploy`);
+            await assetResponse.arrayBuffer();
+        }
+    } finally {
+        if (preview.exitCode === null) {preview.kill('SIGTERM');}
+        await new Promise(resolve => preview.exitCode === null ? preview.once('exit', resolve) : resolve());
+    }
 }
 
 test('programmatic scaffold API creates the same reviewable site without Yeoman', async t => {
@@ -59,6 +121,12 @@ test('packaged generator creates a strictly typed Tailwind and JSX site that bui
     assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), /TypeScript/);
     assert.match(manifest.scripts.typecheck, /tsc/);
     await symlink(path.join(root, 'node_modules'), path.join(destination, 'node_modules'));
+
+    // Exercise the documented local workflow literally: build, serve _deploy as the
+    // document root, then require the page and every origin-local href/src to return 200.
+    execFileSync('npm', ['run', 'build', '--', '--version=local'], {cwd: destination, stdio: 'pipe'});
+    await verifyLocalPreview(destination);
+
     compileSite(destination);
     execFileSync(process.execPath, ['dist/scripts/build.js', '--version=package-test', '--site-url=https://example.com'], {cwd: destination, stdio: 'pipe'});
     assert.match(await readFile(path.join(destination, '_deploy/index.html'), 'utf8'), /<!DOCTYPE html>/i);
