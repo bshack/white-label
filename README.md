@@ -1,6 +1,6 @@
 # generator-white-label
 
-`generator-white-label` creates a small, production-oriented static TypeScript site using Tailwind CSS 4, the framework-independent JSX runtime from `white-label-view`, esbuild, and the White Label model, view, router, and mediator packages. It renders meaningful HTML during the build so content does not depend on JavaScript for accessibility or search discovery.
+`generator-white-label` creates a small, production-oriented static TypeScript site using Tailwind CSS 4, the framework-independent JSX runtime from [`white-label-view`](https://github.com/bshack/white-label-view), esbuild, and the White Label model, view, router, and mediator packages. It renders meaningful HTML during the build so content does not depend on JavaScript for accessibility or search discovery.
 
 The package now provides three interfaces over one canonical scaffold implementation: the first-party `white-label` CLI, the programmatic `generator-white-label/scaffold` API, and an optional Yeoman compatibility wrapper. New automation does not need a Yeoman environment.
 
@@ -154,11 +154,11 @@ For indexing, deploy public pages with successful `200` responses, do not add `n
 
 The generated browser entry demonstrates:
 
-- `white-label-model`: one observable entry point for plain-object, array, and Map state.
-- `white-label-view`: DOM lifecycle and model-driven JSX rendering.
-- `white-label-mediator`: decoupled selection and navigation events.
-- `white-label-router`: crawlable query-string navigation with History API enhancement.
-- `white-label-view/jsx-runtime`: escaped static and client-side JSX without React or another template engine.
+- [`white-label-model`](https://github.com/bshack/white-label-model): one observable entry point for plain-object, array, and Map state.
+- [`white-label-view`](https://github.com/bshack/white-label-view): DOM lifecycle and model-driven JSX rendering.
+- [`white-label-mediator`](https://github.com/bshack/white-label-mediator): decoupled selection and navigation events.
+- [`white-label-router`](https://github.com/bshack/white-label-router): crawlable query-string navigation with History API enhancement.
+- [`white-label-view/jsx-runtime`](https://github.com/bshack/white-label-view): escaped static and client-side JSX without React or another template engine.
 
 `white-label-service` remains independent and is not required by the static example.
 
