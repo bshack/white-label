@@ -91,6 +91,8 @@ npm run build -- --version=local
 python3 -m http.server 8080 --directory _deploy
 ```
 
+Open `http://localhost:8080/`. `_deploy` must be the static server's document root. Do not serve the parent project directory and browse to `/my-site/_deploy/index.html`; the generated HTML intentionally uses origin-rooted asset URLs such as `/release/local/assets/style/global.css`, and serving the wrong document root will make those assets return 404 responses.
+
 Production builds require the public HTTPS origin so canonical, Open Graph, robots, and sitemap URLs are correct:
 
 ```sh
