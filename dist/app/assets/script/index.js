@@ -1,5 +1,5 @@
+import { jsxs as _jsxs } from "white-label-view/jsx-runtime";
 /** @module app/assets/script/index */
-import { Eta } from 'eta/core';
 import Mediator from 'white-label-mediator';
 import { Model } from 'white-label-model';
 import Router from 'white-label-router';
@@ -9,7 +9,7 @@ const eras = new Set(['all', 'southeast', 'gateway', 'far-north']);
 export function normalizeEra(value) {
     return value && eras.has(value) ? value : 'all';
 }
-/** Initialize the Eta, model, view, mediator, and router integration. */
+/** Initialize the JSX, model, view, mediator, and router integration. */
 export function initializeGoldRushPage(documentRoot) {
     const windowRoot = documentRoot.defaultView;
     if (!windowRoot) {
@@ -19,8 +19,6 @@ export function initializeGoldRushPage(documentRoot) {
     const links = [...documentRoot.querySelectorAll('[data-era-filter]')];
     const cards = [...documentRoot.querySelectorAll('[data-era]')];
     const status = documentRoot.querySelector('[data-filter-status]');
-    const eta = new Eta({ autoEscape: true });
-    const statusTemplate = eta.compile('<p>Showing <%= it.visible %> <%= it.visible === 1 ? "era" : "eras" %>.</p>');
     const mediator = new Mediator().initialize();
     const eraIndex = new Model(cards.map(card => card.dataset.era)).initialize();
     const model = new Model({ selected: 'all', visible: cards.length });
@@ -32,11 +30,10 @@ export function initializeGoldRushPage(documentRoot) {
         model,
         template(data) {
             const state = data;
-            return eta.render(statusTemplate, state);
+            return _jsxs("p", { children: ["Showing ", state.visible, " ", state.visible === 1 ? 'era' : 'eras', "."] });
         }
     }).initialize();
     let progressFrame;
-    /** Coalesce scroll and resize work into one read/write pass per animation frame. */
     const updateProgress = () => {
         progressFrame = undefined;
         if (!progress) {
@@ -54,7 +51,6 @@ export function initializeGoldRushPage(documentRoot) {
     windowRoot.addEventListener('scroll', scheduleProgress, { passive: true });
     windowRoot.addEventListener('resize', scheduleProgress);
     updateProgress();
-    /** Apply route state to visible content and its crawlable filter links. */
     const selectEra = (selectedValue) => {
         const selected = normalizeEra(selectedValue);
         let visible = 0;

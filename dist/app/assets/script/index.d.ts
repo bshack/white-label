@@ -1,3 +1,4 @@
+/** @module app/assets/script/index */
 import Mediator from 'white-label-mediator';
 import { Model } from 'white-label-model';
 import Router from 'white-label-router';
@@ -13,5 +14,5 @@ export interface GoldRushApplication {
 }
 /** Return a supported era, falling back to the complete chronology. */
 export declare function normalizeEra(value: string | undefined): string;
-/** Initialize the Eta, model, view, mediator, and router integration. */
+/** Initialize the JSX, model, view, mediator, and router integration. */
 export declare function initializeGoldRushPage(documentRoot: Document): GoldRushApplication;
