@@ -1,13 +1,13 @@
 # generator-white-label
 
-`generator-white-label` creates a small, production-oriented static TypeScript site. Version 6 uses Eta templates, Sass, the complete Bootstrap stylesheet, and the white-label model, view, router, and mediator packages. It renders meaningful HTML during the build so content does not depend on JavaScript for accessibility or search discovery.
+`generator-white-label` creates a small, production-oriented static TypeScript site. Version 6 uses Eta templates, Sass, a curated Bootstrap 5.3 stylesheet, and the white-label model, view, router, and mediator packages. It renders meaningful HTML during the build so content does not depend on JavaScript for accessibility or search discovery.
 
 The generated example is the Gold North historical site. It is deliberately substantial enough to exercise the complete stack; replace its editorial content while retaining the tested structure and conventions.
 
 ## Requirements
 
 - Node.js `^22.18.0` or `>=24.11.0`
-- npm 10 or newer
+- npm 11 or newer
 
 ## Versioning policy
 
@@ -32,7 +32,7 @@ The generated manifest is intentionally reviewable before installation. Runtime 
 | `app/*.eta` | Eta page templates rendered to HTML |
 | `app/assets/data/view/*.json` | Global and page-specific rendering data |
 | `app/assets/script/*.ts` | Strict browser TypeScript bundled by esbuild |
-| `app/assets/style/*.scss` | Site and print styles built with full Bootstrap CSS |
+| `app/assets/style/*.scss` | Site and print styles built with Sass and the curated Bootstrap reset/theme/accessibility/utility subset used by the starter |
 | `scripts/build.ts` | Static build, robots, canonical and sitemap generation |
 | `test/` | Integration, WCAG-oriented and search-indexability checks |
 
@@ -74,6 +74,7 @@ The build creates `_deploy/index.html`, `_deploy/404.html`, `_deploy/robots.txt`
 ## Accessibility and search verification
 
 ```sh
+npm run lint
 npm test
 npm run audit
 ```
@@ -117,7 +118,7 @@ Version 6 is a SemVer major release because template files and APIs change:
 
 MIT
 
-## Unreleased performance changes
+## Current performance notes
 
 The generated stylesheet includes Bootstrap's reset, theme variables, visually-hidden helper, and the flex/wrap/gap utilities used by the starter. Other Bootstrap components are no longer bundled by default. Add their Sass imports in `app/assets/style/bootstrap.scss` when adding those components. Bootstrap's MIT attribution is retained.
 
