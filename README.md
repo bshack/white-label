@@ -164,7 +164,7 @@ The generated browser entry demonstrates:
 - `white-label-router`: crawlable query-string navigation with History API enhancement.
 - `white-label-view/jsx-runtime`: escaped static and client-side JSX without React or another template engine.
 
-`white-label-service` remains independent and is not required by the static example.
+Backend transport, authentication, persistence, and authorization are intentionally outside the generated White Label application layer. Applications integrate those concerns using their own HTTP framework, APIs, SDKs, or server platform.
 
 ## License
 
