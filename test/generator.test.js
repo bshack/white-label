@@ -42,7 +42,7 @@ test('packaged generator creates a strictly typed Tailwind and JSX site that bui
     assert.deepEqual(manifest, createSiteManifest());
     assert.equal(manifest.type, 'module');
     assert.equal(manifest.dependencies['white-label-model'], 'github:bshack/white-label-model#582bef8c70cc246b2cd76b34aeb472ea7fef2f90');
-    assert.equal(manifest.dependencies['white-label-view'], '5.1.0');
+    assert.equal(manifest.dependencies['white-label-view'], 'github:bshack/white-label-view#42b23195e7a1aac91a5e7d969e5c5c88e5b1e691');
     assert.equal(manifest.dependencies['white-label-router'], '4.0.0');
     assert.equal(manifest.dependencies['white-label-mediator'], '3.0.0');
     assert.equal(manifest.dependencies.eta, undefined);
