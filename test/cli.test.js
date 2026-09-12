@@ -1,7 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
-import {runCli} from '../dist/cli/index.js';
+import {mkdtemp, writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {spawnSync} from 'node:child_process';
+import {formatCliError, runCli} from '../dist/cli/index.js';
 
 function captureStream() {
     let output = '';
@@ -68,4 +71,33 @@ test('CLI resolves the destination and delegates to the scaffold API', async () 
     assert.equal(exitCode, 0);
     assert.deepEqual(received, {destination});
     assert.match(stdout.read(), new RegExp(`Created White Label site at ${destination}`));
+});
+
+test('CLI error formatting handles Error and non-Error values', () => {
+    assert.equal(formatCliError(new Error('boom')), 'boom');
+    assert.equal(formatCliError('boom'), 'boom');
+});
+
+test('compiled CLI executes its main success path', () => {
+    const result = spawnSync(process.execPath, ['dist/cli/index.js', '--help'], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        env: process.env
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /white-label create <directory>/);
+});
+
+test('compiled CLI executes its main error path', async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), 'white-label-cli-'));
+    const blocker = path.join(directory, 'blocker');
+    await writeFile(blocker, 'not a directory');
+
+    const result = spawnSync(process.execPath, ['dist/cli/index.js', 'create', path.join(blocker, 'site')], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        env: process.env
+    });
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /Unable to create White Label site:/);
 });
