@@ -1,6 +1,6 @@
 {
   "name": "generator-white-label",
-  "version": "6.1.0",
+  "version": "7.0.0",
   "description": "Scaffolding for developing and building static sites.",
   "type": "module",
   "main": "dist/generators/app/index.js",
