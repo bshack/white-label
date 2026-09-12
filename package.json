@@ -1,6 +1,6 @@
 {
   "name": "generator-white-label",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "description": "A production-oriented static TypeScript site generator with accessible HTML, SEO output, Tailwind CSS, and White Label JSX.",
   "type": "module",
   "main": "dist/generators/app/index.js",
