@@ -1,11 +1,11 @@
 import Mediator from 'white-label-mediator';
-import { Collection, Model } from 'white-label-model';
+import { Model } from 'white-label-model';
 import Router from 'white-label-router';
 import View from 'white-label-view';
 /** Public handles used to verify and release every integrated white-label package. */
 export interface GoldRushApplication {
     mediator: Mediator;
-    collection: Collection;
+    eraIndex: Model<Array<string | undefined>>;
     model: Model;
     router: Router;
     view: View;

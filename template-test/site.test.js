@@ -60,7 +60,7 @@ test('all client packages cooperate through a crawlable routed filter', () => {
     Object.defineProperty(dom.window, 'innerHeight', {value: 1000});
     Object.defineProperty(dom.window, 'scrollY', {value: 250, writable: true});
     const application = initializeGoldRushPage(dom.window.document);
-    assert.equal(application.collection.get().length, 2);
+    assert.equal(application.eraIndex.get().length, 2);
     assert.deepEqual(application.model.get(), {selected: 'all', visible: 2});
     assert.match(dom.window.document.querySelector('[data-filter-status]').textContent, /Showing 2 eras/);
     dom.window.document.querySelector('[data-era-filter="gateway"]').dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
@@ -81,7 +81,7 @@ test('all client packages cooperate through a crawlable routed filter', () => {
         dom.flushFrames();
     assert.equal(dom.window.document.querySelector('[data-reading-progress]').style.transform, 'scaleX(1)');
     application.destroy();
-    assert.equal(application.collection.get().length, 0);
+    assert.equal(application.eraIndex.get().length, 0);
     assert.equal(application.mediator.listenerCount('era:selected'), 0);
 });
 

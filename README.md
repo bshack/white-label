@@ -1,6 +1,6 @@
 # generator-white-label
 
-`generator-white-label` creates a small, production-oriented static TypeScript site. Version 6 uses Eta templates, Sass, a curated Bootstrap 5.3 stylesheet, and the white-label model, view, router, and mediator packages. It renders meaningful HTML during the build so content does not depend on JavaScript for accessibility or search discovery.
+`generator-white-label` creates a small, production-oriented static TypeScript site using Eta templates, Sass, a curated Bootstrap 5.3 stylesheet, and the white-label model, view, router, and mediator packages. It renders meaningful HTML during the build so content does not depend on JavaScript for accessibility or search discovery.
 
 The generated example is the Gold North historical site. It is deliberately substantial enough to exercise the complete stack; replace its editorial content while retaining the tested structure and conventions.
 
@@ -11,7 +11,7 @@ The generated example is the Gold North historical site. It is deliberately subs
 
 ## Versioning policy
 
-White Label does not preserve old APIs or generated-project behavior with compatibility aliases, deprecated signatures, sentinel arguments, duplicate code paths, or other runtime shims. When a public generator contract or generated application API changes incompatibly, that change is communicated with a Semantic Versioning major release and migration notes. Generated projects should use the current documented contracts directly rather than carrying forward compatibility code for earlier major versions.
+White Label does not preserve superseded APIs or generated-project behavior with compatibility aliases, deprecated signatures, sentinel arguments, duplicate code paths, or other runtime shims. When a public generator contract or generated application API changes incompatibly, that change is communicated with a Semantic Versioning major release and release notes outside this README. Generated projects should use the current documented contracts directly rather than carrying compatibility code.
 
 ## Create a site
 
@@ -96,7 +96,7 @@ For indexing, deploy public pages with successful `200` responses, do not add `n
 
 The generated browser entry demonstrates:
 
-- `white-label-model`: observable filter state and collection lifecycle.
+- `white-label-model`: one observable entry point for plain-object, array, and Map state.
 - `white-label-view`: DOM lifecycle and model-driven rendering.
 - `white-label-mediator`: decoupled selection and navigation events.
 - `white-label-router`: crawlable query-string navigation with History API enhancement.
@@ -104,22 +104,12 @@ The generated browser entry demonstrates:
 
 `white-label-service` remains independent and is not required by the static example.
 
-## Version 6 migration
-
-Version 6 is a SemVer major release because template files and APIs change:
-
-- Rename page templates from `.hbs` to `.eta`.
-- Replace Handlebars expressions and partials with Eta syntax.
-- Remove React components and return a DOM node or Eta-rendered HTML from `white-label-view` templates.
-- Remove local font assets and `@font-face` declarations.
-- Supply `--site-url=https://your-origin.example` for production builds.
-
 ## License
 
 MIT
 
 ## Current performance notes
 
-The generated stylesheet includes Bootstrap's reset, theme variables, visually-hidden helper, and the flex/wrap/gap utilities used by the starter. Other Bootstrap components are no longer bundled by default. Add their Sass imports in `app/assets/style/bootstrap.scss` when adding those components. Bootstrap's MIT attribution is retained.
+The generated stylesheet includes Bootstrap's reset, theme variables, visually-hidden helper, and the flex/wrap/gap utilities used by the starter. Other Bootstrap components are not bundled by default. Add their Sass imports in `app/assets/style/bootstrap.scss` when adding those components. Bootstrap's MIT attribution is retained.
 
-The status template is compiled once. Scroll progress uses a coalesced animation frame and a transform; resize and route changes refresh it, and teardown cancels pending work. Runtime Eta compilation still occurs at initialization, so this is not a change to strict CSP compatibility. Published library versions remain pinned until their fixes are released and explicitly adopted.
+The status template is compiled once. Scroll progress uses a coalesced animation frame and a transform; resize and route changes refresh it, and teardown cancels pending work. Runtime Eta compilation occurs at initialization, so strict CSP deployments should account for that behavior. Runtime library revisions remain explicitly pinned and are adopted through reviewed version or commit updates.

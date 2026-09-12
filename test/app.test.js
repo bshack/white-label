@@ -23,7 +23,7 @@ test('generated example integrates model, view, mediator, router, and Eta', () =
     Object.defineProperty(dom.window, 'innerHeight', {value: 1000});
     Object.defineProperty(dom.window, 'scrollY', {value: 250, writable: true});
     const application = initializeGoldRushPage(dom.window.document);
-    assert.equal(application.collection.get().length, 2);
+    assert.equal(application.eraIndex.get().length, 2);
     dom.window.document.querySelector('[data-era-filter="gateway"]').dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
     assert.deepEqual(application.model.get(), {selected: 'gateway', visible: 1});
     application.mediator.emit('era:selected', 'unsupported');
@@ -34,7 +34,7 @@ test('generated example integrates model, view, mediator, router, and Eta', () =
         dom.flushFrames();
     }
     application.destroy();
-    assert.equal(application.collection.get().length, 0);
+    assert.equal(application.eraIndex.get().length, 0);
 });
 
 test('generated example covers optional and invalid environments', () => {
