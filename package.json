@@ -54,7 +54,7 @@
     "yosay": "3.0.0"
   },
   "devDependencies": {
-    "@types/node": "24.13.3",
+    "@types/node": "26.5.0",
     "@types/yosay": "2.0.3",
     "axe-core": "4.13.0",
     "bootstrap": "5.3.8",
