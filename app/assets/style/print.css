@@ -1,5 +1,3 @@
-@charset 'UTF-8';
-
 @media print {
     .site-header, .reading-progress, .era-controls, .button-primary { display: none !important; }
     body { color: #000; background: #fff; font: 11pt/1.5 Georgia, serif; }

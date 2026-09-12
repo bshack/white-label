@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
-  "version": "7.0.0",
-  "description": "A production-oriented static TypeScript site generator with accessible HTML, SEO output, and White Label integration.",
+  "version": "8.0.0",
+  "description": "A production-oriented static TypeScript site generator with accessible HTML, SEO output, Tailwind CSS, and White Label JSX.",
   "type": "module",
   "main": "dist/generators/app/index.js",
   "engines": {
@@ -18,7 +18,7 @@
     "coverage": "npm run compile && npm run test:types && c8 npm run test:unit",
     "prepack": "npm run compile",
     "test:types": "tsc -p tsconfig.consumer.json",
-    "lint": "eslint \"scripts/**/*.ts\" \"scaffold/**/*.ts\" \"generators/**/*.ts\" \"app/assets/script/**/*.{ts,tsx}\" --max-warnings=0",
+    "lint": "eslint \"scripts/**/*.ts\" \"scaffold/**/*.ts\" \"generators/**/*.ts\" \"app/**/*.{ts,tsx}\" --max-warnings=0",
     "lint:fix": "npm run lint -- --fix"
   },
   "files": [
@@ -38,6 +38,8 @@
     "seo",
     "progressive-enhancement",
     "esbuild",
+    "tailwindcss",
+    "jsx",
     "yeoman-generator",
     "white-label"
   ],
@@ -57,24 +59,24 @@
     "yosay": "3.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "4.3.3",
     "@types/node": "24.13.3",
     "@types/yosay": "2.0.3",
     "axe-core": "4.13.0",
-    "bootstrap": "5.3.8",
     "c8": "12.0.0",
     "esbuild": "0.28.2",
-    "eta": "4.6.0",
     "html-validate": "11.15.0",
     "jsdom": "30.0.1",
-    "sass": "1.104.0",
+    "tailwindcss": "4.3.3",
     "typescript": "7.0.2",
     "white-label-mediator": "3.0.0",
     "white-label-model": "github:bshack/white-label-model#582bef8c70cc246b2cd76b34aeb472ea7fef2f90",
     "white-label-router": "4.0.0",
-    "white-label-view": "4.0.0",
+    "white-label-view": "github:bshack/white-label-view#42b23195e7a1aac91a5e7d969e5c5c88e5b1e691",
     "yeoman-environment": "7.0.0",
     "@babel/core": "8.0.5",
     "@babel/eslint-parser": "8.0.5",
+    "@babel/plugin-syntax-jsx": "8.0.1",
     "@babel/preset-typescript": "8.0.1",
     "@eslint/js": "10.0.1",
     "eslint": "10.10.0"
@@ -86,8 +88,8 @@
       "scripts/**/*.ts",
       "scaffold/**/*.ts",
       "generators/**/*.ts",
-      "app/assets/script/**/*.ts",
-      "app/assets/script/**/*.tsx"
+      "app/**/*.ts",
+      "app/**/*.tsx"
     ],
     "reporter": [
       "text",

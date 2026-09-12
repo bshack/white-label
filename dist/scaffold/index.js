@@ -1,31 +1,18 @@
 /** @module scaffold */
-import {cp, mkdir, writeFile} from 'node:fs/promises';
+import { cp, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
-
+import { fileURLToPath } from 'node:url';
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-
-export interface ScaffoldFileSystem {
-    copy(source: string, destination: string): void | Promise<void>;
-    writeJSON(destination: string, value: unknown): void | Promise<void>;
-}
-
-export interface CreateSiteOptions {
-    destination: string;
-    fileSystem?: ScaffoldFileSystem;
-}
-
-const nodeFileSystem: ScaffoldFileSystem = {
+const nodeFileSystem = {
     async copy(source, destination) {
-        await mkdir(path.dirname(destination), {recursive: true});
-        await cp(source, destination, {recursive: true});
+        await mkdir(path.dirname(destination), { recursive: true });
+        await cp(source, destination, { recursive: true });
     },
     async writeJSON(destination, value) {
-        await mkdir(path.dirname(destination), {recursive: true});
+        await mkdir(path.dirname(destination), { recursive: true });
         await writeFile(destination, `${JSON.stringify(value, null, 2)}\n`);
     }
 };
-
 /** Return the package manifest used by generated White Label sites. */
 export function createSiteManifest() {
     return {
@@ -33,7 +20,7 @@ export function createSiteManifest() {
         version: '1.0.0',
         private: true,
         type: 'module',
-        engines: {node: '^22.18.0 || >=24.11.0', npm: '>=11.0'},
+        engines: { node: '^22.18.0 || >=24.11.0', npm: '>=11.0' },
         scripts: {
             build: 'tsc -p tsconfig.json && node dist/scripts/build.js',
             typecheck: 'tsc -p tsconfig.json --noEmit',
@@ -58,25 +45,23 @@ export function createSiteManifest() {
         }
     };
 }
-
 /**
  * Create a White Label site without requiring Yeoman.
  *
  * A custom filesystem adapter may be supplied by integrations that stage writes,
  * such as the Yeoman wrapper. Direct callers use Node's filesystem by default.
  */
-export async function createSite({destination, fileSystem = nodeFileSystem}: CreateSiteOptions) {
+export async function createSite({ destination, fileSystem = nodeFileSystem }) {
     const copies = [
         ['app', 'app'],
         ['app/README.md', 'README.md'],
         ['scripts', 'scripts'],
         ['template-test', 'test'],
         ['tsconfig.site.json', 'tsconfig.json']
-    ] as const;
-
+    ];
     for (const [source, target] of copies) {
         await fileSystem.copy(path.join(packageRoot, source), path.join(destination, target));
     }
-
     await fileSystem.writeJSON(path.join(destination, 'package.json'), createSiteManifest());
 }
+//# sourceMappingURL=index.js.map

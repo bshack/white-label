@@ -1,5 +1,4 @@
 /** @module app/assets/script/index */
-import {Eta} from 'eta/core';
 import Mediator from 'white-label-mediator';
 import {Model} from 'white-label-model';
 import Router from 'white-label-router';
@@ -23,7 +22,7 @@ export function normalizeEra(value: string | undefined): string {
     return value && eras.has(value) ? value : 'all';
 }
 
-/** Initialize the Eta, model, view, mediator, and router integration. */
+/** Initialize the JSX, model, view, mediator, and router integration. */
 export function initializeGoldRushPage(documentRoot: Document): GoldRushApplication {
     const windowRoot = documentRoot.defaultView;
     if (!windowRoot) {throw new TypeError('Gold North requires a browser document');}
@@ -32,8 +31,6 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
     const links = [...documentRoot.querySelectorAll<HTMLAnchorElement>('[data-era-filter]')];
     const cards = [...documentRoot.querySelectorAll<HTMLElement>('[data-era]')];
     const status = documentRoot.querySelector<HTMLElement>('[data-filter-status]');
-    const eta = new Eta({autoEscape: true});
-    const statusTemplate = eta.compile('<p>Showing <%= it.visible %> <%= it.visible === 1 ? "era" : "eras" %>.</p>');
     const mediator = new Mediator().initialize();
     const eraIndex = new Model(cards.map(card => card.dataset.era)).initialize();
     const model = new Model({selected: 'all', visible: cards.length});
@@ -43,12 +40,11 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
         model,
         template(data) {
             const state = data as EraState;
-            return eta.render(statusTemplate, state);
+            return <p>Showing {state.visible} {state.visible === 1 ? 'era' : 'eras'}.</p>;
         }
     }).initialize();
 
     let progressFrame: number | undefined;
-    /** Coalesce scroll and resize work into one read/write pass per animation frame. */
     const updateProgress = (): void => {
         progressFrame = undefined;
         if (!progress) {return;}
@@ -63,8 +59,6 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
     windowRoot.addEventListener('resize', scheduleProgress);
     updateProgress();
 
-
-    /** Apply route state to visible content and its crawlable filter links. */
     const selectEra = (selectedValue?: string): void => {
         const selected = normalizeEra(selectedValue);
         let visible = 0;
@@ -90,7 +84,6 @@ export function initializeGoldRushPage(documentRoot: Document): GoldRushApplicat
     };
     router.routes = {'/': route, defaultRoute: route};
     router.initialize();
-
 
     return {
         eraIndex,
