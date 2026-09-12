@@ -4,7 +4,7 @@
 
 The package now provides three interfaces over one canonical scaffold implementation: the first-party `white-label` CLI, the programmatic `generator-white-label/scaffold` API, and an optional Yeoman compatibility wrapper. New automation does not need a Yeoman environment.
 
-The generated example is the Gold North historical site. It is deliberately substantial enough to exercise the complete stack; replace its editorial content while retaining the tested structure and conventions.
+The generated example is a neutral White Label starter and package showcase. It is deliberately substantial enough to exercise the complete stack; replace its editorial content while retaining the tested structure and conventions.
 
 ## Requirements
 
