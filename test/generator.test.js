@@ -89,6 +89,26 @@ test('programmatic scaffold API creates the reviewable site', async t => {
     assert.match(await readFile(path.join(destination, 'test/site.test.js'), 'utf8'), /test/);
 });
 
+test('programmatic scaffold API creates a complete non-JSX site', async t => {
+    const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-no-jsx-'));
+    t.after(() => rm(temporary, {recursive: true, force: true}));
+    const destination = path.join(temporary, 'site');
+    await createProject({destination, jsx: false});
+    assert.deepEqual(JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8')), createSiteManifest());
+    assert.doesNotMatch(await readFile(path.join(destination, 'tsconfig.json'), 'utf8'), /jsxImportSource/);
+    assert.match(await readFile(path.join(destination, 'app/index.ts'), 'utf8'), /return `<!doctype html>/i);
+    assert.match(await readFile(path.join(destination, 'app/404.ts'), 'utf8'), /Page not found/);
+    assert.match(await readFile(path.join(destination, 'app/assets/script/index.ts'), 'utf8'), /TaskApplication/);
+    assert.match(await readFile(path.join(destination, 'app/assets/script/tasks/TaskView.ts'), 'utf8'), /class TaskView/);
+    assert.match(await readFile(path.join(destination, 'app/assets/view/examples/tasks/TaskExample.ts'), 'utf8'), /TaskExample/);
+    assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), /without JSX|plain TypeScript|HTML strings/i);
+    await symlink(path.join(root, 'node_modules'), path.join(destination, 'node_modules'));
+    execFileSync('npm', ['run', 'build', '--', '--version=no-jsx-test', '--production=true', '--site-url=https://example.com'], {cwd: destination, stdio: 'pipe'});
+    const html = await readFile(path.join(destination, '_deploy/index.html'), 'utf8');
+    assert.match(html, /<!DOCTYPE html>/i);
+    assert.doesNotMatch(html, /<%|\{\{/);
+});
+
 test('packaged project creator creates a strictly typed Tailwind and JSX site that builds in development and production', async t => {
     const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-generator-'));
     t.after(() => rm(temporary, {recursive: true, force: true}));
@@ -117,8 +137,6 @@ test('packaged project creator creates a strictly typed Tailwind and JSX site th
     assert.match(manifest.scripts.typecheck, /tsc/);
     await symlink(path.join(root, 'node_modules'), path.join(destination, 'node_modules'));
 
-    // Exercise the documented local workflow literally: build, serve _deploy as the
-    // document root, then require the page and every origin-local href/src to return 200.
     execFileSync('npm', ['run', 'build', '--', '--version=local'], {cwd: destination, stdio: 'pipe'});
     await verifyLocalPreview(destination);
 
@@ -127,7 +145,6 @@ test('packaged project creator creates a strictly typed Tailwind and JSX site th
     assert.match(await readFile(path.join(destination, '_deploy/index.html'), 'utf8'), /<!DOCTYPE html>/i);
     execFileSync(process.execPath, ['--test', 'test/site.test.js'], {cwd: destination, stdio: 'pipe'});
 
-    // Run the imported build too so its coverage maps to the repository's source.
     await build(parseArguments(['--version=development']), destination);
     const css = await readFile(path.join(destination, '_deploy/release/development/assets/style/global.css'), 'utf8');
     assert.match(css, /tailwindcss v4\.3\.3/i);
