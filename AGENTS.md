@@ -8,7 +8,7 @@ Verified against `package.json`, `README.md`, and `.github/workflows/security.ym
 
 ## Code map
 
-`generators/` contains the generator; `app/` contains site templates, browser TypeScript, styles, and data; `scripts/build.ts` builds the site; `test/` holds tests; `dist/` contains compiled code. The package entry is `dist/generators/app/index.js`.
+`scaffold/` contains the project-creation engine; `cli/` contains the command-line adapter; `app/` contains site templates, browser TypeScript, styles, and data; `scripts/build.ts` builds the site; `test/` holds tests; `dist/` contains compiled code. The package entry is `dist/scaffold/index.js`.
 
 ## Toolchain and checks
 
