@@ -1,54 +1,55 @@
 # White Label CLI
 
-The first-party `white-label` command creates a White Label site directly from the framework-independent scaffold API. It does not create or require a Yeoman environment.
+White Label has one project-creation engine and thin adapters around it.
 
-## Create a site
+```text
+CLI ────────┐
+Yeoman ─────┼──> createProject() ──> project
+Node API ───┘
+```
 
-Install the package globally or invoke its binary through your preferred npm workflow, then run:
+The adapters translate input. `createProject()` owns the scaffold.
+
+## Create a project
 
 ```sh
-white-label create my-site
-cd my-site
+white-label create my-project
+cd my-project
 npm install
 npm test
 ```
 
-The destination may be relative to the current working directory or absolute. The command creates the same reviewed scaffold as `generator-white-label/scaffold` and the optional Yeoman wrapper.
-
-## Help
+The same CLI can be invoked directly from the package:
 
 ```sh
-white-label --help
+npx generator-white-label create my-project
 ```
 
-## Architecture
+Run `white-label --help` for usage.
 
-The CLI is intentionally thin:
-
-```text
-white-label CLI
-      |
-      v
-generator-white-label/scaffold
-      |
-      v
-createSite()
-```
-
-`createSite()` is the canonical implementation. The CLI and Yeoman generator are adapters around it; neither owns a separate template or generation path.
-
-This means integrations can call the programmatic API directly:
+## Use the API
 
 ```js
-import {createSite} from 'generator-white-label/scaffold';
+import {createProject} from 'generator-white-label';
 
-await createSite({destination: '/absolute/path/to/my-site'});
+await createProject({
+    destination: '/absolute/path/to/my-project'
+});
 ```
 
-## Yeoman compatibility
+`createSite()` remains available as a compatibility alias.
 
-The existing `yo white-label` interface remains supported as an optional interactive wrapper for users who already use Yeoman. New automation and integrations should prefer the first-party CLI or programmatic scaffold API so they do not depend on Yeoman-specific lifecycle behavior.
+## Why this shape
 
-## Release verification
+Creation behavior belongs in one place. A CLI, Yeoman adapter, or future integration should call `createProject()` rather than copy templates or reimplement generation logic.
 
-CI compiles the CLI, enforces the repository's 100% coverage gate, packs the npm artifact, installs that tarball into a clean temporary project, verifies the `white-label` bin entry exists, verifies the public scaffold import resolves, and executes the packed CLI help path.
+That keeps every entry point consistent and makes the source itself a guide to extending the tool:
+
+- `scaffold/index.ts` — project creation
+- `cli/index.ts` — command-line adapter
+- `generators/app/index.ts` — Yeoman adapter
+- `test/` — executable contracts
+
+## Yeoman
+
+`yo white-label` remains supported. Yeoman is an adapter, not a requirement of the scaffold API.

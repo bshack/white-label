@@ -19,7 +19,7 @@ test('CLI shows help without scaffolding', async () => {
     let called = false;
     const exitCode = await runCli([], {
         cwd: () => '/workspace',
-        createSite: async () => {called = true;},
+        createProject: async () => {called = true;},
         stdout: stdout.stream,
         stderr: captureStream().stream
     });
@@ -34,7 +34,7 @@ test('CLI accepts explicit help flags', async () => {
         const stdout = captureStream();
         const exitCode = await runCli([flag], {
             cwd: () => '/workspace',
-            createSite: async () => {},
+            createProject: async () => {},
             stdout: stdout.stream,
             stderr: captureStream().stream
         });
@@ -48,7 +48,7 @@ test('CLI rejects malformed create commands', async () => {
         const stderr = captureStream();
         const exitCode = await runCli(args, {
             cwd: () => '/workspace',
-            createSite: async () => {},
+            createProject: async () => {},
             stdout: captureStream().stream,
             stderr: stderr.stream
         });
@@ -57,12 +57,12 @@ test('CLI rejects malformed create commands', async () => {
     }
 });
 
-test('CLI resolves the destination and delegates to the scaffold API', async () => {
+test('CLI resolves the destination and delegates to createProject', async () => {
     const stdout = captureStream();
     let received;
     const exitCode = await runCli(['create', 'sites/storefront'], {
         cwd: () => '/workspace',
-        createSite: async (options) => {received = options;},
+        createProject: async (options) => {received = options;},
         stdout: stdout.stream,
         stderr: captureStream().stream
     });
@@ -70,7 +70,7 @@ test('CLI resolves the destination and delegates to the scaffold API', async () 
     const destination = path.resolve('/workspace', 'sites/storefront');
     assert.equal(exitCode, 0);
     assert.deepEqual(received, {destination});
-    assert.match(stdout.read(), new RegExp(`Created White Label site at ${destination}`));
+    assert.match(stdout.read(), new RegExp(`Created White Label project at ${destination}`));
 });
 
 test('CLI error formatting handles Error and non-Error values', () => {
@@ -99,5 +99,5 @@ test('compiled CLI executes its main error path', async () => {
         env: process.env
     });
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /Unable to create White Label site:/);
+    assert.match(result.stderr, /Unable to create White Label project:/);
 });
