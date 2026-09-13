@@ -36,7 +36,7 @@ export default function TaskExample({state}: {state: TaskState}) {
                         data-pushstate
                         aria-current={state.filter === filter ? 'page' : 'false'}
                     >
-                        {filter[0]?.toUpperCase()}{filter.slice(1)}
+                        {filter.charAt(0).toUpperCase()}{filter.slice(1)}
                     </a>
                 ))}
             </nav>
