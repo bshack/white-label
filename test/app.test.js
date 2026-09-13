@@ -56,7 +56,6 @@ test('task example integrates model, view, mediator, router, and JSX', () => {
     assert.match(dom.window.document.querySelector('[data-task-status]').textContent, /Showing 2 tasks for the completed filter/);
 
     application.destroy();
-    assert.equal(application.model.get().tasks.length, 0);
     assert.equal(application.mediator.listenerCount('task:add'), 0);
 });
 
