@@ -88,6 +88,37 @@ test('CLI detects non-interactive streams when no override is provided', async (
     assert.deepEqual(received, {destination: path.resolve('/workspace', 'site'), jsx: true});
 });
 
+test('CLI detects interactive TTY streams when no override is provided', async () => {
+    const stdinDescriptor = Object.getOwnPropertyDescriptor(process.stdin, 'isTTY');
+    const stdoutDescriptor = Object.getOwnPropertyDescriptor(process.stdout, 'isTTY');
+    const input = new PassThrough();
+    const output = new PassThrough();
+    let received;
+
+    try {
+        Object.defineProperty(process.stdin, 'isTTY', {configurable: true, value: true});
+        Object.defineProperty(process.stdout, 'isTTY', {configurable: true, value: true});
+        input.end('no\n');
+
+        const exitCode = await runCli(['create', 'site'], {
+            cwd: () => '/workspace',
+            createProject: async (options) => {received = options;},
+            input,
+            output,
+            stdout: captureStream().stream,
+            stderr: captureStream().stream
+        });
+
+        assert.equal(exitCode, 0);
+        assert.deepEqual(received, {destination: path.resolve('/workspace', 'site'), jsx: false});
+    } finally {
+        if (stdinDescriptor) Object.defineProperty(process.stdin, 'isTTY', stdinDescriptor);
+        else delete process.stdin.isTTY;
+        if (stdoutDescriptor) Object.defineProperty(process.stdout, 'isTTY', stdoutDescriptor);
+        else delete process.stdout.isTTY;
+    }
+});
+
 test('CLI supports explicit JSX and non-JSX generation', async () => {
     for (const [flag, jsx] of [['--jsx', true], ['--no-jsx', false]]) {
         let received;
