@@ -13,7 +13,7 @@ const nodeFileSystem = {
         await writeFile(destination, `${JSON.stringify(value, null, 2)}\n`);
     }
 };
-/** Return the package manifest used by generated White Label sites. */
+/** Return the package manifest used by generated White Label projects. */
 export function createSiteManifest() {
     return {
         name: 'white-label-site',
@@ -46,12 +46,13 @@ export function createSiteManifest() {
     };
 }
 /**
- * Create a White Label site without requiring Yeoman.
+ * Create a White Label project.
  *
- * A custom filesystem adapter may be supplied by integrations that stage writes,
- * such as the Yeoman wrapper. Direct callers use Node's filesystem by default.
+ * This is the shared implementation behind every creation interface. Adapters
+ * translate their environment into these options instead of owning templates or
+ * project-generation behavior themselves.
  */
-export async function createSite({ destination, fileSystem = nodeFileSystem }) {
+export async function createProject({ destination, fileSystem = nodeFileSystem }) {
     const copies = [
         ['app', 'app'],
         ['app/README.md', 'README.md'],
@@ -64,4 +65,6 @@ export async function createSite({ destination, fileSystem = nodeFileSystem }) {
     }
     await fileSystem.writeJSON(path.join(destination, 'package.json'), createSiteManifest());
 }
+/** Compatibility alias for the original scaffold API. */
+export const createSite = createProject;
 //# sourceMappingURL=index.js.map
