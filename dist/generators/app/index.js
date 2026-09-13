@@ -2,7 +2,8 @@
 import Generator from 'yeoman-generator';
 import chalk from 'chalk';
 import yosay from 'yosay';
-import { createSite } from '../../scaffold/index.js';
+import { createProject } from '../../scaffold/index.js';
+export { createProject, createSite, createSiteManifest } from '../../scaffold/index.js';
 export default class extends Generator {
     /**
      * Describe the scaffold operation through Yeoman's output adapter.
@@ -12,11 +13,11 @@ export default class extends Generator {
         this.log(yosay(`Setting up the ${chalk.red('white-label')} project.`));
     }
     /**
-     * Delegate site creation to the shared scaffold API while preserving Yeoman's staged filesystem.
+     * Adapt Yeoman's staged filesystem to the shared project-creation API.
      * @returns A promise that resolves after the scaffold has been staged.
      */
     async writing() {
-        await createSite({
+        await createProject({
             destination: this.destinationRoot(),
             fileSystem: {
                 copy: (source, destination) => {
