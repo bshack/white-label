@@ -83,7 +83,7 @@ jobs:
             npm)
               npm install --ignore-scripts "$PACKAGE" >/dev/null
               node --input-type=module -e "const scaffold=await import('generator-white-label'); if (typeof scaffold.createProject !== 'function') process.exit(1)"
-              npx --no-install white-label --help | grep -q "white-label create <directory>"
+              ./node_modules/.bin/white-label --help | grep -q "white-label create <directory>"
               ;;
             yarn)
               yarn add "$PACKAGE" >/dev/null
