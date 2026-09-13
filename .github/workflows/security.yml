@@ -69,7 +69,7 @@ jobs:
         run: |
           corepack enable
           if [ "${{ matrix.package-manager }}" = "yarn" ]; then
-            corepack prepare yarn@4.9.2 --activate
+            corepack prepare yarn@4.18.0 --activate
           else
             corepack prepare pnpm@10.17.1 --activate
           fi
@@ -95,5 +95,60 @@ jobs:
               pnpm add --ignore-scripts "$PACKAGE" >/dev/null
               pnpm exec node --input-type=module -e "const scaffold=await import('generator-white-label'); if (typeof scaffold.createProject !== 'function') process.exit(1)"
               pnpm exec white-label --help | grep -q "white-label create <directory>"
+              ;;
+          esac
+
+  generated-project-compatibility:
+    needs: test-build-audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        package-manager: [npm, yarn, pnpm]
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.21.0
+      - uses: actions/download-artifact@v7
+        with:
+          name: packed-package
+          path: package
+      - name: Configure package manager
+        if: matrix.package-manager != 'npm'
+        run: |
+          corepack enable
+          if [ "${{ matrix.package-manager }}" = "yarn" ]; then
+            corepack prepare yarn@4.18.0 --activate
+          else
+            corepack prepare pnpm@10.17.1 --activate
+          fi
+      - name: Generate, install, and test project
+        run: |
+          PACKAGE="$(realpath package/*.tgz)"
+          TEMP="$(mktemp -d)"
+          cd "$TEMP"
+          printf '{"private":true,"type":"module"}\n' > package.json
+          case "${{ matrix.package-manager }}" in
+            npm)
+              npm install --ignore-scripts "$PACKAGE" >/dev/null
+              node ./node_modules/generator-white-label/dist/cli/index.js create site --jsx
+              cd site
+              npm install --ignore-scripts >/dev/null
+              npm test
+              ;;
+            yarn)
+              YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn add "$PACKAGE" >/dev/null
+              yarn exec white-label create site --jsx
+              cd site
+              YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+              yarn test
+              ;;
+            pnpm)
+              pnpm add --ignore-scripts "$PACKAGE" >/dev/null
+              pnpm exec white-label create site --jsx
+              cd site
+              pnpm install --ignore-scripts >/dev/null
+              pnpm test
               ;;
           esac
