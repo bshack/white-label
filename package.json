@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "version": "8.0.0",
-  "description": "A production-oriented TypeScript project generator with a first-party scaffold CLI, accessible HTML, SEO output, Tailwind CSS, and White Label JSX.",
+  "description": "A production-oriented TypeScript project generator with a first-party scaffold CLI, accessible HTML, SEO output, Tailwind CSS, and optional White Label JSX.",
   "type": "module",
   "main": "dist/scaffold/index.js",
   "bin": {
@@ -34,7 +34,8 @@
     "README.md",
     "CLI.md",
     "dist",
-    "tsconfig.site.json"
+    "tsconfig.site.json",
+    "tsconfig.site.no-jsx.json"
   ],
   "keywords": [
     "typescript",
