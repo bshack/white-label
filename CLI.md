@@ -37,8 +37,6 @@ await createProject({
 });
 ```
 
-`createSite()` remains available as a compatibility alias.
-
 ## Why this shape
 
 Creation behavior belongs in one place. A CLI, Yeoman adapter, or future integration should call `createProject()` rather than copy templates or reimplement generation logic.
