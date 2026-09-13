@@ -72,7 +72,7 @@ export default function IndexPage(data: Record<string, unknown>) {
                                 <p>Choose a feature group below. The URL is routed, the mediator coordinates the change, the model stores the current state, and the view renders the result. These controls are ordinary links first, then progressively enhanced in the browser.</p>
                             </div>
 
-                            <div className="demo" aria-label="Interactive White Label architecture example">
+                            <div className="demo">
                                 <div className="demo__controls">
                                     <p className="demo__label">Filter the documentation</p>
                                     <nav className="feature-controls" aria-label="Filter package documentation">
@@ -126,7 +126,7 @@ export default function IndexPage(data: Record<string, unknown>) {
                                 <p>White Label does not hide application structure behind a framework. Each package has one job and can be used independently.</p>
                             </div>
 
-                            <div className="architecture" aria-label="White Label application flow">
+                            <div className="architecture">
                                 <ol>
                                     <li><strong>Router</strong><span>turns a URL into application intent</span></li>
                                     <li><strong>Mediator</strong><span>coordinates that intent between modules</span></li>
