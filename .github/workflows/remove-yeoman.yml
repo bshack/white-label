@@ -1,15 +1,13 @@
 name: Remove Yeoman
-
 on:
   push:
-    branches: [remove-yeoman-20260913]
-
+    branches:
+      - remove-yeoman-20260913
 permissions:
   contents: write
-
 jobs:
-  remove:
-    if: github.actor != 'github-actions[bot]'
+  lockfile:
+    if: ${{ github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -18,148 +16,11 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24.21.0
-          cache: npm
-      - name: Remove Yeoman and verify
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-          pkg.main = 'dist/scaffold/index.js';
-          pkg.types = 'dist/scaffold/index.d.ts';
-          pkg.files = pkg.files.filter(value => value !== 'generators');
-          pkg.keywords = pkg.keywords.filter(value => value !== 'yeoman-generator');
-          delete pkg.dependencies.chalk;
-          delete pkg.dependencies['yeoman-generator'];
-          delete pkg.dependencies.yosay;
-          delete pkg.devDependencies['@types/yosay'];
-          delete pkg.devDependencies['yeoman-environment'];
-          pkg.scripts.lint = pkg.scripts.lint.replace(' "generators/**/*.ts"', '');
-          pkg.c8.include = pkg.c8.include.filter(value => value !== 'generators/**/*.ts');
-          pkg.exports['.'] = {
-            types: './dist/scaffold/index.d.ts',
-            import: './dist/scaffold/index.js',
-            default: './dist/scaffold/index.js'
-          };
-          fs.writeFileSync('package.json', `${JSON.stringify(pkg, null, 2)}\n`);
-
-          const tsconfig = JSON.parse(fs.readFileSync('tsconfig.json', 'utf8'));
-          tsconfig.include = tsconfig.include.filter(value => value !== 'generators/**/*.ts');
-          fs.writeFileSync('tsconfig.json', `${JSON.stringify(tsconfig, null, 2)}\n`);
-          NODE
-
-          python3 <<'PY'
-          from pathlib import Path
-
-          readme = Path('README.md')
-          text = readme.read_text()
-          text = text.replace('`createProject()` is the canonical creation API. CLI, Yeoman, and future integrations are adapters around it rather than separate generation systems.\n', '`createProject()` is the canonical creation API. The CLI and future integrations are adapters around it rather than separate generation systems.\n')
-          start = text.find('## Optional Yeoman adapter\n')
-          end = text.find('## Source layout\n', start)
-          if start != -1 and end != -1:
-              text = text[:start] + text[end:]
-          text = text.replace('| `generators/app/index.ts` | Yeoman adapter |\n', '')
-          readme.write_text(text)
-
-          Path('CLI.md').write_text('''# White Label CLI
-
-White Label has one project-creation engine and a thin command-line adapter.
-
-```text
-CLI ──────> createProject() ──────> project
-Node API ─┘
-```
-
-`createProject()` owns the scaffold. The CLI translates command-line input into that API.
-
-## Create a project
-
-```sh
-white-label create my-project
-cd my-project
-npm install
-npm test
-```
-
-Or run the package directly:
-
-```sh
-npx generator-white-label create my-project
-```
-
-Run `white-label --help` for usage.
-
-## Use the API
-
-```js
-import {createProject} from 'generator-white-label';
-
-await createProject({
-    destination: '/absolute/path/to/my-project'
-});
-```
-
-## Read the implementation
-
-The source is intentionally small enough to teach the design:
-
-- `scaffold/index.ts` — project creation
-- `cli/index.ts` — command-line adapter
-- `test/` — executable contracts
-
-Creation behavior belongs in one place. Future integrations should call `createProject()` rather than copy templates or reimplement generation logic.
-''')
-
-          agents = Path('AGENTS.md')
-          text = agents.read_text()
-          text = text.replace('`generators/` contains the generator; `app/` contains site templates, browser TypeScript, styles, and data; `scripts/build.ts` builds the site; `test/` holds tests; `dist/` contains compiled code. The package entry is `dist/generators/app/index.js`.', '`scaffold/` contains the project-creation engine; `cli/` contains the command-line adapter; `app/` contains site templates, browser TypeScript, styles, and data; `scripts/build.ts` builds the site; `test/` holds tests; `dist/` contains compiled code. The package entry is `dist/scaffold/index.js`.')
-          agents.write_text(text)
-
-          test = Path('test/generator.test.js')
-          text = test.read_text()
-          text = text.replace("import {createEnv} from 'yeoman-environment';\n", '')
-          old = """    const sourceEnv = createEnv({cwd: path.join(temporary, 'source-site'), skipInstall: true});
-    sourceEnv.register(path.join(root, 'generators/app/index.js'), {namespace: 'white-label:app'});
-    await sourceEnv.run('white-label:app', {skipInstall: true, force: true});
-    const destination = path.join(temporary, 'site');
-    const env = createEnv({cwd: destination, skipInstall: true});
-    env.register(path.join(temporary, 'package/generators/app/index.js'), {namespace: 'white-label:app'});
-    await env.run('white-label:app', {skipInstall: true, force: true});
-"""
-          new = """    const destination = path.join(temporary, 'site');
-    const packagedScaffold = await import(new URL(`file://${path.join(temporary, 'package/dist/scaffold/index.js')}`).href);
-    await packagedScaffold.createProject({destination});
-"""
-          if old not in text:
-              raise SystemExit('expected Yeoman integration block not found')
-          text = text.replace(old, new)
-          text = text.replace("test('programmatic scaffold API creates the same reviewable site without Yeoman'", "test('programmatic scaffold API creates the reviewable site'")
-          text = text.replace("test('packaged generator creates a strictly typed Tailwind and JSX site that builds in development and production'", "test('packaged project creator creates a strictly typed Tailwind and JSX site that builds in development and production'")
-          test.write_text(text)
-
-          consumer = Path('test-types/consumer.mts')
-          text = consumer.read_text()
-          text = text.replace("import Generator from '../dist/generators/app/index.js';\n", "import {createProject} from '../dist/scaffold/index.js';\n")
-          text = text.replace('void [Generator, build, config];', 'void [createProject, build, config];')
-          consumer.write_text(text)
-          PY
-
-          rm -rf generators dist/generators
-          npm install --package-lock-only --ignore-scripts
-          npm ci --ignore-scripts
-          npm run lint
-          npm run compile
-          git diff --exit-code -- dist
-          npm run typecheck
-          npm test
-          npm run coverage
-          npm run audit
-          npm pack --dry-run
-
+      - run: npm install --package-lock-only --ignore-scripts
+      - run: |
           rm .github/workflows/remove-yeoman.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'refactor: remove Yeoman integration'
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json .github/workflows/remove-yeoman.yml
+          git commit -m "chore: refresh lockfile without Yeoman"
           git push origin HEAD:remove-yeoman-20260913
