@@ -71,6 +71,8 @@ A useful reading order is:
 
 Comments focus on why boundaries exist instead of narrating obvious TypeScript.
 
+When documenting public APIs, examples use comments where they clarify intent, lifecycle, side effects, or non-obvious behavior. Public method documentation should also state the return value—including meaningful boolean/status values, chaining returns, `undefined`, promises, and relevant thrown/rejected errors.
+
 A useful rule when extending the project is:
 
 > Introduce an abstraction when it gives a concern a clear home, not merely to create another layer.
@@ -107,10 +109,13 @@ Project creation has one implementation:
 ```js
 import {createProject} from 'generator-white-label';
 
+// Resolves after the scaffold files and package manifest have been written.
 await createProject({
     destination: new URL('./my-project', import.meta.url).pathname
 });
 ```
+
+`createProject(options)` returns `Promise<void>`. A successful call resolves with `undefined`; file-system failures reject the promise instead of returning a status value.
 
 `createProject()` is the canonical creation API. The CLI and future integrations are adapters around it rather than separate generation systems.
 
