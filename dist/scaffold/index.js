@@ -38,10 +38,10 @@ export function createSiteManifest() {
             'typescript': '7.0.2'
         },
         dependencies: {
-            'white-label-mediator': 'github:bshack/white-label-mediator#bdfa86b7db8843792e963b5ad38592f55773097e',
-            'white-label-model': 'github:bshack/white-label-model#fb6230fb120a244d80a1edc6908c04519573e3b9',
-            'white-label-router': 'github:bshack/white-label-router#31a48516cebb70af7fa9a681bcf92d84585118a6',
-            'white-label-view': 'github:bshack/white-label-view#42b23195e7a1aac91a5e7d969e5c5c88e5b1e691'
+            'white-label-mediator': 'github:bshack/white-label-mediator#e815f704a759de76f96f66ac198b4dc42dfc30f4',
+            'white-label-model': 'github:bshack/white-label-model#b5b45b13b45f509497d0a5bdbed86c8bcc054980',
+            'white-label-router': 'github:bshack/white-label-router#23295657a29764a140218e03d384631ce3a2b9c3',
+            'white-label-view': 'github:bshack/white-label-view#b612930edaef814412899b3391a14fd36df28d9d'
         }
     };
 }
