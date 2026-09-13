@@ -2,10 +2,10 @@ import Mediator from 'white-label-mediator';
 import type {TaskFilter} from '../../view/examples/tasks/task-state.js';
 
 /**
- * Typed application events are the public language between independent pieces.
- *
- * The View can publish user intent without importing the Model, and Router can
- * publish navigation intent without knowing how state is stored or rendered.
+ * Document the event protocol in one place even though the currently installed
+ * Mediator exposes the EventEmitter-compatible runtime without a generic map.
+ * Keeping names and payloads explicit still gives learners one clear contract
+ * to follow when tracing the example.
  */
 export type TaskEvents = {
     'task:add': [title: string];
@@ -13,8 +13,8 @@ export type TaskEvents = {
     'task:toggle': [id: number];
 };
 
-export type TaskMediator = Mediator<TaskEvents>;
+export type TaskMediator = Mediator;
 
 export function createTaskMediator(): TaskMediator {
-    return new Mediator<TaskEvents>().initialize();
+    return new Mediator().initialize();
 }
