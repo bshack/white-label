@@ -5,7 +5,7 @@ import axe from 'axe-core';
 import {HtmlValidate} from 'html-validate';
 import {JSDOM} from 'jsdom';
 
-const applicationMarkup = `<!doctype html><html><body><main></main><span data-reading-progress></span><div data-filter-status></div><nav><a href="/?feature=all#features" data-feature-filter="all" data-pushstate></a><a href="/?feature=runtime#features" data-feature-filter="runtime" data-pushstate></a></nav><article data-feature="core"></article><article data-feature="runtime"></article></body></html>`;
+const applicationMarkup = `<!doctype html><html><body><main></main><span data-reading-progress></span><div data-filter-status></div><nav><a href="/?feature=all#example" data-feature-filter="all" data-pushstate></a><a href="/?feature=runtime#example" data-feature-filter="runtime" data-pushstate></a></nav><article data-feature="core"></article><article data-feature="runtime"></article></body></html>`;
 
 /** Install one JSDOM window as the browser globals consumed by the packages. */
 function installBrowser(markup = applicationMarkup) {
@@ -36,6 +36,14 @@ test('production output is valid, accessible static HTML', async () => {
     dom.window.eval(axe.source);
     const results = await dom.window.axe.run(dom.window.document, {runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}});
     assert.equal(results.violations.length, 0, results.violations.map(violation => violation.id).join(', '));
+
+    const root = dom.window.document;
+    assert.equal(root.querySelector('.skip-link').getAttribute('href'), '#main');
+    assert.equal(root.querySelector('main#main').getAttribute('tabindex'), '-1');
+    assert.equal(root.querySelector('[data-filter-status]').getAttribute('aria-live'), 'polite');
+    assert.equal(root.querySelector('[data-filter-status]').getAttribute('aria-atomic'), 'true');
+    assert.equal(root.querySelector('[data-feature-filter][aria-current="page"]').dataset.featureFilter, 'all');
+    assert.ok([...root.querySelectorAll('[data-feature-filter]')].every(link => link instanceof dom.window.HTMLAnchorElement && link.hasAttribute('href')));
 });
 
 test('production output is crawlable and supplies complete SEO signals', async () => {
@@ -62,11 +70,13 @@ test('all client packages cooperate through a crawlable routed filter', () => {
     const application = initializeWhiteLabelPage(dom.window.document);
     assert.equal(application.featureIndex.get().length, 2);
     assert.deepEqual(application.model.get(), {selected: 'all', visible: 2});
-    assert.match(dom.window.document.querySelector('[data-filter-status]').textContent, /Showing 2 features/);
+    assert.match(dom.window.document.querySelector('[data-filter-status]').textContent, /View2 features rendered/);
     dom.window.document.querySelector('[data-feature-filter="runtime"]').dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
     assert.deepEqual(application.model.get(), {selected: 'runtime', visible: 1});
     assert.equal(dom.window.document.querySelector('[data-feature="core"]').hidden, true);
     assert.equal(dom.window.document.querySelector('[data-feature-filter="runtime"]').getAttribute('aria-current'), 'page');
+    assert.match(dom.window.document.querySelector('[data-filter-status]').textContent, /feature:selected → runtime/);
+    assert.match(dom.window.document.querySelector('[data-filter-status]').textContent, /View1 feature rendered/);
     application.mediator.emit('feature:selected', 'unsupported');
     assert.deepEqual(application.model.get(), {selected: 'all', visible: 2});
     dom.window.dispatchEvent(new dom.window.Event('scroll'));
