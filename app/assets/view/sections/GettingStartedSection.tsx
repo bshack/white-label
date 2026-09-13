@@ -1,3 +1,5 @@
+import CodeBlock, {syntax} from '../CodeBlock.js';
+
 /** Keep the shortest path from generator install to a verified local build visible. */
 export default function GettingStartedSection() {
     return (
@@ -10,9 +12,13 @@ export default function GettingStartedSection() {
                 </div>
                 <div>
                     <p className="code-label">Create a project</p>
-                    <pre><code>npx generator-white-label</code></pre>
+                    <CodeBlock lines={[<><span style={syntax.type}>npx</span> generator-white-label</>]} />
                     <p className="code-label">Then develop</p>
-                    <pre><code>{`npm ci\nnpm test\nnpm run build -- --version=local`}</code></pre>
+                    <CodeBlock lines={[
+                        <><span style={syntax.type}>npm</span> ci</>,
+                        <><span style={syntax.type}>npm</span> test</>,
+                        <><span style={syntax.type}>npm</span> run build -- --version=<span style={syntax.value}>local</span></>
+                    ]} />
                     <p><a href="https://github.com/bshack/white-label#readme">Read the complete generator documentation</a></p>
                 </div>
             </div>
