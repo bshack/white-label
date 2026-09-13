@@ -1,0 +1,17 @@
+import { jsx as _jsx, jsxs as _jsxs } from "white-label-view/jsx-runtime";
+const repositories = {
+    mediator: 'https://github.com/bshack/white-label-mediator',
+    model: 'https://github.com/bshack/white-label-model',
+    router: 'https://github.com/bshack/white-label-router',
+    view: 'https://github.com/bshack/white-label-view'
+};
+/**
+ * Package documentation stays close to the example it describes.
+ *
+ * Each snippet intentionally shows the smallest useful public API rather than
+ * introducing a project-specific abstraction developers would have to unlearn.
+ */
+export default function PackageDocsSection() {
+    return (_jsx("section", { className: "section", id: "packages", "aria-labelledby": "packages-title", children: _jsxs("div", { className: "container", children: [_jsxs("div", { className: "section-intro", children: [_jsx("p", { className: "eyebrow", children: "Documentation" }), _jsx("h2", { id: "packages-title", children: "The core flow stays explicit." }), _jsx("p", { children: "Each package has one job, can be used independently, and stays easy to replace or test because application concerns are not hidden behind a framework." })] }), _jsx("div", { className: "architecture", children: _jsxs("ol", { children: [_jsxs("li", { children: [_jsx("strong", { children: "Router" }), _jsx("span", { children: "turns a URL into application intent" })] }), _jsxs("li", { children: [_jsx("strong", { children: "Mediator" }), _jsx("span", { children: "coordinates that intent between modules" })] }), _jsxs("li", { children: [_jsx("strong", { children: "Model" }), _jsx("span", { children: "stores and publishes application state" })] }), _jsxs("li", { children: [_jsx("strong", { children: "View" }), _jsx("span", { children: "renders the resulting interface" })] })] }) }), _jsxs("div", { className: "docs-grid", children: [_jsxs("article", { children: [_jsx("p", { className: "eyebrow", children: "Model" }), _jsx("h3", { children: "State is observable, not magical." }), _jsx("pre", { children: _jsx("code", { children: `const model = new Model({count: 0});\nmodel.on('change', state => render(state));\nmodel.update({count: 1});` }) }), _jsx("p", { children: _jsx("a", { href: repositories.model, children: "Model documentation" }) })] }), _jsxs("article", { children: [_jsx("p", { className: "eyebrow", children: "View" }), _jsx("h3", { children: "JSX renders through White Label." }), _jsx("pre", { children: _jsx("code", { children: `const view = new View({\n  model,\n  template: state => <p>{state.count}</p>\n}).initialize();` }) }), _jsx("p", { children: _jsx("a", { href: repositories.view, children: "View documentation" }) })] }), _jsxs("article", { children: [_jsx("p", { className: "eyebrow", children: "Mediator" }), _jsx("h3", { children: "Modules communicate through events." }), _jsx("pre", { children: _jsx("code", { children: `mediator.on('counter:increment', increment);\nmediator.emit('counter:increment');` }) }), _jsx("p", { children: _jsx("a", { href: repositories.mediator, children: "Mediator documentation" }) })] }), _jsxs("article", { children: [_jsx("p", { className: "eyebrow", children: "Router" }), _jsx("h3", { children: "Routes describe intent." }), _jsx("pre", { children: _jsx("code", { children: `router.routes = {\n  '/': (_scope, location) => {\n    mediator.emit('filter:set', location.data.query.filter);\n  }\n};` }) }), _jsx("p", { children: _jsx("a", { href: repositories.router, children: "Router documentation" }) })] })] })] }) }));
+}
+//# sourceMappingURL=PackageDocsSection.js.map
