@@ -15,9 +15,6 @@ export interface CreateProjectOptions {
     fileSystem?: ScaffoldFileSystem;
 }
 
-/** Compatibility name for integrations that still describe the scaffold as a site. */
-export type CreateSiteOptions = CreateProjectOptions;
-
 const nodeFileSystem: ScaffoldFileSystem = {
     async copy(source, destination) {
         await mkdir(path.dirname(destination), {recursive: true});
@@ -84,6 +81,3 @@ export async function createProject({destination, fileSystem = nodeFileSystem}: 
 
     await fileSystem.writeJSON(path.join(destination, 'package.json'), createSiteManifest());
 }
-
-/** Compatibility alias for the original scaffold API. */
-export const createSite = createProject;

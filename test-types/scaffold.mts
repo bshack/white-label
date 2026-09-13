@@ -1,9 +1,7 @@
 import {
     createProject,
-    createSite,
     createSiteManifest,
     type CreateProjectOptions,
-    type CreateSiteOptions,
     type ScaffoldFileSystem
 } from 'generator-white-label';
 
@@ -17,8 +15,6 @@ const options: CreateProjectOptions = {
     fileSystem
 };
 
-const compatibilityOptions: CreateSiteOptions = options;
 await createProject(options);
-await createSite(compatibilityOptions);
 const manifest = createSiteManifest();
 manifest.name satisfies string;

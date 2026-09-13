@@ -7,7 +7,7 @@ import {execFileSync, spawn} from 'node:child_process';
 import {createServer} from 'node:net';
 import {createEnv} from 'yeoman-environment';
 import {build, parseArguments} from '../dist/scripts/build.js';
-import {createSite, createSiteManifest} from '../dist/scaffold/index.js';
+import {createProject, createSiteManifest} from '../dist/scaffold/index.js';
 const root = path.resolve('.');
 
 function compileSite(destination) {
@@ -79,7 +79,7 @@ test('programmatic scaffold API creates the same reviewable site without Yeoman'
     const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-scaffold-'));
     t.after(() => rm(temporary, {recursive: true, force: true}));
     const destination = path.join(temporary, 'site');
-    await createSite({destination});
+    await createProject({destination});
     assert.deepEqual(JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8')), createSiteManifest());
     const readme = await readFile(path.join(destination, 'README.md'), 'utf8');
     assert.match(readme, /TypeScript/);
