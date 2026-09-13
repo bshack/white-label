@@ -96,7 +96,7 @@ test('programmatic scaffold API creates a complete non-JSX site', async t => {
     await createProject({destination, jsx: false});
     assert.deepEqual(JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8')), createSiteManifest());
     assert.doesNotMatch(await readFile(path.join(destination, 'tsconfig.json'), 'utf8'), /jsxImportSource/);
-    assert.match(await readFile(path.join(destination, 'app/index.ts'), 'utf8'), /return `<!doctype html>/i);
+    assert.match(await readFile(path.join(destination, 'app/index.ts'), 'utf8'), /return `<html/i);
     assert.match(await readFile(path.join(destination, 'app/404.ts'), 'utf8'), /Page not found/);
     assert.match(await readFile(path.join(destination, 'app/assets/script/index.ts'), 'utf8'), /TaskApplication/);
     assert.match(await readFile(path.join(destination, 'app/assets/script/tasks/TaskView.ts'), 'utf8'), /class TaskView/);
