@@ -5,8 +5,8 @@ export default function GettingStartedSection() {
             <div className="container start-grid">
                 <div className="section-intro">
                     <p className="eyebrow">Get started</p>
-                    <h2 id="start-title">Generate the boring parts.</h2>
-                    <p>The generated project is static-first, TypeScript-first, accessible by default, and ready to replace with your own product code.</p>
+                    <h2 id="start-title">Create a project with the generator.</h2>
+                    <p>The generated project is static-first, TypeScript-first, accessible by default, and ready for application-specific code.</p>
                 </div>
                 <div>
                     <p className="code-label">Create a project</p>
