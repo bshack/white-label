@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import {JSDOM} from 'jsdom';
 
-const markup = `<!doctype html><html><body><main></main><span data-reading-progress></span><div data-filter-status></div><nav><a href="/?feature=all#features" data-feature-filter="all" data-pushstate></a><a href="/?feature=runtime#features" data-feature-filter="runtime" data-pushstate></a></nav><article data-feature="core"></article><article data-feature="runtime"></article></body></html>`;
+const markup = `<!doctype html><html><body><main></main><span data-reading-progress></span><div data-filter-status></div><nav><a href="/?feature=all#example" data-feature-filter="all" data-pushstate></a><a href="/?feature=runtime#example" data-feature-filter="runtime" data-pushstate></a></nav><article data-feature="core"></article><article data-feature="runtime"></article></body></html>`;
 function install(markupValue = markup) {
     const dom = new JSDOM(markupValue, {url: 'https://example.com/', pretendToBeVisual: true});
     Object.assign(globalThis, {window: dom.window, document: dom.window.document, DOMParser: dom.window.DOMParser, Element: dom.window.Element, Node: dom.window.Node});
@@ -24,8 +25,11 @@ test('generated example integrates model, view, mediator, router, and JSX', () =
     Object.defineProperty(dom.window, 'scrollY', {value: 250, writable: true});
     const application = initializeWhiteLabelPage(dom.window.document);
     assert.equal(application.featureIndex.get().length, 2);
+    assert.match(dom.window.document.querySelector('[data-filter-status]').textContent, /View2 features rendered/);
     dom.window.document.querySelector('[data-feature-filter="runtime"]').dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
     assert.deepEqual(application.model.get(), {selected: 'runtime', visible: 1});
+    assert.match(dom.window.document.querySelector('[data-filter-status]').textContent, /Router\/\?feature=runtime/);
+    assert.match(dom.window.document.querySelector('[data-filter-status]').textContent, /View1 feature rendered/);
     application.mediator.emit('feature:selected', 'unsupported');
     assert.deepEqual(application.model.get(), {selected: 'all', visible: 2});
     for (const scrollY of [-10, 3000]) {
@@ -45,6 +49,13 @@ test('generated example covers optional and invalid environments', () => {
     assert.equal(normalizeFeature(undefined), 'all');
     assert.equal(normalizeFeature('runtime'), 'runtime');
     assert.throws(() => initializeWhiteLabelPage(dom.window.document.implementation.createHTMLDocument('detached')), /browser document/);
+});
+
+test('landing page source styles use only white, black, and accessible grey', async () => {
+    const styles = await Promise.all(['app/assets/style/global.css', 'app/assets/style/print.css'].map(path => readFile(path, 'utf8')));
+    const normalize = value => value.length === 4 ? `#${[...value.slice(1)].map(character => character.repeat(2)).join('')}` : value;
+    const colors = new Set(styles.flatMap(style => style.match(/#[0-9a-f]{3,6}\b/gi) ?? []).map(value => normalize(value.toLowerCase())));
+    assert.deepEqual([...colors].sort(), ['#000000', '#767676', '#ffffff']);
 });
 
 test.after(() => {
