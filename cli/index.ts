@@ -35,9 +35,7 @@ export function formatCliError(error: unknown) {
     return error instanceof Error ? error.message : String(error);
 }
 
-async function askForJsx(dependencies: CliDependencies): Promise<boolean> {
-    const input = dependencies.input ?? process.stdin;
-    const output = dependencies.output ?? process.stdout;
+async function askForJsx(input: NodeJS.ReadableStream, output: NodeJS.WritableStream): Promise<boolean> {
     const readline = createInterface({input, output});
     try {
         const answer = await readline.question(
@@ -54,6 +52,8 @@ export async function runCli(args: readonly string[], dependencies: CliDependenc
     const scaffold = dependencies.createProject ?? createProject;
     const stdout = dependencies.stdout ?? process.stdout;
     const stderr = dependencies.stderr ?? process.stderr;
+    const input = dependencies.input ?? process.stdin;
+    const output = dependencies.output ?? process.stdout;
     const [command, destination, ...options] = args;
 
     if (command === '--help' || command === '-h' || args.length === 0) {
@@ -78,7 +78,7 @@ export async function runCli(args: readonly string[], dependencies: CliDependenc
     } else if (options.includes('--no-jsx')) {
         jsx = false;
     } else if (dependencies.isInteractive ?? Boolean(process.stdin.isTTY && process.stdout.isTTY)) {
-        jsx = await askForJsx(dependencies);
+        jsx = await askForJsx(input, output);
     } else {
         jsx = true;
     }
