@@ -25,6 +25,7 @@
     "lint:fix": "node --run lint -- --fix"
   },
   "files": [
+    ".yarnrc.yml",
     "app",
     "cli",
     "scaffold",
