@@ -23,7 +23,7 @@
   "include": [
     "cli/**/*.ts",
     "scripts/**/*.ts",
-    "scaffold/**/*.ts",
+    "scaffold/index.ts",
     "app/**/*.ts",
     "app/**/*.tsx"
   ]
