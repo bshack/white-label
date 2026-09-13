@@ -40,7 +40,14 @@ export function initializeWhiteLabelPage(documentRoot: Document): WhiteLabelAppl
         model,
         template(data) {
             const state = data as FeatureState;
-            return <p>Showing {state.visible} {state.visible === 1 ? 'feature' : 'features'}.</p>;
+            return (
+                <dl>
+                    <div><dt>Router</dt><dd>/?feature={state.selected}</dd></div>
+                    <div><dt>Mediator</dt><dd>feature:selected → {state.selected}</dd></div>
+                    <div><dt>Model</dt><dd>selected: {state.selected}</dd></div>
+                    <div><dt>View</dt><dd>{state.visible} {state.visible === 1 ? 'feature' : 'features'} rendered</dd></div>
+                </dl>
+            );
         }
     }).initialize();
 
