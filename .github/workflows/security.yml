@@ -127,27 +127,28 @@ jobs:
         run: |
           PACKAGE="$(realpath package/*.tgz)"
           TEMP="$(mktemp -d)"
-          cd "$TEMP"
+          mkdir "$TEMP/runner"
+          cd "$TEMP/runner"
           printf '{"private":true,"type":"module"}\n' > package.json
           case "${{ matrix.package-manager }}" in
             npm)
               npm install --ignore-scripts "$PACKAGE" >/dev/null
-              node ./node_modules/generator-white-label/dist/cli/index.js create site --jsx
-              cd site
+              node ./node_modules/generator-white-label/dist/cli/index.js create ../site --jsx
+              cd ../site
               npm install --ignore-scripts >/dev/null
               npm test
               ;;
             yarn)
               YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn add "$PACKAGE" >/dev/null
-              yarn exec white-label create site --jsx
-              cd site
+              yarn exec white-label create ../site --jsx
+              cd ../site
               YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
               yarn test
               ;;
             pnpm)
               pnpm add --ignore-scripts "$PACKAGE" >/dev/null
-              pnpm exec white-label create site --jsx
-              cd site
+              pnpm exec white-label create ../site --jsx
+              cd ../site
               pnpm install --ignore-scripts >/dev/null
               pnpm test
               ;;
