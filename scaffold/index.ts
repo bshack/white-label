@@ -34,12 +34,11 @@ export function createSiteManifest() {
         version: '1.0.0',
         private: true,
         type: 'module',
-        engines: {node: '^22.18.0 || >=24.11.0', npm: '>=11.0'},
+        engines: {node: '^22.18.0 || >=24.11.0'},
         scripts: {
             build: 'tsc -p tsconfig.json && node dist/scripts/build.js',
             typecheck: 'tsc -p tsconfig.json --noEmit',
-            test: 'npm run typecheck && npm run build -- --version=test --production=true --site-url=https://example.com && node --test --experimental-test-coverage --test-coverage-include=dist/app/assets/script/index.js --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 test/*.test.js',
-            audit: 'npm audit --audit-level=low'
+            test: 'node --run typecheck && node --run build -- --version=test --production=true --site-url=https://example.com && node --test --experimental-test-coverage --test-coverage-include=dist/app/assets/script/index.js --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 test/*.test.js'
         },
         devDependencies: {
             '@tailwindcss/cli': '4.3.3',
