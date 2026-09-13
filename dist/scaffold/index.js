@@ -65,6 +65,4 @@ export async function createProject({ destination, fileSystem = nodeFileSystem }
     }
     await fileSystem.writeJSON(path.join(destination, 'package.json'), createSiteManifest());
 }
-/** Compatibility alias for the original scaffold API. */
-export const createSite = createProject;
 //# sourceMappingURL=index.js.map
