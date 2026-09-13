@@ -75,6 +75,19 @@ test('CLI resolves the destination and defaults to JSX when non-interactive', as
     assert.match(stdout.read(), new RegExp(`Created White Label project at ${destination}`));
 });
 
+test('CLI detects non-interactive streams when no override is provided', async () => {
+    let received;
+    const exitCode = await runCli(['create', 'site'], {
+        cwd: () => '/workspace',
+        createProject: async (options) => {received = options;},
+        stdout: captureStream().stream,
+        stderr: captureStream().stream
+    });
+
+    assert.equal(exitCode, 0);
+    assert.deepEqual(received, {destination: path.resolve('/workspace', 'site'), jsx: true});
+});
+
 test('CLI supports explicit JSX and non-JSX generation', async () => {
     for (const [flag, jsx] of [['--jsx', true], ['--no-jsx', false]]) {
         let received;
