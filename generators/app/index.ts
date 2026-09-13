@@ -4,8 +4,8 @@ import chalk from 'chalk';
 import yosay from 'yosay';
 import {createProject} from '../../scaffold/index.js';
 
-export {createProject, createSite, createSiteManifest} from '../../scaffold/index.js';
-export type {CreateProjectOptions, CreateSiteOptions, ScaffoldFileSystem} from '../../scaffold/index.js';
+export {createProject, createSiteManifest} from '../../scaffold/index.js';
+export type {CreateProjectOptions, ScaffoldFileSystem} from '../../scaffold/index.js';
 
 export default class extends Generator {
     /**
