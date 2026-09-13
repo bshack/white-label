@@ -13,9 +13,7 @@
     "resolveJsonModule": true,
     "jsx": "react-jsx",
     "jsxImportSource": "white-label-view",
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "noEmitOnError": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
@@ -26,7 +24,6 @@
     "cli/**/*.ts",
     "scripts/**/*.ts",
     "scaffold/**/*.ts",
-    "generators/**/*.ts",
     "app/**/*.ts",
     "app/**/*.tsx"
   ]

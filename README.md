@@ -112,21 +112,9 @@ await createProject({
 });
 ```
 
-`createProject()` is the canonical creation API. CLI, Yeoman, and future integrations are adapters around it rather than separate generation systems.
+`createProject()` is the canonical creation API. The CLI and future integrations are adapters around it rather than separate generation systems.
 
 This is the same design principle used throughout White Label: one responsibility, one implementation, explicit adapters at environment boundaries.
-
-## Optional Yeoman adapter
-
-Yeoman remains available as an adapter:
-
-```sh
-npm install --global yo generator-white-label
-mkdir my-project && cd my-project
-yo white-label
-```
-
-Generated applications do not depend on Yeoman at runtime.
 
 ## Source layout
 
@@ -134,7 +122,6 @@ Generated applications do not depend on Yeoman at runtime.
 | --- | --- |
 | `scaffold/index.ts` | Canonical `createProject()` implementation |
 | `cli/index.ts` | First-party command-line adapter |
-| `generators/app/index.ts` | Yeoman adapter |
 | `app/*.tsx` | Top-level static pages |
 | `app/assets/view/` | JSX views and page sections |
 | `app/assets/script/tasks/` | Model/View/Mediator/Router example |
@@ -218,18 +205,3 @@ Tests are part of the documentation. They demonstrate intended contracts while p
 - [`white-label-router`](https://github.com/bshack/white-label-router) — routing and URL state.
 
 The generated project imports the real packages rather than reproducing their behavior locally. That makes it both an example and an ecosystem integration test.
-
-## Design principles
-
-- **Compose instead of prescribe.** Use only the pieces a feature needs.
-- **Keep ownership obvious.** State, rendering, coordination, and routing have clear homes.
-- **Prefer explicit wiring.** Application dependencies should be visible.
-- **Keep simple things simple.** Static presentation can remain plain JSX.
-- **Enhance the platform.** Useful HTML exists before browser JavaScript initializes.
-- **Use one implementation behind adapters.** Project creation belongs to `createProject()`.
-- **Make contracts executable.** Tests teach intended usage as well as prevent regressions.
-- **Let the source teach.** Structure and comments are part of the documentation.
-
-## License
-
-MIT

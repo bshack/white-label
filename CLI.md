@@ -1,14 +1,13 @@
 # White Label CLI
 
-White Label has one project-creation engine and thin adapters around it.
+White Label has one project-creation engine and a thin command-line adapter.
 
 ```text
-CLI ────────┐
-Yeoman ─────┼──> createProject() ──> project
-Node API ───┘
+CLI ──────> createProject() ──────> project
+Node API ─┘
 ```
 
-The adapters translate input. `createProject()` owns the scaffold.
+`createProject()` owns the scaffold. The CLI translates command-line input into that API.
 
 ## Create a project
 
@@ -19,7 +18,7 @@ npm install
 npm test
 ```
 
-The same CLI can be invoked directly from the package:
+Or run the package directly:
 
 ```sh
 npx generator-white-label create my-project
@@ -37,17 +36,12 @@ await createProject({
 });
 ```
 
-## Why this shape
+## Read the implementation
 
-Creation behavior belongs in one place. A CLI, Yeoman adapter, or future integration should call `createProject()` rather than copy templates or reimplement generation logic.
-
-That keeps every entry point consistent and makes the source itself a guide to extending the tool:
+The source is intentionally small enough to teach the design:
 
 - `scaffold/index.ts` — project creation
 - `cli/index.ts` — command-line adapter
-- `generators/app/index.ts` — Yeoman adapter
 - `test/` — executable contracts
 
-## Yeoman
-
-`yo white-label` remains supported. Yeoman is an adapter, not a requirement of the scaffold API.
+Creation behavior belongs in one place. Future integrations should call `createProject()` rather than copy templates or reimplement generation logic.

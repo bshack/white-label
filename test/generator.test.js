@@ -5,7 +5,6 @@ import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {execFileSync, spawn} from 'node:child_process';
 import {createServer} from 'node:net';
-import {createEnv} from 'yeoman-environment';
 import {build, parseArguments} from '../dist/scripts/build.js';
 import {createProject, createSiteManifest} from '../dist/scaffold/index.js';
 const root = path.resolve('.');
@@ -75,7 +74,7 @@ async function verifyLocalPreview(destination) {
     }
 }
 
-test('programmatic scaffold API creates the same reviewable site without Yeoman', async t => {
+test('programmatic scaffold API creates the reviewable site', async t => {
     const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-scaffold-'));
     t.after(() => rm(temporary, {recursive: true, force: true}));
     const destination = path.join(temporary, 'site');
@@ -90,19 +89,15 @@ test('programmatic scaffold API creates the same reviewable site without Yeoman'
     assert.match(await readFile(path.join(destination, 'test/site.test.js'), 'utf8'), /test/);
 });
 
-test('packaged generator creates a strictly typed Tailwind and JSX site that builds in development and production', async t => {
+test('packaged project creator creates a strictly typed Tailwind and JSX site that builds in development and production', async t => {
     const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-generator-'));
     t.after(() => rm(temporary, {recursive: true, force: true}));
     const pack = JSON.parse(execFileSync('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', temporary], {encoding: 'utf8'}))[0];
     execFileSync('tar', ['-xzf', path.join(temporary, pack.filename), '-C', temporary]);
     await symlink(path.join(root, 'node_modules'), path.join(temporary, 'package/node_modules'));
-    const sourceEnv = createEnv({cwd: path.join(temporary, 'source-site'), skipInstall: true});
-    sourceEnv.register(path.join(root, 'generators/app/index.js'), {namespace: 'white-label:app'});
-    await sourceEnv.run('white-label:app', {skipInstall: true, force: true});
     const destination = path.join(temporary, 'site');
-    const env = createEnv({cwd: destination, skipInstall: true});
-    env.register(path.join(temporary, 'package/generators/app/index.js'), {namespace: 'white-label:app'});
-    await env.run('white-label:app', {skipInstall: true, force: true});
+    const packagedScaffold = await import(new URL(`file://${path.join(temporary, 'package/dist/scaffold/index.js')}`).href);
+    await packagedScaffold.createProject({destination});
     const manifest = JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8'));
     assert.deepEqual(manifest, createSiteManifest());
     assert.equal(manifest.type, 'module');
