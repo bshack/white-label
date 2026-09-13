@@ -121,6 +121,5 @@
       "import": "./dist/scaffold/index.js",
       "default": "./dist/scaffold/index.js"
     }
-  },
-  "packageManager": "npm@11.19.1"
+  }
 }
