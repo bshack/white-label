@@ -21,8 +21,7 @@ export default class TaskModel extends Model<TaskState> {
         const index = state.tasks.findIndex(task => task.id === id);
         if (index < 0) {return false;}
         const tasks = [...state.tasks];
-        const task = tasks[index];
-        if (!task) {return false;}
+        const task = tasks[index]!;
         tasks[index] = {...task, complete: !task.complete};
         return this.update({tasks});
     }
