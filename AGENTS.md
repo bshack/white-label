@@ -4,7 +4,7 @@
 
 Generator and first-party CLI for production-oriented static TypeScript sites using Tailwind CSS, esbuild, and the White Label model, view, router, mediator, and JSX packages.
 
-Verified against `package.json`, `README.md`, and `.github/workflows/security.yml` on September 11, 2026. Recheck those files when commands or supported environments change.
+Verified against `package.json`, `README.md`, and `.github/workflows/security.yml` on September 13, 2026. Recheck those files when commands or supported environments change.
 
 ## Code map
 
@@ -23,7 +23,9 @@ npm run coverage
 npm run audit
 ```
 
-`npm test` compiles implementation code, checks consumer types, and runs Node tests. `npm run coverage` enforces 100% statements, branches, functions, and lines per included implementation file. CI also runs `npm run compile` and `git diff --exit-code -- dist` to detect committed-output drift.
+`npm test` compiles implementation code, checks consumer types, and runs Node tests. `npm run coverage` enforces 100% statements, branches, functions, and lines per included implementation file. CI also compiles from authored source, runs the production build, audits dependencies, packs the package, and verifies that the packed generator and CLI install and execute correctly.
+
+Source-first testing policy: authored source and the committed lockfile are authoritative. Keep behavior, type, coverage, production-build, audit, packaging, and consumer/CLI verification strict. Do not use committed generated-output synchronization as a correctness gate unless a repository or release workflow explicitly requires generated artifacts to be source-controlled. Reduce CI noise by removing brittle synchronization checks, not by lowering coverage, weakening assertions, skipping type checks, or bypassing package/runtime verification.
 
 ESLint is configured through `eslint.config.mjs`; run `npm run lint` and treat warnings as failures. No dedicated formatter script is configured.
 
@@ -38,7 +40,7 @@ python3 -m http.server 8080 --directory _deploy
 
 Preview at `http://localhost:8080`; Python 3 is required only for this preview command. Build flags configure the static site without production credentials. Builds regenerate `_deploy/`; keep user-authored files outside generated output. Production builds require the intended HTTPS `--site-url`; `--version` is an asset-directory label, not an npm version bump.
 
-Edit TypeScript sources and regenerate tracked `dist/` output with the existing compiler; do not hand-edit compiled JavaScript or declarations. Review generated diffs with the source changes.
+Edit authored TypeScript and templates, not compiled JavaScript or declarations. Generate `dist/` and deployment output through the existing build/compiler when validating, packaging, or releasing. Review generated artifacts when they are material to the requested change, but do not require a PR to commit compiler output merely to satisfy a source-vs-generated drift check unless the repository's current release process explicitly requires it.
 
 ## Architectural boundaries
 
