@@ -107,7 +107,8 @@
     "perFile": true,
     "exclude": [
       "**/*.d.ts",
-      "app/assets/view/page-data.ts"
+      "app/assets/view/page-data.ts",
+      "scaffold/no-jsx/app/**"
     ]
   },
   "exports": {
