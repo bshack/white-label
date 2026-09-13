@@ -3,7 +3,7 @@ import Generator from 'yeoman-generator';
 import chalk from 'chalk';
 import yosay from 'yosay';
 import { createProject } from '../../scaffold/index.js';
-export { createProject, createSite, createSiteManifest } from '../../scaffold/index.js';
+export { createProject, createSiteManifest } from '../../scaffold/index.js';
 export default class extends Generator {
     /**
      * Describe the scaffold operation through Yeoman's output adapter.
