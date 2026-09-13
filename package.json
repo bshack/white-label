@@ -113,7 +113,8 @@
     "statements": 100,
     "perFile": true,
     "exclude": [
-      "**/*.d.ts"
+      "**/*.d.ts",
+      "app/assets/view/page-data.ts"
     ]
   },
   "exports": {

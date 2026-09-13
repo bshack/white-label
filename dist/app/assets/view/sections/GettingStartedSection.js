@@ -1,0 +1,6 @@
+import { jsx as _jsx, jsxs as _jsxs } from "white-label-view/jsx-runtime";
+/** Keep the shortest path from generator install to a verified local build visible. */
+export default function GettingStartedSection() {
+    return (_jsx("section", { className: "section", id: "start", "aria-labelledby": "start-title", children: _jsxs("div", { className: "container start-grid", children: [_jsxs("div", { className: "section-intro", children: [_jsx("p", { className: "eyebrow", children: "Get started" }), _jsx("h2", { id: "start-title", children: "Generate the boring parts." }), _jsx("p", { children: "The generated project is static-first, TypeScript-first, accessible by default, and ready to replace with your own product code." })] }), _jsxs("div", { children: [_jsx("p", { className: "code-label", children: "Create a project" }), _jsx("pre", { children: _jsx("code", { children: "npx generator-white-label" }) }), _jsx("p", { className: "code-label", children: "Then develop" }), _jsx("pre", { children: _jsx("code", { children: `npm ci\nnpm test\nnpm run build -- --version=local` }) }), _jsx("p", { children: _jsx("a", { href: "https://github.com/bshack/white-label#readme", children: "Read the complete generator documentation" }) })] })] }) }));
+}
+//# sourceMappingURL=GettingStartedSection.js.map

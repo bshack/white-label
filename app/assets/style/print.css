@@ -1,10 +1,8 @@
 @media print {
-    .site-header, .reading-progress, .era-controls, .button-primary { display: none !important; }
-    body { color: #000; background: #fff; font: 11pt/1.5 Georgia, serif; }
-    .hero, .section--dark, .section--sources { color: #000; background: #fff; }
-    .timeline-card[hidden] { display: grid; }
-    a { color: #000; }
+    .site-header, .task-form, .task-filters, .primary-link { display: none !important; }
+    body { color: #000000; background: #ffffff; font: 11pt/1.5 Georgia, serif; }
+    a { color: #000000; }
     a[href^='http']::after { content: ' (' attr(href) ')'; overflow-wrap: anywhere; }
     h1, h2, h3 { break-after: avoid; }
-    article, .timeline-card { break-inside: avoid; }
+    article, .task-app, pre { break-inside: avoid; }
 }
