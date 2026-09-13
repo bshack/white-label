@@ -37,15 +37,15 @@ async function filesUnder(directory) {
     }));
     return files.flat();
 }
-/** Render compiled TSX pages using global, page-specific, and deployment data. */
+/** Render compiled TypeScript or TSX pages using global, page-specific, and deployment data. */
 async function renderMarkup(config, outputRoot, projectRoot) {
     const globalData = JSON.parse(await fs.readFile(path.join(projectRoot, 'app/assets/data/view/global.json'), 'utf8'));
     const appRoot = path.join(projectRoot, 'app');
     const pages = (await filesUnder(appRoot))
-        .filter((file) => file.endsWith('.tsx') && !file.includes(`${path.sep}assets${path.sep}`));
+        .filter((file) => /\.tsx?$/.test(file) && !file.includes(`${path.sep}assets${path.sep}`));
     await Promise.all(pages.map(async (page) => {
         const relative = path.relative(appRoot, page);
-        const pageDataPath = path.join(projectRoot, 'app/assets/data/view', relative.replace(/\.tsx$/, '.json'));
+        const pageDataPath = path.join(projectRoot, 'app/assets/data/view', relative.replace(/\.tsx?$/, '.json'));
         let pageData = {};
         try {
             pageData = JSON.parse(await fs.readFile(pageDataPath, 'utf8'));
@@ -55,13 +55,13 @@ async function renderMarkup(config, outputRoot, projectRoot) {
                 throw error;
             }
         }
-        const compiledPage = path.join(projectRoot, 'dist/app', relative.replace(/\.tsx$/, '.js'));
+        const compiledPage = path.join(projectRoot, 'dist/app', relative.replace(/\.tsx?$/, '.js'));
         const module = await import(pathToFileURL(compiledPage).href);
         if (typeof module.default !== 'function') {
             throw new TypeError(`Page module ${relative} must export a default render function`);
         }
         const markup = module.default({ ...globalData, ...pageData, ...config });
-        const destination = path.join(outputRoot, relative.replace(/\.tsx$/, '.html'));
+        const destination = path.join(outputRoot, relative.replace(/\.tsx?$/, '.html'));
         await fs.mkdir(path.dirname(destination), { recursive: true });
         await fs.writeFile(destination, `<!DOCTYPE html>\n${String(markup)}\n`);
     }));
