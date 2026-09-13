@@ -160,8 +160,6 @@ The generated browser entry demonstrates:
 - [`white-label-router`](https://github.com/bshack/white-label-router): crawlable query-string navigation with History API enhancement.
 - [`white-label-view/jsx-runtime`](https://github.com/bshack/white-label-view): escaped static and client-side JSX without React or another template engine.
 
-`white-label-service` remains independent and is not required by the static example.
-
 ## License
 
 MIT

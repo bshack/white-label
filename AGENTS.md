@@ -2,7 +2,7 @@
 
 # Repository Guide — white-label
 
-Yeoman generator for static TypeScript sites using Eta, Sass, Bootstrap, esbuild, and the White Label browser packages.
+Generator and first-party CLI for production-oriented static TypeScript sites using Tailwind CSS, esbuild, and the White Label model, view, router, mediator, and JSX packages.
 
 Verified against `package.json`, `README.md`, and `.github/workflows/security.yml` on September 11, 2026. Recheck those files when commands or supported environments change.
 
@@ -42,7 +42,7 @@ Edit TypeScript sources and regenerate tracked `dist/` output with the existing 
 
 ## Architectural boundaries
 
-Preserve initial rendered HTML, escaped Eta interpolation, and the independent service boundary. Changes to generator templates affect generated applications: validate both generator behavior and generated output. The starter uses system fonts.
+Preserve initial rendered HTML, escaped JSX output, framework-independent package boundaries, and crawlable progressive enhancement. Changes to generator templates affect generated applications: validate both generator behavior and generated output. The starter uses system fonts.
 
 ---
 
