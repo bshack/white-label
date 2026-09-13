@@ -28,7 +28,7 @@ URL / user action
       DOM
 ```
 
-These are responsibilities, not mandatory layers. Static content can stay plain JSX. A feature that does not need routing does not need a router.
+These are responsibilities, not mandatory layers. Static content can stay plain JSX or plain TypeScript HTML strings. A feature that does not need routing does not need a router.
 
 - [`white-label-router`](https://github.com/bshack/white-label-router) turns location into application intent.
 - [`white-label-mediator`](https://github.com/bshack/white-label-mediator) coordinates application events.
@@ -42,7 +42,7 @@ The goal is simple boundaries with explicit composition.
 
 The generated landing page demonstrates the same architecture it documents.
 
-Its static sections are ordinary JSX functions. The task example then shows all four packages working together:
+Its static sections use either JSX functions or equivalent plain TypeScript HTML-string functions, depending on the generator choice. The task example then shows all four packages working together:
 
 ```text
 TaskRouter
@@ -52,15 +52,15 @@ TaskMediator
 TaskModel
     ↓ observable state
 TaskView
-    ↓ JSX
+    ↓ render
 DOM
 ```
 
-The initial task markup and browser updates share the same JSX renderer. The example stays useful before JavaScript enhancement and remains easy to trace after initialization.
+Both generated variants provide the same application behavior and progressive enhancement. The only difference is template syntax.
 
 ## Read the source
 
-A useful reading order is:
+For the default JSX scaffold, a useful reading order is:
 
 1. [`app/index.tsx`](app/index.tsx) — page composition.
 2. [`app/assets/view/sections/LiveExampleSection.tsx`](app/assets/view/sections/LiveExampleSection.tsx) — static composition around an interactive feature.
@@ -68,6 +68,8 @@ A useful reading order is:
 4. [`app/assets/script/tasks/TaskApplication.ts`](app/assets/script/tasks/TaskApplication.ts) — explicit dependency wiring.
 5. `TaskRouter`, `TaskMediator`, `TaskModel`, and `TaskView` — one responsibility at a time.
 6. [`test/app.test.js`](test/app.test.js) — the architecture exercised as a feature.
+
+The `--no-jsx` scaffold mirrors the same structure with `.ts` files and HTML-string render functions.
 
 Comments focus on why boundaries exist instead of narrating obvious TypeScript.
 
@@ -100,6 +102,20 @@ Or run it without a global install:
 npx generator-white-label create my-project
 ```
 
+Interactive creation asks whether templates should use JSX/TSX. Choose **Yes** for JSX syntax such as `<section>...</section>`, or **No** for plain TypeScript functions that return HTML strings. Both choices generate the same functional starter application.
+
+For explicit or non-interactive use:
+
+```sh
+white-label create my-project --jsx
+white-label create my-project --no-jsx
+
+npx generator-white-label create my-project --jsx
+npx generator-white-label create my-project --no-jsx
+```
+
+If no interactive answer is available and neither flag is supplied, JSX is the default for backward compatibility.
+
 See [`CLI.md`](CLI.md) for the small CLI contract.
 
 ## Programmatic API
@@ -111,9 +127,12 @@ import {createProject} from 'generator-white-label';
 
 // Resolves after the scaffold files and package manifest have been written.
 await createProject({
-    destination: new URL('./my-project', import.meta.url).pathname
+    destination: new URL('./my-project', import.meta.url).pathname,
+    jsx: false
 });
 ```
+
+Set `jsx: true` for JSX/TSX templates or `jsx: false` for plain TypeScript and HTML strings. Omitting `jsx` defaults to `true`.
 
 `createProject(options)` returns `Promise<void>`. A successful call resolves with `undefined`; file-system failures reject the promise instead of returning a status value.
 
@@ -126,11 +145,12 @@ This is the same design principle used throughout White Label: one responsibilit
 | Path | Purpose |
 | --- | --- |
 | `scaffold/index.ts` | Canonical `createProject()` implementation |
+| `scaffold/no-jsx/` | Plain-TypeScript template equivalents |
 | `cli/index.ts` | First-party command-line adapter |
-| `app/*.tsx` | Top-level static pages |
-| `app/assets/view/` | JSX views and page sections |
+| `app/*.tsx` | Default JSX top-level static pages |
+| `app/assets/view/` | Default JSX views and page sections |
 | `app/assets/script/tasks/` | Model/View/Mediator/Router example |
-| `scripts/build.ts` | Static rendering and asset build |
+| `scripts/build.ts` | Static rendering and asset build for `.ts` and `.tsx` pages |
 | `test/` | Executable contracts and integration tests |
 | `template-test/` | Generated-project validation |
 
@@ -138,7 +158,7 @@ No React, Bootstrap, Sass, Eta, Handlebars, web fonts, or browser-side template 
 
 ## JSX
 
-TypeScript uses the White Label JSX runtime:
+JSX is optional. When enabled, TypeScript uses the White Label JSX runtime:
 
 ```json
 {
@@ -157,9 +177,11 @@ export default function Page(data: Record<string, unknown>) {
 }
 ```
 
+With `--no-jsx`, the equivalent page is ordinary TypeScript returning an HTML string instead. The application architecture and generated features remain the same.
+
 For larger pages, compose focused views instead of growing one renderer indefinitely.
 
-JSX expressions are escaped by default. Use `raw()` only for trusted application-authored markup.
+JSX expressions are escaped by default. In plain-TypeScript templates, dynamic values should be escaped before insertion into HTML strings.
 
 ## Progressive enhancement
 
