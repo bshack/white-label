@@ -29,14 +29,70 @@ jobs:
       - run: npm run build -- --version=ci --production=true --site-url=https://example.com
       - run: npm run audit
       - run: npm pack --dry-run
+      - name: Create packed package
+        run: npm pack --silent
+      - uses: actions/upload-artifact@v7
+        with:
+          name: packed-package
+          path: '*.tgz'
+          if-no-files-found: error
+          retention-days: 7
       - name: Verify packed install and CLI
         run: |
-          PACKAGE="$(npm pack --silent)"
+          PACKAGE="$(ls *.tgz)"
           TEMP="$(mktemp -d)"
           cd "$TEMP"
-          npm init -y >/dev/null
+          printf '{"private":true,"type":"module"}\n' > package.json
           npm install --ignore-scripts "$GITHUB_WORKSPACE/$PACKAGE" >/dev/null
           node --input-type=module -e "const scaffold=await import('generator-white-label'); if (typeof scaffold.createProject !== 'function') process.exit(1)"
           test -e ./node_modules/.bin/white-label
           node ./node_modules/generator-white-label/dist/cli/index.js --help | grep -q "white-label create <directory>"
-          rm "$GITHUB_WORKSPACE/$PACKAGE"
+
+  package-manager-compatibility:
+    needs: test-build-audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        package-manager: [npm, yarn, pnpm]
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.21.0
+      - uses: actions/download-artifact@v7
+        with:
+          name: packed-package
+          path: package
+      - name: Configure package manager
+        if: matrix.package-manager != 'npm'
+        run: |
+          corepack enable
+          if [ "${{ matrix.package-manager }}" = "yarn" ]; then
+            corepack prepare yarn@4.9.2 --activate
+          else
+            corepack prepare pnpm@10.17.1 --activate
+          fi
+      - name: Verify packed package and CLI
+        run: |
+          PACKAGE="$(realpath package/*.tgz)"
+          TEMP="$(mktemp -d)"
+          cd "$TEMP"
+          printf '{"private":true,"type":"module"}\n' > package.json
+          case "${{ matrix.package-manager }}" in
+            npm)
+              npm install --ignore-scripts "$PACKAGE" >/dev/null
+              node --input-type=module -e "const scaffold=await import('generator-white-label'); if (typeof scaffold.createProject !== 'function') process.exit(1)"
+              npx --no-install white-label --help | grep -q "white-label create <directory>"
+              ;;
+            yarn)
+              yarn add "$PACKAGE" >/dev/null
+              yarn node --input-type=module -e "const scaffold=await import('generator-white-label'); if (typeof scaffold.createProject !== 'function') process.exit(1)"
+              yarn exec white-label --help | grep -q "white-label create <directory>"
+              ;;
+            pnpm)
+              pnpm add --ignore-scripts "$PACKAGE" >/dev/null
+              pnpm exec node --input-type=module -e "const scaffold=await import('generator-white-label'); if (typeof scaffold.createProject !== 'function') process.exit(1)"
+              pnpm exec white-label --help | grep -q "white-label create <directory>"
+              ;;
+          esac
