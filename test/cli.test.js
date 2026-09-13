@@ -4,6 +4,7 @@ import path from 'node:path';
 import {mkdtemp, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {spawnSync} from 'node:child_process';
+import {PassThrough} from 'node:stream';
 import {formatCliError, runCli} from '../dist/cli/index.js';
 
 function captureStream() {
@@ -86,6 +87,30 @@ test('CLI supports explicit JSX and non-JSX generation', async () => {
         });
         assert.equal(exitCode, 0);
         assert.deepEqual(received, {destination: path.resolve('/workspace', 'site'), jsx});
+    }
+});
+
+test('CLI asks an understandable interactive JSX question and honors yes/no answers', async () => {
+    for (const [answer, jsx] of [['\n', true], ['yes\n', true], ['n\n', false], ['No\n', false]]) {
+        const input = new PassThrough();
+        const output = new PassThrough();
+        let prompt = '';
+        output.on('data', chunk => {prompt += chunk.toString();});
+        let received;
+        input.end(answer);
+        const exitCode = await runCli(['create', 'site'], {
+            cwd: () => '/workspace',
+            createProject: async options => {received = options;},
+            isInteractive: true,
+            input,
+            output,
+            stdout: captureStream().stream,
+            stderr: captureStream().stream
+        });
+        assert.equal(exitCode, 0);
+        assert.deepEqual(received, {destination: path.resolve('/workspace', 'site'), jsx});
+        assert.match(prompt, /Use JSX\/TSX for page and view templates\?/);
+        assert.match(prompt, /plain TypeScript that returns HTML strings/);
     }
 });
 
