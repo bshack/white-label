@@ -6,8 +6,6 @@ export interface CreateProjectOptions {
     destination: string;
     fileSystem?: ScaffoldFileSystem;
 }
-/** Compatibility name for integrations that still describe the scaffold as a site. */
-export type CreateSiteOptions = CreateProjectOptions;
 /** Return the package manifest used by generated White Label projects. */
 export declare function createSiteManifest(): {
     name: string;
@@ -49,5 +47,3 @@ export declare function createSiteManifest(): {
  * project-generation behavior themselves.
  */
 export declare function createProject({ destination, fileSystem }: CreateProjectOptions): Promise<void>;
-/** Compatibility alias for the original scaffold API. */
-export declare const createSite: typeof createProject;
