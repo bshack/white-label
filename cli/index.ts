@@ -3,11 +3,11 @@
 import path from 'node:path';
 import process from 'node:process';
 import {fileURLToPath} from 'node:url';
-import {createSite} from '../scaffold/index.js';
+import {createProject} from '../scaffold/index.js';
 
 export interface CliDependencies {
     cwd?: () => string;
-    createSite?: typeof createSite;
+    createProject?: typeof createProject;
     stdout?: Pick<NodeJS.WriteStream, 'write'>;
     stderr?: Pick<NodeJS.WriteStream, 'write'>;
 }
@@ -18,7 +18,7 @@ function usage() {
         '  white-label create <directory>',
         '',
         'Commands:',
-        '  create <directory>  Create a White Label site without Yeoman.',
+        '  create <directory>  Create a White Label project.',
         '',
         'Options:',
         '  -h, --help          Show this help message.'
@@ -31,7 +31,7 @@ export function formatCliError(error: unknown) {
 
 export async function runCli(args: readonly string[], dependencies: CliDependencies = {}) {
     const cwd = dependencies.cwd ?? process.cwd;
-    const scaffold = dependencies.createSite ?? createSite;
+    const scaffold = dependencies.createProject ?? createProject;
     const stdout = dependencies.stdout ?? process.stdout;
     const stderr = dependencies.stderr ?? process.stderr;
     const [command, destination, ...extra] = args;
@@ -48,7 +48,7 @@ export async function runCli(args: readonly string[], dependencies: CliDependenc
 
     const resolvedDestination = path.resolve(cwd(), destination);
     await scaffold({destination: resolvedDestination});
-    stdout.write(`Created White Label site at ${resolvedDestination}\n`);
+    stdout.write(`Created White Label project at ${resolvedDestination}\n`);
     return 0;
 }
 
@@ -58,7 +58,7 @@ if (invokedPath === modulePath) {
     runCli(process.argv.slice(2)).then(
         (exitCode) => {process.exitCode = exitCode;},
         (error: unknown) => {
-            process.stderr.write(`Unable to create White Label site: ${formatCliError(error)}\n`);
+            process.stderr.write(`Unable to create White Label project: ${formatCliError(error)}\n`);
             process.exitCode = 1;
         }
     );
