@@ -7,7 +7,7 @@ export interface TaskItem {
     title: string;
 }
 
-export interface TaskState {
+export interface TaskState extends Record<PropertyKey, unknown> {
     filter: TaskFilter;
     tasks: TaskItem[];
 }
