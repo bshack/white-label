@@ -121,10 +121,10 @@ test('packaged project creator creates a strictly typed Tailwind and JSX site th
     const manifest = JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8'));
     assert.deepEqual(manifest, createSiteManifest());
     assert.equal(manifest.type, 'module');
-    assert.equal(manifest.dependencies['white-label-mediator'], 'github:bshack/white-label-mediator#e815f704a759de76f96f66ac198b4dc42dfc30f4');
-    assert.equal(manifest.dependencies['white-label-model'], 'github:bshack/white-label-model#b5b45b13b45f509497d0a5bdbed86c8bcc054980');
-    assert.equal(manifest.dependencies['white-label-router'], 'github:bshack/white-label-router#23295657a29764a140218e03d384631ce3a2b9c3');
-    assert.equal(manifest.dependencies['white-label-view'], 'github:bshack/white-label-view#b612930edaef814412899b3391a14fd36df28d9d');
+    assert.equal(manifest.dependencies['white-label-mediator'], '3.0.0');
+    assert.equal(manifest.dependencies['white-label-model'], 'github:bshack/white-label-model#582bef8c70cc246b2cd76b34aeb472ea7fef2f90');
+    assert.equal(manifest.dependencies['white-label-router'], '4.0.0');
+    assert.equal(manifest.dependencies['white-label-view'], 'github:bshack/white-label-view#42b23195e7a1aac91a5e7d969e5c5c88e5b1e691');
     assert.equal(manifest.dependencies.eta, undefined);
     assert.equal(manifest.devDependencies.bootstrap, undefined);
     assert.equal(manifest.devDependencies.sass, undefined);
