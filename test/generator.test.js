@@ -99,7 +99,7 @@ test('programmatic scaffold API creates a complete non-JSX site', async t => {
     assert.match(await readFile(path.join(destination, 'app/index.ts'), 'utf8'), /return `<html/i);
     assert.match(await readFile(path.join(destination, 'app/404.ts'), 'utf8'), /Page not found/);
     assert.match(await readFile(path.join(destination, 'app/assets/script/index.ts'), 'utf8'), /TaskApplication/);
-    assert.match(await readFile(path.join(destination, 'app/assets/script/tasks/TaskView.ts'), 'utf8'), /class TaskView/);
+    assert.match(await readFile(path.join(destination, 'app/assets/script/tasks/TaskView.ts'), 'utf8'), /createTaskView/);
     assert.match(await readFile(path.join(destination, 'app/assets/view/examples/tasks/TaskExample.ts'), 'utf8'), /TaskExample/);
     assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), /without JSX|plain TypeScript|HTML strings/i);
     await symlink(path.join(root, 'node_modules'), path.join(destination, 'node_modules'));
