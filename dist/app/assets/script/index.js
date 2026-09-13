@@ -1,4 +1,4 @@
-import { jsxs as _jsxs } from "white-label-view/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "white-label-view/jsx-runtime";
 /** @module app/assets/script/index */
 import Mediator from 'white-label-mediator';
 import { Model } from 'white-label-model';
@@ -30,7 +30,7 @@ export function initializeWhiteLabelPage(documentRoot) {
         model,
         template(data) {
             const state = data;
-            return _jsxs("p", { children: ["Showing ", state.visible, " ", state.visible === 1 ? 'feature' : 'features', "."] });
+            return (_jsxs("dl", { children: [_jsxs("div", { children: [_jsx("dt", { children: "Router" }), _jsxs("dd", { children: ["/?feature=", state.selected] })] }), _jsxs("div", { children: [_jsx("dt", { children: "Mediator" }), _jsxs("dd", { children: ["feature:selected \u2192 ", state.selected] })] }), _jsxs("div", { children: [_jsx("dt", { children: "Model" }), _jsxs("dd", { children: ["selected: ", state.selected] })] }), _jsxs("div", { children: [_jsx("dt", { children: "View" }), _jsxs("dd", { children: [state.visible, " ", state.visible === 1 ? 'feature' : 'features', " rendered"] })] })] }));
         }
     }).initialize();
     let progressFrame;
