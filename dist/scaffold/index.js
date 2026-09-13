@@ -45,6 +45,25 @@ export function createSiteManifest() {
         }
     };
 }
+const commonNoJsxCopies = [
+    ['app/assets/data', 'app/assets/data'],
+    ['app/assets/style', 'app/assets/style'],
+    ['app/assets/script/tasks/TaskApplication.ts', 'app/assets/script/tasks/TaskApplication.ts'],
+    ['app/assets/script/tasks/TaskMediator.ts', 'app/assets/script/tasks/TaskMediator.ts'],
+    ['app/assets/script/tasks/TaskModel.ts', 'app/assets/script/tasks/TaskModel.ts'],
+    ['app/assets/script/tasks/TaskRouter.ts', 'app/assets/script/tasks/TaskRouter.ts'],
+    ['app/assets/view/examples/tasks/task-state.ts', 'app/assets/view/examples/tasks/task-state.ts'],
+    ['app/package.json', 'app/package.json']
+];
+const noJsxTemplateCopies = [
+    ['scaffold/no-jsx/app/index.ts', 'app/index.ts'],
+    ['scaffold/no-jsx/app/404.ts', 'app/404.ts'],
+    ['scaffold/no-jsx/app/assets/script/index.ts', 'app/assets/script/index.ts'],
+    ['scaffold/no-jsx/app/assets/script/tasks/TaskView.ts', 'app/assets/script/tasks/TaskView.ts'],
+    ['scaffold/no-jsx/app/assets/view/examples/tasks/TaskExample.ts', 'app/assets/view/examples/tasks/TaskExample.ts'],
+    ['scaffold/no-jsx/README.md', 'README.md'],
+    ['tsconfig.site.no-jsx.json', 'tsconfig.json']
+];
 /**
  * Create a White Label project.
  *
@@ -52,13 +71,18 @@ export function createSiteManifest() {
  * translate their environment into these options instead of owning templates or
  * project-generation behavior themselves.
  */
-export async function createProject({ destination, fileSystem = nodeFileSystem }) {
-    const copies = [
+export async function createProject({ destination, fileSystem = nodeFileSystem, jsx = true }) {
+    const copies = jsx ? [
         ['app', 'app'],
         ['app/README.md', 'README.md'],
         ['scripts', 'scripts'],
         ['template-test', 'test'],
         ['tsconfig.site.json', 'tsconfig.json']
+    ] : [
+        ...commonNoJsxCopies,
+        ...noJsxTemplateCopies,
+        ['scripts', 'scripts'],
+        ['template-test', 'test']
     ];
     for (const [source, target] of copies) {
         await fileSystem.copy(path.join(packageRoot, source), path.join(destination, target));

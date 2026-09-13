@@ -11,20 +11,13 @@
     "outDir": "dist",
     "rootDir": ".",
     "resolveJsonModule": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "white-label-view",
-    "types": ["node"],
-    "noEmitOnError": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true
+    "types": [
+      "node"
+    ],
+    "noEmitOnError": true
   },
   "include": [
-    "cli/**/*.ts",
     "scripts/**/*.ts",
-    "scaffold/index.ts",
-    "app/**/*.ts",
-    "app/**/*.tsx"
+    "app/**/*.ts"
   ]
 }

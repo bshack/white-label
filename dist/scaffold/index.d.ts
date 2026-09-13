@@ -5,6 +5,7 @@ export interface ScaffoldFileSystem {
 export interface CreateProjectOptions {
     destination: string;
     fileSystem?: ScaffoldFileSystem;
+    jsx?: boolean;
 }
 /** Return the package manifest used by generated White Label projects. */
 export declare function createSiteManifest(): {
@@ -46,4 +47,4 @@ export declare function createSiteManifest(): {
  * translate their environment into these options instead of owning templates or
  * project-generation behavior themselves.
  */
-export declare function createProject({ destination, fileSystem }: CreateProjectOptions): Promise<void>;
+export declare function createProject({ destination, fileSystem, jsx }: CreateProjectOptions): Promise<void>;
