@@ -135,7 +135,7 @@ jobs:
               npm install --ignore-scripts "$PACKAGE" >/dev/null
               node ./node_modules/generator-white-label/dist/cli/index.js create ../site --jsx
               cd ../site
-              npm install --ignore-scripts >/dev/null
+              npm install >/dev/null
               npm test
               ;;
             yarn)
@@ -149,7 +149,7 @@ jobs:
               pnpm add --ignore-scripts "$PACKAGE" >/dev/null
               pnpm exec white-label create ../site --jsx
               cd ../site
-              pnpm install --ignore-scripts >/dev/null
+              pnpm install >/dev/null
               pnpm test
               ;;
           esac
