@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import {readdir} from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import {createInterface} from 'node:readline/promises';
@@ -47,6 +48,19 @@ async function askForJsx(input: NodeJS.ReadableStream, output: NodeJS.WritableSt
     }
 }
 
+/** Reject an existing non-empty target so a mistyped CLI destination cannot overwrite project files. */
+async function assertDestinationAvailable(destination: string) {
+    try {
+        const entries = await readdir(destination);
+        if (entries.length) {
+            throw new Error(`Destination directory must be empty: ${destination}`);
+        }
+    } catch (error) {
+        if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {return;}
+        throw error;
+    }
+}
+
 export async function runCli(args: readonly string[], dependencies: CliDependencies = {}) {
     const cwd = dependencies.cwd ?? process.cwd;
     const scaffold = dependencies.createProject ?? createProject;
@@ -84,6 +98,7 @@ export async function runCli(args: readonly string[], dependencies: CliDependenc
     }
 
     const resolvedDestination = path.resolve(cwd(), destination);
+    await assertDestinationAvailable(resolvedDestination);
     await scaffold({destination: resolvedDestination, jsx});
     stdout.write(`Created White Label project at ${resolvedDestination}\n`);
     return 0;

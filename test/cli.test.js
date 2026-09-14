@@ -58,6 +58,24 @@ test('CLI rejects malformed create commands', async () => {
     }
 });
 
+test('CLI refuses an existing non-empty destination before scaffolding', async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), 'white-label-cli-existing-'));
+    await writeFile(path.join(directory, 'keep.txt'), 'existing work');
+    let called = false;
+
+    await assert.rejects(
+        runCli(['create', directory, '--jsx'], {
+            cwd: () => process.cwd(),
+            createProject: async () => {called = true;},
+            isInteractive: false,
+            stdout: captureStream().stream,
+            stderr: captureStream().stream
+        }),
+        /Destination directory must be empty/
+    );
+    assert.equal(called, false);
+});
+
 test('CLI resolves the destination and defaults to JSX when non-interactive', async () => {
     const stdout = captureStream();
     let received;
