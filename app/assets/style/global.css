@@ -29,7 +29,7 @@ button { cursor: pointer; }
 .site-header nav a:hover, .site-header nav a:focus-visible { color: var(--black); }
 .hero { padding: clamp(5rem, 12vw, 10rem) 0 clamp(4.5rem, 10vw, 8rem); border-bottom: 1px solid var(--grey); }
 .hero__inner { max-width: 64rem; }
-.hero h1 { max-width: 11ch; margin: .5rem 0 1.75rem; font-size: clamp(3.6rem, 10vw, 8.75rem); font-weight: 800; line-height: .86; letter-spacing: -.07em; }
+.hero h1 { max-width: 11ch; margin: .5rem 0 1.75rem; font-size: clamp(3.6rem, 10vw, 8.75rem); font-weight: 800; line-height: .94; letter-spacing: -.055em; }
 .hero__lede { max-width: 45rem; margin: 0 0 2rem; font-size: clamp(1.15rem, 2.2vw, 1.55rem); line-height: 1.5; }
 .hero__links { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; align-items: center; }
 .primary-link { display: inline-flex; align-items: center; min-height: 44px; padding: .45rem .85rem; border: 1px solid var(--black); background: var(--black); color: var(--white); text-decoration: none; }
