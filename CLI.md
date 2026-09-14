@@ -11,17 +11,27 @@ Node API ─┘
 
 ## Create a project
 
+With a globally installed CLI:
+
 ```sh
 white-label create my-project
-cd my-project
-npm install
-npm test
 ```
 
-Or run the package directly:
+Or run the package directly with the package manager you prefer:
 
 ```sh
 npx generator-white-label create my-project
+yarn dlx generator-white-label create my-project
+pnpm dlx generator-white-label create my-project
+```
+
+Then install and test the generated project with npm, Yarn, or pnpm:
+
+```sh
+cd my-project
+npm install && npm test
+# or: yarn install && yarn test
+# or: pnpm install && pnpm test
 ```
 
 When run interactively, the CLI asks whether page and view templates should use JSX/TSX. Choose **Yes** for JSX syntax such as `<section>...</section>`, or **No** for plain TypeScript functions that return HTML strings. Both choices produce the same working starter application and features.
@@ -36,9 +46,11 @@ npx generator-white-label create my-project --jsx
 npx generator-white-label create my-project --no-jsx
 ```
 
+The same `--jsx` and `--no-jsx` flags work through `yarn dlx` and `pnpm dlx`.
+
 If no choice can be asked interactively and neither flag is supplied, JSX remains the default for backward compatibility.
 
-Run `white-label --help` for usage.
+Run `white-label --help` for usage. See [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md) for package-manager compatibility details.
 
 ## Use the API
 
