@@ -12,6 +12,23 @@ export interface TaskState extends Record<PropertyKey, unknown> {
     tasks: TaskItem[];
 }
 
+const taskPredicates: Record<TaskFilter, (task: TaskItem) => boolean> = {
+    active: task => !task.complete,
+    all: () => true,
+    completed: task => task.complete
+};
+
+/** Return the tasks visible for the current filter. */
+export function getVisibleTasks(state: TaskState): TaskItem[] {
+    return state.tasks.filter(taskPredicates[state.filter]);
+}
+
+/** Describe the currently rendered task result for assistive technology. */
+export function describeTaskStatus(state: TaskState): string {
+    const visible = getVisibleTasks(state).length;
+    return `Showing ${visible} ${visible === 1 ? 'task' : 'tasks'} for the ${state.filter} filter.`;
+}
+
 /**
  * Return fresh demo data for each application instance.
  *
