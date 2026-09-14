@@ -12,12 +12,12 @@ export default function GettingStartedSection() {
                 </div>
                 <div>
                     <p className="code-label">Create a project</p>
-                    <CodeBlock lines={[<><span style={syntax.type}>npx</span> generator-white-label</>]} />
+                    <CodeBlock lines={[<><span className={syntax.type}>npx</span> generator-white-label</>]} />
                     <p className="code-label">Then develop</p>
                     <CodeBlock lines={[
-                        <><span style={syntax.type}>npm</span> ci</>,
-                        <><span style={syntax.type}>npm</span> test</>,
-                        <><span style={syntax.type}>npm</span> run build -- --version=<span style={syntax.value}>local</span></>
+                        <><span className={syntax.type}>npm</span> ci</>,
+                        <><span className={syntax.type}>npm</span> test</>,
+                        <><span className={syntax.type}>npm</span> run build -- --version=<span className={syntax.value}>local</span></>
                     ]} />
                     <p><a href="https://github.com/bshack/white-label#readme">Read the complete generator documentation</a></p>
                 </div>
