@@ -128,7 +128,7 @@ test('starter code syntax colors remain grayscale and meet AA contrast', async (
         .map(match => match[1].toLowerCase());
     assert.equal(codeColors.length, 5);
     for (const color of codeColors) {
-        assert.match(color, /^#([0-9a-f])\1([0-9a-f])\2([0-9a-f])\3$/i);
+        assert.match(color, /^#([0-9a-f]{2})\1\1$/i);
         assert.ok(contrastRatio(color, '#f4f4f4') >= 4.5, `${color} must meet 4.5:1 against the code background`);
     }
 });
