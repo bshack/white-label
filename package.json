@@ -26,6 +26,7 @@
   },
   "files": [
     ".yarnrc.yml",
+    "pnpm-workspace.yaml",
     "app",
     "cli",
     "scaffold",
