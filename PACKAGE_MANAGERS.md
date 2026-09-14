@@ -24,7 +24,7 @@ pnpm install && pnpm test
 
 Generated manifests require the supported Node.js runtime but do not require a specific package manager. Nested scripts use Node's `--run` support instead of invoking npm internally.
 
-Generated projects also include narrow package-manager security configuration for the dependencies they actually use. `.yarnrc.yml` uses Yarn's `node-modules` linker and approves only the pinned White Label Git repositories. `pnpm-workspace.yaml` allows dependency build scripts only for `esbuild` and `white-label-view`, which need installation-time builds. These settings avoid requiring users to disable package-manager security globally.
+Generated projects also carry narrow install-script approvals for the dependencies that actually need lifecycle builds: `esbuild`, `@parcel/watcher`, and the pinned `white-label-view` Git dependency. npm uses pinned `allowScripts` entries, Yarn uses pinned `dependenciesMeta` build permissions plus approved White Label Git repositories, and pnpm uses `onlyBuiltDependencies`. These settings avoid requiring users to disable package-manager security globally.
 
 ## Repository development
 
