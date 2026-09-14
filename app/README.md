@@ -44,9 +44,25 @@ Open `http://localhost:8080/`.
 
 Serve `_deploy` as the web server's document root. Do **not** browse to `_deploy/index.html` through a server rooted at the project directory (for example, `/white-label-site/_deploy/index.html`), because generated asset URLs such as `/release/local/assets/style/global.css` are intentionally rooted at the deployed site's origin and will otherwise return 404 responses.
 
-The build output is `_deploy`. The test suite checks the starter content, progressive interaction, production build, accessibility/indexability signals, and full coverage for the custom browser code.
+The build output is `_deploy`. The test suite checks the starter content, progressive interaction, production build, accessibility/indexability signals, serverless request isolation, Web-standard bundling, and serverless size/startup budgets.
 
-Pages live in `app/*.tsx`, page data lives in `app/assets/data/view`, browser code lives in `app/assets/script`, and shared styles live in `app/assets/style`. TypeScript is configured with `jsx: react-jsx` and `jsxImportSource: white-label-view`, so this scaffold's JSX does not require React.
+Pages live in `app/*.tsx`, page data lives in `app/assets/data/view`, browser code lives in `app/assets/script`, the provider-neutral serverless example lives in `server/handler.ts`, and shared styles live in `app/assets/style`. TypeScript is configured with `jsx: react-jsx` and `jsxImportSource: white-label-view`, so this scaffold's JSX does not require React.
+
+## Serverless / function runtimes
+
+`server/handler.ts` demonstrates a cloud-agnostic server function using the Web `Request` and `Response` APIs. It composes a request-scoped Mediator, Model, Router, and server View, then destroys those mutable instances before the invocation completes.
+
+```ts
+import {handleRequest} from './dist/server/handler.js';
+
+const response = await handleRequest(new Request('https://example.com/hello?name=Ada'));
+```
+
+Keep immutable configuration at module scope when useful, but create mutable Model/View/Router/Mediator instances per request unless their shared lifetime is intentional. Serverless platforms may reuse one process for many warm invocations, so module-level mutable application state can leak data between requests.
+
+Cloud adapters should stay thin: translate the provider's event/request into a Web `Request`, call `handleRequest`, then translate the resulting `Response` if the platform requires it. The starter does not depend on AWS, Vercel, Netlify, Cloudflare, Azure, or another provider SDK.
+
+The portability test bundles the server-side composition with a browser/Web target to catch unresolved Node built-ins. That is an edge-portability smoke test, not a claim that every edge provider is supported; verify the actual provider runtime before deployment.
 
 `app/assets/style/global.css` imports Tailwind and contains the starter's custom theme styles. `print.css` remains plain CSS. Tailwind scans the project source during the build and emits static CSS; there is no browser-side Tailwind runtime.
 
