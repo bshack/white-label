@@ -10,7 +10,9 @@ yarn dlx generator-white-label create my-project
 pnpm dlx generator-white-label create my-project
 ```
 
-The same `--jsx` and `--no-jsx` options are available through every invocation path.
+The same `--jsx` and `--no-jsx` options are available through every invocation path. JSX is optional: use `--jsx` for the first-party White Label JSX runtime, or `--no-jsx` for plain TypeScript templates and as the starting point for a third-party template engine.
+
+See [Template engines and JSX options](https://whitelabeljs.org/docs/view/#template-engines) for tested third-party renderers and the View rendering contract.
 
 ## Work with a generated project
 
