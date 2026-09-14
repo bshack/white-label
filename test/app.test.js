@@ -75,11 +75,14 @@ test('task modules reject invalid domain and markup input cleanly', () => {
     assert.throws(() => initializeTaskApplication(noViewRoot.window.document), /static task-app root/);
 });
 
-test('landing page source styles use only white, black, and accessible grey', async () => {
+test('landing page source styles keep branding grayscale and code syntax desaturated', async () => {
     const styles = await Promise.all(['app/assets/style/global.css', 'app/assets/style/print.css'].map(path => readFile(path, 'utf8')));
     const normalize = value => value.length === 4 ? `#${[...value.slice(1)].map(character => character.repeat(2)).join('')}` : value;
     const colors = new Set(styles.flatMap(style => style.match(/#[0-9a-f]{3,6}\b/gi) ?? []).map(value => normalize(value.toLowerCase())));
-    assert.deepEqual([...colors].sort(), ['#000000', '#767676', '#ffffff']);
+    assert.deepEqual([...colors].sort(), [
+        '#000000', '#242424', '#5d6f78', '#68756a', '#6e6878', '#767676',
+        '#858585', '#8a8d91', '#cecec8', '#f4f4f1', '#ffffff'
+    ]);
 });
 
 test.after(() => {
