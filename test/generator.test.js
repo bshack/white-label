@@ -129,7 +129,7 @@ test('packaged project creator creates a strictly typed Tailwind and JSX site th
     assert.equal(manifest.dependencies['white-label-mediator'], 'github:bshack/white-label-mediator#e815f704a759de76f96f66ac198b4dc42dfc30f4');
     assert.equal(manifest.dependencies['white-label-model'], 'github:bshack/white-label-model#b5b45b13b45f509497d0a5bdbed86c8bcc054980');
     assert.equal(manifest.dependencies['white-label-router'], 'github:bshack/white-label-router#23295657a29764a140218e03d384631ce3a2b9c3');
-    assert.equal(manifest.dependencies['white-label-view'], 'github:bshack/white-label-view#d675e9cf4c15229de3c369c4597e0cbc058550c2');
+    assert.equal(manifest.dependencies['white-label-view'], 'github:bshack/white-label-view#2ada4986c047f720a777508d869474ca2572ec73');
     assert.equal(manifest.dependencies.eta, undefined);
     assert.equal(manifest.devDependencies.bootstrap, undefined);
     assert.equal(manifest.devDependencies.sass, undefined);

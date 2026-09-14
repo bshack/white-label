@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "version": "8.0.0",
-  "description": "Framework-independent TypeScript project generator for accessible, SEO-friendly sites with progressive enhancement and optional White Label JSX.",
+  "description": "Framework-independent TypeScript project generator for accessible, SEO-friendly sites with progressive enhancement, optional JSX, and a provider-neutral serverless handler example.",
   "type": "module",
   "main": "dist/scaffold/index.js",
   "bin": {
@@ -21,7 +21,7 @@
     "coverage": "node --run compile && node --run test:types && c8 node --run test:unit",
     "prepack": "node --run compile",
     "test:types": "tsc -p tsconfig.consumer.json",
-    "lint": "eslint \"cli/**/*.ts\" \"scripts/**/*.ts\" \"scaffold/**/*.ts\" \"app/**/*.{ts,tsx}\" --max-warnings=0",
+    "lint": "eslint \"cli/**/*.ts\" \"scripts/**/*.ts\" \"scaffold/**/*.ts\" \"server/**/*.ts\" \"app/**/*.{ts,tsx}\" --max-warnings=0",
     "lint:fix": "node --run lint -- --fix"
   },
   "files": [
@@ -31,6 +31,7 @@
     "app",
     "cli",
     "scaffold",
+    "server",
     "scripts",
     "template-test",
     "README.md",
@@ -49,6 +50,7 @@
     "accessibility",
     "seo",
     "progressive-enhancement",
+    "serverless",
     "esbuild",
     "tailwindcss",
     "jsx",

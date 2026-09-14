@@ -20,6 +20,7 @@
   },
   "include": [
     "scripts/**/*.ts",
+    "server/**/*.ts",
     "app/**/*.ts",
     "app/**/*.tsx"
   ]

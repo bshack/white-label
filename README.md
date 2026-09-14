@@ -1,6 +1,6 @@
 # generator-white-label
 
-`generator-white-label` is a framework-independent TypeScript project generator for building small, accessible, SEO-friendly sites with progressive enhancement and composable White Label primitives.
+`generator-white-label` is a framework-independent TypeScript project generator for small, accessible, SEO-friendly sites with progressive enhancement, composable White Label primitives, and a provider-neutral Node.js function example.
 
 [Documentation](https://whitelabeljs.org/docs/generator/) · [API reference](https://whitelabeljs.org/api/#generator) · [Demo site](https://whitelabeljs.org/)
 
@@ -69,7 +69,8 @@ For the default JSX scaffold, a useful reading order is:
 3. [`app/assets/view/examples/tasks/TaskExample.tsx`](app/assets/view/examples/tasks/TaskExample.tsx) — shared JSX rendering.
 4. [`app/assets/script/tasks/TaskApplication.ts`](app/assets/script/tasks/TaskApplication.ts) — explicit dependency wiring.
 5. `TaskRouter`, `TaskMediator`, `TaskModel`, and `TaskView` — one responsibility at a time.
-6. [`test/app.test.js`](test/app.test.js) — the architecture exercised as a feature.
+6. [`server/handler.ts`](server/handler.ts) — provider-neutral `Request`/`Response` serverless composition.
+7. [`test/app.test.js`](test/app.test.js) and [`template-test/site.test.js`](template-test/site.test.js) — browser and generated-project contracts.
 
 The `--no-jsx` scaffold mirrors the same structure with `.ts` files and HTML-string render functions.
 
@@ -175,11 +176,12 @@ This is the same design principle used throughout White Label: one responsibilit
 | `app/*.tsx` | Default JSX top-level static pages |
 | `app/assets/view/` | Default JSX views and page sections |
 | `app/assets/script/tasks/` | Model/View/Mediator/Router example |
+| `server/handler.ts` | Provider-neutral serverless `Request` → `Response` example |
 | `scripts/build.ts` | Static rendering and asset build for `.ts` and `.tsx` pages |
 | `test/` | Executable contracts and integration tests |
-| `template-test/` | Generated-project validation |
+| `template-test/` | Generated-project validation, including serverless portability budgets |
 
-No React, Bootstrap, Sass, Eta, Handlebars, Mustache, Nunjucks, Pug, web fonts, or browser-side template framework are required. Third-party template engines remain optional application dependencies.
+No React, Bootstrap, Sass, Eta, Handlebars, Mustache, Nunjucks, Pug, web fonts, cloud SDK, or browser-side template framework is required. Third-party template engines and provider adapters remain optional application dependencies.
 
 ## Template choice: JSX or no JSX
 
@@ -218,6 +220,18 @@ The principle is intentional:
 HTML owns semantics.
 JavaScript enhances behavior.
 ```
+
+## Serverless and function runtimes
+
+Every generated project includes `server/handler.ts`, a provider-neutral example built around the Web `Request` and `Response` APIs. It composes Router, Mediator, Model, and `white-label-view/server` without Express or a provider SDK.
+
+Mutable White Label instances are created inside `handleRequest()`. This is intentional: serverless hosts can reuse a warm process for many requests, so mutable module-level Model/View/Router/Mediator instances can leak request data or listeners. Immutable configuration can still be shared at module scope when its lifetime is intentionally process-wide.
+
+Cloud-specific adapters should stay at the boundary. Translate an AWS/Vercel/Netlify/Azure/etc. request into a Web `Request` when necessary, call `handleRequest()`, and translate the returned `Response` back only if the provider requires it.
+
+Generated-project tests exercise sequential warm invocations, concurrent requests, request-data escaping, execution without browser globals, and a browser/Web-target bundle smoke test. They also enforce a 100 kB minified serverless-composition bundle budget and a 750 ms fresh-process handler-import budget. These are regression guards, not universal latency guarantees.
+
+The Web-target bundle smoke test catches unresolved Node built-ins, but it does **not** claim blanket Cloudflare/Deno/edge-provider compatibility. The published runtime packages still document Node as their supported server runtime; verify a specific edge provider before deployment.
 
 ## Build and verify
 

@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
 import {readFile} from 'node:fs/promises';
 import axe from 'axe-core';
+import {build as buildBundle} from 'esbuild';
 import {HtmlValidate} from 'html-validate';
 import {JSDOM} from 'jsdom';
 
@@ -16,6 +18,26 @@ function installBrowser(markup = applicationMarkup) {
     globalThis.Element = dom.window.Element;
     globalThis.Node = dom.window.Node;
     return dom;
+}
+
+async function withoutBrowserGlobals(callback) {
+    const previous = {
+        window: globalThis.window,
+        document: globalThis.document,
+        DOMParser: globalThis.DOMParser,
+        Element: globalThis.Element,
+        Node: globalThis.Node
+    };
+    delete globalThis.window;
+    delete globalThis.document;
+    delete globalThis.DOMParser;
+    delete globalThis.Element;
+    delete globalThis.Node;
+    try {
+        return await callback();
+    } finally {
+        Object.assign(globalThis, previous);
+    }
 }
 
 function relativeLuminance(hex) {
@@ -120,6 +142,74 @@ test('all client packages cooperate through the task application without losing 
     assert.equal(normalizeTaskFilter('nope'), 'all');
     application.destroy();
     assert.equal(application.mediator.listenerCount('task:add'), 0);
+});
+
+test('serverless handler keeps warm and concurrent requests isolated', async () => {
+    await withoutBrowserGlobals(async () => {
+        const {handleRequest} = await import('../dist/server/handler.js');
+        const first = await handleRequest(new Request('https://example.com/hello?name=Ada'));
+        const second = await handleRequest(new Request('https://example.com/hello?name=Grace'));
+        assert.equal(first.status, 200);
+        assert.equal(second.status, 200);
+        assert.match(await first.text(), /Hello Ada\./);
+        assert.match(await second.text(), /Hello Grace\./);
+
+        const [alan, katherine] = await Promise.all([
+            handleRequest(new Request('https://example.com/hello?name=Alan')),
+            handleRequest(new Request('https://example.com/hello?name=Katherine'))
+        ]);
+        const [alanHtml, katherineHtml] = await Promise.all([alan.text(), katherine.text()]);
+        assert.match(alanHtml, /Hello Alan\./);
+        assert.doesNotMatch(alanHtml, /Katherine/);
+        assert.match(katherineHtml, /Hello Katherine\./);
+        assert.doesNotMatch(katherineHtml, /Alan/);
+
+        const escaped = await handleRequest(new Request('https://example.com/hello?name=%3Cstrong%3EAda%3C%2Fstrong%3E'));
+        assert.match(await escaped.text(), /Hello &lt;strong&gt;Ada&lt;\/strong&gt;\./);
+        const missing = await handleRequest(new Request('https://example.com/missing'));
+        assert.equal(missing.status, 404);
+    });
+});
+
+test('serverless composition bundles for Web-standard runtimes within the size budget', async () => {
+    const result = await buildBundle({
+        stdin: {
+            contents: `
+                import Mediator from 'white-label-mediator';
+                import {Model} from 'white-label-model';
+                import Router from 'white-label-router';
+                import View from 'white-label-view/server';
+                const mediator = new Mediator();
+                const model = new Model({ok: true});
+                const router = new Router();
+                const view = new View({model, template: data => '<p>' + String(data.ok) + '</p>'});
+                router.mediator = mediator;
+                export {mediator, model, router, view};
+            `,
+            loader: 'ts',
+            resolveDir: process.cwd(),
+            sourcefile: 'serverless-portability-smoke.ts'
+        },
+        bundle: true,
+        format: 'esm',
+        logLevel: 'silent',
+        minify: true,
+        platform: 'browser',
+        target: 'es2022',
+        treeShaking: true,
+        write: false
+    });
+    const bundle = result.outputFiles[0].text;
+    const bytes = Buffer.byteLength(bundle);
+    assert.ok(bytes <= 100_000, `serverless runtime bundle grew to ${bytes} bytes (100000 byte budget)`);
+    assert.doesNotMatch(bundle, /(?:from|require\()["']node:/);
+});
+
+test('fresh serverless handler import stays within the cold-start budget', () => {
+    const script = "const start=performance.now(); await import('./dist/server/handler.js'); console.log(performance.now()-start);";
+    const elapsed = Number(execFileSync(process.execPath, ['--input-type=module', '-e', script], {encoding: 'utf8'}).trim());
+    assert.ok(Number.isFinite(elapsed));
+    assert.ok(elapsed <= 750, `serverless handler import took ${elapsed.toFixed(1)}ms (750ms budget)`);
 });
 
 test('starter code syntax colors remain grayscale and meet AA contrast', async () => {
