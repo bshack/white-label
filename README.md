@@ -1,6 +1,8 @@
 # generator-white-label
 
-`generator-white-label` creates small, production-oriented TypeScript projects from composable White Label primitives.
+`generator-white-label` is a framework-independent TypeScript project generator for building small, accessible, SEO-friendly sites with progressive enhancement and composable White Label primitives.
+
+[Documentation](https://whitelabeljs.org/docs/generator/) · [API reference](https://whitelabeljs.org/api/#generator) · [Demo site](https://whitelabeljs.org/)
 
 The project is also its own teaching tool. The landing page, README, source, and tests are meant to be read together:
 

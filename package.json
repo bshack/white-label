@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
   "version": "8.0.0",
-  "description": "A production-oriented TypeScript project generator with a first-party scaffold CLI, accessible HTML, SEO output, Tailwind CSS, and optional White Label JSX.",
+  "description": "Framework-independent TypeScript project generator for accessible, SEO-friendly sites with progressive enhancement and optional White Label JSX.",
   "type": "module",
   "main": "dist/scaffold/index.js",
   "bin": {
@@ -42,7 +42,10 @@
   ],
   "keywords": [
     "typescript",
+    "project-generator",
     "static-site-generator",
+    "web-development",
+    "framework-independent",
     "accessibility",
     "seo",
     "progressive-enhancement",
@@ -62,7 +65,7 @@
   "bugs": {
     "url": "https://github.com/bshack/white-label/issues"
   },
-  "homepage": "https://github.com/bshack/white-label",
+  "homepage": "https://whitelabeljs.org/docs/generator/",
   "dependencies": {},
   "devDependencies": {
     "@tailwindcss/cli": "4.3.3",
