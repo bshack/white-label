@@ -90,6 +90,7 @@ const noJsxTemplateCopies = [
 export async function createProject({destination, fileSystem = nodeFileSystem, jsx = true}: CreateProjectOptions) {
     const copies = jsx ? [
         ['.yarnrc.yml', '.yarnrc.yml'],
+        ['pnpm-workspace.yaml', 'pnpm-workspace.yaml'],
         ['app', 'app'],
         ['app/README.md', 'README.md'],
         ['scripts', 'scripts'],
@@ -97,6 +98,7 @@ export async function createProject({destination, fileSystem = nodeFileSystem, j
         ['tsconfig.site.json', 'tsconfig.json']
     ] as const : [
         ['.yarnrc.yml', '.yarnrc.yml'],
+        ['pnpm-workspace.yaml', 'pnpm-workspace.yaml'],
         ...commonNoJsxCopies,
         ...noJsxTemplateCopies,
         ['scripts', 'scripts'],
