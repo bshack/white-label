@@ -24,7 +24,6 @@
     "cli/**/*.ts",
     "scripts/**/*.ts",
     "scaffold/index.ts",
-    "server/**/*.ts",
     "app/**/*.ts",
     "app/**/*.tsx"
   ]
