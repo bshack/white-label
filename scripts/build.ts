@@ -86,13 +86,13 @@ async function compileStyles(outputAssets: string, production: boolean, projectR
     const styleRoot = path.join(projectRoot, 'app/assets/style');
     await fs.mkdir(path.join(outputAssets, 'style'), {recursive: true});
     const destination = path.join(outputAssets, 'style/global.css');
+    const executable = process.platform === 'win32' ? 'tailwindcss.cmd' : 'tailwindcss';
     const argumentsList = [
-        '@tailwindcss/cli',
         '-i', path.join(styleRoot, 'global.css'),
         '-o', destination
     ];
     if (production) {argumentsList.push('--minify');}
-    await execFileAsync('npx', argumentsList, {cwd: projectRoot});
+    await execFileAsync(executable, argumentsList, {cwd: projectRoot});
     await fs.copyFile(path.join(styleRoot, 'print.css'), path.join(outputAssets, 'style/print.css'));
 }
 
@@ -124,15 +124,19 @@ export async function build(config = parseArguments(process.argv.slice(2)), proj
     await fs.rm(outputRoot, {recursive: true, force: true});
     await fs.mkdir(outputAssets, {recursive: true});
 
-    await fs.cp(path.join(projectRoot, 'app/assets/data'), path.join(outputAssets, 'data'), {recursive: true});
+    await Promise.all([
+        fs.cp(path.join(projectRoot, 'app/assets/data'), path.join(outputAssets, 'data'), {recursive: true}),
+        renderMarkup(config, outputRoot, projectRoot),
+        compileStyles(outputAssets, config.production, projectRoot),
+        compileScripts(outputAssets, config.production, projectRoot)
+    ]);
     await fs.writeFile(path.join(outputAssets, 'data/config.json'), JSON.stringify(config));
-    await renderMarkup(config, outputRoot, projectRoot);
-    await compileStyles(outputAssets, config.production, projectRoot);
-    await compileScripts(outputAssets, config.production, projectRoot);
     const robots = `User-agent: *\nAllow: /\nSitemap: ${config.siteUrl}/sitemap.xml\n`;
-    await fs.writeFile(path.join(outputRoot, 'robots.txt'), robots);
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${config.siteUrl}/</loc></url></urlset>\n`;
-    await fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap);
+    await Promise.all([
+        fs.writeFile(path.join(outputRoot, 'robots.txt'), robots),
+        fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap)
+    ]);
 }
 
 if (path.resolve(process.argv[1] || '') === fileURLToPath(import.meta.url)) {
