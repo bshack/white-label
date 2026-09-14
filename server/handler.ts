@@ -27,7 +27,7 @@ function escapeHtml(value: string) {
 export async function handleRequest(request: Request): Promise<Response> {
     const url = new URL(request.url);
     const mediator = new Mediator();
-    const model = new Model<ServerState>({
+    const model = new Model({
         status: 404,
         title: 'Not found',
         message: `No route for ${url.pathname}.`
