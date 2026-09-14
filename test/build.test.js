@@ -15,7 +15,7 @@ test('build arguments reject path traversal and non-HTTPS production origins', (
     assert.throws(() => parseArguments(['--site-url=not-a-url']), /HTTPS/);
 });
 
-test('starter uses Tailwind and White Label JSX without Bootstrap, Eta, React, or Handlebars', async () => {
+test('starter uses Tailwind and White Label JSX without Bootstrap, Eta, React, Handlebars, or npm-only build commands', async () => {
     const [manifest, build, style, page] = await Promise.all([
         'package.json', 'scripts/build.ts', 'app/assets/style/global.css', 'app/index.tsx'
     ].map(file => readFile(file, 'utf8')));
@@ -23,6 +23,8 @@ test('starter uses Tailwind and White Label JSX without Bootstrap, Eta, React, o
     assert.match(manifest, /"@tailwindcss\/cli": "4\.3\.3"/);
     assert.match(style, /@import "tailwindcss"/);
     assert.match(page, /white-label-view\/jsx-runtime/);
+    assert.match(build, /tailwindcss\.cmd/);
+    assert.doesNotMatch(build, /\bnpx\b/);
     assert.doesNotMatch(`${manifest}${build}${style}${page}`, /bootstrap|\beta\b|handlebars|react-dom|from 'react'/i);
     assert.doesNotMatch(style, /@font-face|assets\/font/);
 });
