@@ -1,6 +1,10 @@
 # White Label starter application
 
-This static starter uses TypeScript and the White Label JSX runtime for page and client-side View rendering, with Tailwind CSS 4 for styling. It makes no API or service calls.
+This static starter was generated with the **JSX/TSX** template option. It uses TypeScript and the White Label JSX runtime for page and client-side View rendering, with Tailwind CSS 4 for styling. It makes no API or service calls.
+
+JSX is optional in White Label. If you prefer plain TypeScript or want a third-party template engine to own rendering, generate with `--no-jsx` (or answer **No** to the generator's JSX question), then install and call that renderer from the View `template` function. The Model, View, Router, Mediator, progressive-enhancement behavior, and generated feature set remain equivalent.
+
+See [Template engines and JSX options](https://whitelabeljs.org/docs/view/#template-engines) for the tested third-party engines, rendering contract, and no-JSX setup.
 
 ## Start developing
 
@@ -42,7 +46,7 @@ Serve `_deploy` as the web server's document root. Do **not** browse to `_deploy
 
 The build output is `_deploy`. The test suite checks the starter content, progressive interaction, production build, accessibility/indexability signals, and full coverage for the custom browser code.
 
-Pages live in `app/*.tsx`, page data lives in `app/assets/data/view`, browser code lives in `app/assets/script`, and shared styles live in `app/assets/style`. TypeScript is configured with `jsx: react-jsx` and `jsxImportSource: white-label-view`, so JSX does not require React.
+Pages live in `app/*.tsx`, page data lives in `app/assets/data/view`, browser code lives in `app/assets/script`, and shared styles live in `app/assets/style`. TypeScript is configured with `jsx: react-jsx` and `jsxImportSource: white-label-view`, so this scaffold's JSX does not require React.
 
 `app/assets/style/global.css` imports Tailwind and contains the starter's custom theme styles. `print.css` remains plain CSS. Tailwind scans the project source during the build and emits static CSS; there is no browser-side Tailwind runtime.
 

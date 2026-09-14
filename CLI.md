@@ -36,7 +36,9 @@ npm install && npm test
 # or: pnpm install && pnpm test
 ```
 
-When run interactively, the CLI asks whether page and view templates should use JSX/TSX. Choose **Yes** for JSX syntax such as `<section>...</section>`, or **No** for plain TypeScript functions that return HTML strings. Both choices produce the same working starter application and features.
+When run interactively, the CLI asks whether page and view templates should use JSX/TSX. JSX is optional: choose **Yes** for White Label's first-party JSX syntax such as `<section>...</section>`, or **No** for plain TypeScript functions that return HTML strings. Both choices produce the same working starter application and features.
+
+Choose **No** when you want plain string templates or plan to use a third-party renderer. Install that renderer in the generated application and call it from the View `template` function; White Label does not require an adapter. See [Template engines and JSX options](https://whitelabeljs.org/docs/view/#template-engines) for the tested third-party engines and rendering contract.
 
 For scripts and non-interactive use, choose explicitly:
 
@@ -65,7 +67,7 @@ await createProject({
 });
 ```
 
-Set `jsx: true` for JSX/TSX templates or `jsx: false` for plain TypeScript and HTML strings. Omitting `jsx` defaults to `true`.
+Set `jsx: true` for JSX/TSX templates or `jsx: false` for plain TypeScript and HTML strings. Use `jsx: false` as the starting point when another template engine should own rendering. Omitting `jsx` defaults to `true`.
 
 `createProject()` is the lower-level programmatic API and does not apply the CLI's non-empty-directory guard. Applications using it directly own destination-policy decisions.
 

@@ -34,7 +34,7 @@ These are responsibilities, not mandatory layers. Static content can stay plain 
 - [`white-label-mediator`](https://github.com/bshack/white-label-mediator) coordinates application events.
 - [`white-label-model`](https://github.com/bshack/white-label-model) owns observable state.
 - [`white-label-view`](https://github.com/bshack/white-label-view) owns rendering and DOM lifecycle.
-- [`white-label-view/jsx-runtime`](https://github.com/bshack/white-label-view) provides escaped JSX without React or another template engine.
+- [`white-label-view/jsx-runtime`](https://github.com/bshack/white-label-view) provides optional escaped JSX without React or another template engine.
 
 The goal is simple boundaries with explicit composition.
 
@@ -121,7 +121,9 @@ npm install && npm test
 # or: pnpm install && pnpm test
 ```
 
-Interactive creation asks whether templates should use JSX/TSX. Choose **Yes** for JSX syntax such as `<section>...</section>`, or **No** for plain TypeScript functions that return HTML strings. Both choices generate the same functional starter application.
+Interactive creation asks whether templates should use JSX/TSX. JSX is optional: choose **Yes** for White Label's first-party JSX syntax such as `<section>...</section>`, or **No** for plain TypeScript functions that return HTML strings. Both choices generate the same functional starter application.
+
+Choose the no-JSX path when another template engine should own rendering. Install that engine in the generated application and call it from the View `template` function; no White Label adapter is required. White Label View currently tests Handlebars, Eta, EJS, Mustache, Nunjucks, and Pug in both browser and server rendering. See [Template engines and JSX options](https://whitelabeljs.org/docs/view/#template-engines) for tested versions, examples, the rendering contract, and security guidance.
 
 For explicit or non-interactive use:
 
@@ -153,7 +155,7 @@ await createProject({
 });
 ```
 
-Set `jsx: true` for JSX/TSX templates or `jsx: false` for plain TypeScript and HTML strings. Omitting `jsx` defaults to `true`.
+Set `jsx: true` for JSX/TSX templates or `jsx: false` for plain TypeScript and HTML strings. Use `jsx: false` as the starting point for a third-party template engine. Omitting `jsx` defaults to `true`.
 
 `createProject(options)` returns `Promise<void>`. A successful call resolves with `undefined`; file-system failures reject the promise instead of returning a status value.
 
@@ -175,9 +177,9 @@ This is the same design principle used throughout White Label: one responsibilit
 | `test/` | Executable contracts and integration tests |
 | `template-test/` | Generated-project validation |
 
-No React, Bootstrap, Sass, Eta, Handlebars, web fonts, or browser-side template framework are required.
+No React, Bootstrap, Sass, Eta, Handlebars, Mustache, Nunjucks, Pug, web fonts, or browser-side template framework are required. Third-party template engines remain optional application dependencies.
 
-## JSX
+## Template choice: JSX or no JSX
 
 JSX is optional. When enabled, TypeScript uses the White Label JSX runtime:
 
@@ -198,11 +200,11 @@ export default function Page(data: Record<string, unknown>) {
 }
 ```
 
-With `--no-jsx`, the equivalent page is ordinary TypeScript returning an HTML string instead. The application architecture and generated features remain the same.
+With `--no-jsx`, the equivalent page is ordinary TypeScript returning an HTML string instead. The application architecture and generated features remain the same. That no-JSX scaffold is also the intended starting point when Handlebars, Eta, EJS, Mustache, Nunjucks, Pug, or another renderer should remain the project's template convention.
 
 For larger pages, compose focused views instead of growing one renderer indefinitely.
 
-JSX expressions are escaped by default. In plain-TypeScript templates, dynamic values should be escaped before insertion into HTML strings.
+JSX expressions are escaped by default. In plain-TypeScript templates or third-party engines, applications own the engine's escaping and raw-output configuration. See [Template engines and JSX options](https://whitelabeljs.org/docs/view/#template-engines) for the tested matrix and trust boundaries.
 
 ## Progressive enhancement
 
@@ -250,7 +252,7 @@ Tests are part of the documentation. They demonstrate intended contracts while p
 ## White Label ecosystem
 
 - [`white-label-model`](https://github.com/bshack/white-label-model) — observable state.
-- [`white-label-view`](https://github.com/bshack/white-label-view) — rendering, DOM lifecycle, and JSX.
+- [`white-label-view`](https://github.com/bshack/white-label-view) — rendering, DOM lifecycle, optional JSX, and a template-engine-agnostic rendering contract.
 - [`white-label-mediator`](https://github.com/bshack/white-label-mediator) — application events.
 - [`white-label-router`](https://github.com/bshack/white-label-router) — routing and URL state.
 
