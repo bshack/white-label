@@ -39,6 +39,10 @@ test('production output is valid, accessible static HTML', async () => {
     assert.equal(root.querySelector('[data-task-filter][aria-current="page"]').dataset.taskFilter, 'all');
     assert.ok([...root.querySelectorAll('[data-task-filter]')].every(link => link instanceof dom.window.HTMLAnchorElement && link.hasAttribute('href')));
     assert.ok(root.querySelector('[data-task-form] label[for="task-title"]'));
+
+    const codeBlocks = [...root.querySelectorAll('pre > code')];
+    assert.ok(codeBlocks.length > 0);
+    assert.ok(codeBlocks.every(code => code.firstChild === code.firstElementChild && code.lastChild === code.lastElementChild));
 });
 
 test('production output is crawlable and supplies complete SEO signals', async () => {
