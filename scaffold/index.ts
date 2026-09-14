@@ -34,12 +34,21 @@ export function createSiteManifest() {
         version: '1.0.0',
         private: true,
         type: 'module',
-        engines: {node: '^22.18.0 || >=24.11.0', npm: '>=11.0'},
+        engines: {node: '^22.18.0 || >=24.11.0'},
         scripts: {
             build: 'tsc -p tsconfig.json && node dist/scripts/build.js',
             typecheck: 'tsc -p tsconfig.json --noEmit',
-            test: 'npm run typecheck && npm run build -- --version=test --production=true --site-url=https://example.com && node --test --experimental-test-coverage --test-coverage-include=dist/app/assets/script/index.js --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 test/*.test.js',
-            audit: 'npm audit --audit-level=low'
+            test: 'node --run typecheck && node --run build -- --version=test --production=true --site-url=https://example.com && node --test --experimental-test-coverage --test-coverage-include=dist/app/assets/script/index.js --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 test/*.test.js'
+        },
+        allowScripts: {
+            '@parcel/watcher@2.5.1': true,
+            'esbuild@0.28.2': true,
+            'white-label-view@5.1.0': true
+        },
+        dependenciesMeta: {
+            '@parcel/watcher@2.5.1': {built: true},
+            'esbuild@0.28.2': {built: true},
+            'white-label-view@5.1.0': {built: true}
         },
         devDependencies: {
             '@tailwindcss/cli': '4.3.3',
@@ -55,7 +64,7 @@ export function createSiteManifest() {
             'white-label-mediator': 'github:bshack/white-label-mediator#e815f704a759de76f96f66ac198b4dc42dfc30f4',
             'white-label-model': 'github:bshack/white-label-model#b5b45b13b45f509497d0a5bdbed86c8bcc054980',
             'white-label-router': 'github:bshack/white-label-router#23295657a29764a140218e03d384631ce3a2b9c3',
-            'white-label-view': 'github:bshack/white-label-view#b612930edaef814412899b3391a14fd36df28d9d'
+            'white-label-view': 'github:bshack/white-label-view#d675e9cf4c15229de3c369c4597e0cbc058550c2'
         }
     };
 }
@@ -90,12 +99,16 @@ const noJsxTemplateCopies = [
  */
 export async function createProject({destination, fileSystem = nodeFileSystem, jsx = true}: CreateProjectOptions) {
     const copies = jsx ? [
+        ['.yarnrc.yml', '.yarnrc.yml'],
+        ['pnpm-workspace.yaml', 'pnpm-workspace.yaml'],
         ['app', 'app'],
         ['app/README.md', 'README.md'],
         ['scripts', 'scripts'],
         ['template-test', 'test'],
         ['tsconfig.site.json', 'tsconfig.json']
     ] as const : [
+        ['.yarnrc.yml', '.yarnrc.yml'],
+        ['pnpm-workspace.yaml', 'pnpm-workspace.yaml'],
         ...commonNoJsxCopies,
         ...noJsxTemplateCopies,
         ['scripts', 'scripts'],

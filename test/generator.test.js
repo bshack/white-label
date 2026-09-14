@@ -84,6 +84,10 @@ test('programmatic scaffold API creates the reviewable site', async t => {
     assert.match(readme, /TypeScript/);
     assert.match(readme, /--directory _deploy/);
     assert.match(readme, /http:\/\/localhost:8080\//);
+    assert.match(await readFile(path.join(destination, '.yarnrc.yml'), 'utf8'), /approvedGitRepositories/);
+    const pnpmWorkspace = await readFile(path.join(destination, 'pnpm-workspace.yaml'), 'utf8');
+    assert.match(pnpmWorkspace, /white-label-view/);
+    assert.match(pnpmWorkspace, /esbuild/);
     assert.match(await readFile(path.join(destination, 'tsconfig.json'), 'utf8'), /jsxImportSource/);
     assert.match(await readFile(path.join(destination, 'scripts/build.ts'), 'utf8'), /tailwindcss/);
     assert.match(await readFile(path.join(destination, 'test/site.test.js'), 'utf8'), /test/);
@@ -124,7 +128,7 @@ test('packaged project creator creates a strictly typed Tailwind and JSX site th
     assert.equal(manifest.dependencies['white-label-mediator'], 'github:bshack/white-label-mediator#e815f704a759de76f96f66ac198b4dc42dfc30f4');
     assert.equal(manifest.dependencies['white-label-model'], 'github:bshack/white-label-model#b5b45b13b45f509497d0a5bdbed86c8bcc054980');
     assert.equal(manifest.dependencies['white-label-router'], 'github:bshack/white-label-router#23295657a29764a140218e03d384631ce3a2b9c3');
-    assert.equal(manifest.dependencies['white-label-view'], 'github:bshack/white-label-view#b612930edaef814412899b3391a14fd36df28d9d');
+    assert.equal(manifest.dependencies['white-label-view'], 'github:bshack/white-label-view#d675e9cf4c15229de3c369c4597e0cbc058550c2');
     assert.equal(manifest.dependencies.eta, undefined);
     assert.equal(manifest.devDependencies.bootstrap, undefined);
     assert.equal(manifest.devDependencies.sass, undefined);

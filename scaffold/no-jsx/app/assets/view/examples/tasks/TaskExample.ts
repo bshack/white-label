@@ -35,7 +35,7 @@ export default function TaskExample({state}: {state: TaskState}): string {
         <nav class="task-filters" aria-label="Filter tasks">${filterLinks}</nav>
         <p class="visually-hidden" aria-live="polite" aria-atomic="true" data-task-status>Showing ${visibleTasks.length} tasks for the ${state.filter} filter.</p>
         <ul class="task-list">${tasks}</ul>
-        <dl class="demo__trace" aria-label="White Label application flow">
+        <dl class="demo__trace">
             <div><dt>Router</dt><dd>/?tasks=${state.filter}</dd></div>
             <div><dt>Mediator</dt><dd>task:* application events</dd></div>
             <div><dt>Model</dt><dd>${state.tasks.length} tasks · ${completed} complete</dd></div>

@@ -9,23 +9,24 @@
     "white-label": "dist/cli/index.js"
   },
   "engines": {
-    "node": "^22.18.0 || >=24.11.0",
-    "npm": ">=11.0"
+    "node": "^22.18.0 || >=24.11.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node dist/scripts/build.js",
-    "test": "npm run compile && npm run test:types && npm run test:unit",
+    "test": "node --run compile && node --run test:types && node --run test:unit",
     "audit": "npm audit --audit-level=low",
     "compile": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:unit": "node --test test/*.test.js",
-    "coverage": "npm run compile && npm run test:types && c8 npm run test:unit",
-    "prepack": "npm run compile",
+    "coverage": "node --run compile && node --run test:types && c8 node --run test:unit",
+    "prepack": "node --run compile",
     "test:types": "tsc -p tsconfig.consumer.json",
     "lint": "eslint \"cli/**/*.ts\" \"scripts/**/*.ts\" \"scaffold/**/*.ts\" \"app/**/*.{ts,tsx}\" --max-warnings=0",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "node --run lint -- --fix"
   },
   "files": [
+    ".yarnrc.yml",
+    "pnpm-workspace.yaml",
     "app",
     "cli",
     "scaffold",
@@ -33,6 +34,7 @@
     "template-test",
     "README.md",
     "CLI.md",
+    "PACKAGE_MANAGERS.md",
     "dist",
     "tsconfig.site.json",
     "tsconfig.site.no-jsx.json"
@@ -122,6 +124,5 @@
       "import": "./dist/scaffold/index.js",
       "default": "./dist/scaffold/index.js"
     }
-  },
-  "packageManager": "npm@11.19.1"
+  }
 }
