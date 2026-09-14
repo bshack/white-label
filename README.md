@@ -81,25 +81,44 @@ A useful rule when extending the project is:
 
 ## Create a project
 
-Requirements:
+Requirement:
 
 - Node.js `^22.18.0` or `>=24.11.0`
-- npm 11 or newer
 
-Use the CLI:
+Install the CLI globally with your preferred package manager, or run the package directly.
+
+With npm:
+
+```sh
+npx generator-white-label create my-project
+```
+
+With Yarn:
+
+```sh
+yarn dlx generator-white-label create my-project
+```
+
+With pnpm:
+
+```sh
+pnpm dlx generator-white-label create my-project
+```
+
+A global install also exposes the `white-label` command:
 
 ```sh
 npm install --global generator-white-label
 white-label create my-project
-cd my-project
-npm install
-npm test
 ```
 
-Or run it without a global install:
+After generation, use npm, Yarn, or pnpm consistently within the project:
 
 ```sh
-npx generator-white-label create my-project
+cd my-project
+npm install && npm test
+# or: yarn install && yarn test
+# or: pnpm install && pnpm test
 ```
 
 Interactive creation asks whether templates should use JSX/TSX. Choose **Yes** for JSX syntax such as `<section>...</section>`, or **No** for plain TypeScript functions that return HTML strings. Both choices generate the same functional starter application.
@@ -114,9 +133,11 @@ npx generator-white-label create my-project --jsx
 npx generator-white-label create my-project --no-jsx
 ```
 
+The same `--jsx` and `--no-jsx` options work through `yarn dlx` and `pnpm dlx`.
+
 If no interactive answer is available and neither flag is supplied, JSX is the default for backward compatibility.
 
-See [`CLI.md`](CLI.md) for the small CLI contract.
+See [`CLI.md`](CLI.md) for the CLI contract and [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md) for package-manager compatibility details.
 
 ## Programmatic API
 
@@ -195,6 +216,8 @@ JavaScript enhances behavior.
 ```
 
 ## Build and verify
+
+The repository keeps npm as its canonical maintenance/audit path and committed lockfile. Generated projects support npm, Yarn, and pnpm.
 
 Development build:
 
