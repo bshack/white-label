@@ -139,10 +139,10 @@ jobs:
               npm test
               ;;
             yarn)
-              YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn add "$PACKAGE" >/dev/null
+              YARN_ENABLE_HARDENED_MODE=0 YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn add "$PACKAGE" >/dev/null
               yarn exec white-label create ../site --jsx
               cd ../site
-              YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+              YARN_ENABLE_HARDENED_MODE=0 YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
               yarn test
               ;;
             pnpm)
