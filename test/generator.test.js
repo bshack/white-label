@@ -86,6 +86,11 @@ test('programmatic scaffold API creates the reviewable site', async t => {
     assert.match(readme, /http:\/\/localhost:8080\//);
     const yarnConfig = await readFile(path.join(destination, '.yarnrc.yml'), 'utf8');
     assert.match(yarnConfig, /nodeLinker:\s*node-modules/);
+    assert.match(yarnConfig, /npmPreapprovedPackages/);
+    assert.match(yarnConfig, /white-label-mediator/);
+    assert.match(yarnConfig, /white-label-model/);
+    assert.match(yarnConfig, /white-label-router/);
+    assert.match(yarnConfig, /white-label-view/);
     assert.doesNotMatch(yarnConfig, /approvedGitRepositories/);
     const pnpmWorkspace = await readFile(path.join(destination, 'pnpm-workspace.yaml'), 'utf8');
     assert.match(pnpmWorkspace, /white-label-view/);
