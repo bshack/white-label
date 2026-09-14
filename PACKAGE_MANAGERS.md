@@ -24,6 +24,8 @@ pnpm install && pnpm test
 
 Generated manifests require the supported Node.js runtime but do not require a specific package manager. Nested scripts use Node's `--run` support instead of invoking npm internally.
 
+Generated projects also include narrow package-manager security configuration for the dependencies they actually use. `.yarnrc.yml` uses Yarn's `node-modules` linker and approves only the pinned White Label Git repositories. `pnpm-workspace.yaml` allows dependency build scripts only for `esbuild` and `white-label-view`, which need installation-time builds. These settings avoid requiring users to disable package-manager security globally.
+
 ## Repository development
 
 The committed `package-lock.json` remains the generator repository's canonical dependency lockfile and npm remains the maintenance/audit path used by primary CI. Compatibility CI packs the real generator artifact and verifies its API and CLI under npm, Yarn, and pnpm. Alternate lockfiles are not committed merely for compatibility testing.
