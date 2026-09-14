@@ -1,11 +1,6 @@
-import type {TaskFilter, TaskItem, TaskState} from './task-state.js';
+import {getVisibleTasks, type TaskFilter, type TaskState} from './task-state.js';
 
 const filters: TaskFilter[] = ['all', 'active', 'completed'];
-const taskPredicates: Record<TaskFilter, (task: TaskItem) => boolean> = {
-    active: task => !task.complete,
-    all: () => true,
-    completed: task => task.complete
-};
 
 function escapeHtml(value: unknown): string {
     return String(value)
@@ -18,7 +13,7 @@ function escapeHtml(value: unknown): string {
 
 /** Render the task example with plain TypeScript and HTML strings. */
 export default function TaskExample({state}: {state: TaskState}): string {
-    const visibleTasks = state.tasks.filter(taskPredicates[state.filter]);
+    const visibleTasks = getVisibleTasks(state);
     const completed = state.tasks.filter(task => task.complete).length;
     const filterLinks = filters.map(filter => `
         <a href="/?tasks=${filter}#example" data-task-filter="${filter}" data-pushstate aria-current="${state.filter === filter ? 'page' : 'false'}">${filter.charAt(0).toUpperCase()}${filter.slice(1)}</a>
@@ -33,7 +28,6 @@ export default function TaskExample({state}: {state: TaskState}): string {
             <div class="task-form__controls"><input id="task-title" name="task" type="text" autocomplete="off" required><button type="submit">Add task</button></div>
         </form>
         <nav class="task-filters" aria-label="Filter tasks">${filterLinks}</nav>
-        <p class="visually-hidden" aria-live="polite" aria-atomic="true" data-task-status>Showing ${visibleTasks.length} tasks for the ${state.filter} filter.</p>
         <ul class="task-list">${tasks}</ul>
         <dl class="demo__trace">
             <div><dt>Router</dt><dd>/?tasks=${state.filter}</dd></div>
