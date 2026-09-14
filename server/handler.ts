@@ -60,7 +60,7 @@ export async function handleRequest(request: Request): Promise<Response> {
     };
 
     try {
-        router.initialize(`${url.pathname}${url.search}`);
+        router.navigate(`${url.pathname}${url.search}`);
         view.initialize();
         return new Response(`<!doctype html>${view.toString()}`, {
             status: model.get().status,
