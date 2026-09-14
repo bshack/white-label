@@ -1,6 +1,6 @@
 import type Router from 'white-label-router';
 import type View from 'white-label-view';
-import {createInitialTaskState} from '../../view/examples/tasks/task-state.js';
+import {createInitialTaskState, describeTaskStatus} from '../../view/examples/tasks/task-state.js';
 import {createTaskMediator, type TaskMediator} from './TaskMediator.js';
 import TaskModel from './TaskModel.js';
 import {createTaskRouter} from './TaskRouter.js';
@@ -29,10 +29,12 @@ export function initializeTaskApplication(documentRoot: Document): TaskApplicati
     const mediator = createTaskMediator();
     const model = new TaskModel(createInitialTaskState());
     const view = createTaskView(parentElement, model);
+    const status = parentElement.querySelector<HTMLElement>('[data-task-status]')!;
+    const updateStatus = (): void => {status.textContent = describeTaskStatus(model.get());};
 
-    const addTask = (title: string): void => {model.add(title);};
-    const toggleTask = (id: number): void => {model.toggle(id);};
-    const setFilter = (filter: 'all' | 'active' | 'completed'): void => {model.setFilter(filter);};
+    const addTask = (title: string): void => {model.add(title); updateStatus();};
+    const toggleTask = (id: number): void => {model.toggle(id); updateStatus();};
+    const setFilter = (filter: 'all' | 'active' | 'completed'): void => {model.setFilter(filter); updateStatus();};
     mediator.on('task:add', addTask);
     mediator.on('task:toggle', toggleTask);
     mediator.on('task:filter', setFilter);
@@ -47,7 +49,11 @@ export function initializeTaskApplication(documentRoot: Document): TaskApplicati
     });
     delegated.on('change', '[data-task-toggle]', (event: Event) => {
         const input = event.target as HTMLInputElement;
-        mediator.emit('task:toggle', Number(input.dataset.taskId));
+        const id = Number(input.dataset.taskId);
+        mediator.emit('task:toggle', id);
+        const focusTarget = parentElement.querySelector<HTMLInputElement>(`[data-task-id="${id}"]`)
+            ?? parentElement.querySelector<HTMLAnchorElement>('[data-task-filter][aria-current="page"]')!;
+        focusTarget.focus();
     });
 
     const router = createTaskRouter(documentRoot, mediator);

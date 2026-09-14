@@ -5,7 +5,7 @@ import axe from 'axe-core';
 import {HtmlValidate} from 'html-validate';
 import {JSDOM} from 'jsdom';
 
-const applicationMarkup = `<!doctype html><html><body><main><div data-task-example><section data-task-app><form data-task-form><input name="task"></form><nav><a href="/?tasks=all#example" data-task-filter="all" data-pushstate></a><a href="/?tasks=active#example" data-task-filter="active" data-pushstate></a><a href="/?tasks=completed#example" data-task-filter="completed" data-pushstate></a></nav><p data-task-status></p><ul><li><input type="checkbox" data-task-toggle data-task-id="1"></li><li><input type="checkbox" data-task-toggle data-task-id="2"></li></ul></section></div></main></body></html>`;
+const applicationMarkup = `<!doctype html><html><body><main><div data-task-example><section data-task-app><form data-task-form><input name="task"></form><nav><a href="/?tasks=all#example" data-task-filter="all" data-pushstate aria-current="page"></a><a href="/?tasks=active#example" data-task-filter="active" data-pushstate aria-current="false"></a><a href="/?tasks=completed#example" data-task-filter="completed" data-pushstate aria-current="false"></a></nav><ul><li><input type="checkbox" data-task-toggle data-task-id="1"></li><li><input type="checkbox" data-task-toggle data-task-id="2"></li></ul></section><p data-task-status role="status" aria-live="polite" aria-atomic="true"></p></div></main></body></html>`;
 
 /** Install one JSDOM window as the browser globals consumed by the packages. */
 function installBrowser(markup = applicationMarkup) {
@@ -18,24 +18,45 @@ function installBrowser(markup = applicationMarkup) {
     return dom;
 }
 
+function relativeLuminance(hex) {
+    const channels = hex.slice(1).match(/.{2}/g).map(value => Number.parseInt(value, 16) / 255);
+    const [red, green, blue] = channels.map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
+    return .2126 * red + .7152 * green + .0722 * blue;
+}
+
+function contrastRatio(foreground, background) {
+    const first = relativeLuminance(foreground);
+    const second = relativeLuminance(background);
+    return (Math.max(first, second) + .05) / (Math.min(first, second) + .05);
+}
+
+async function assertAccessible(name, html) {
+    const validator = new HtmlValidate({extends: ['html-validate:recommended']});
+    const validation = await validator.validateString(html);
+    assert.equal(validation.valid, true, `${name}: ${validation.results.flatMap(result => result.messages).map(message => message.message).join('\n')}`);
+    const dom = new JSDOM(html, {runScripts: 'dangerously', url: 'https://example.com/'});
+    dom.window.eval(axe.source);
+    const results = await dom.window.axe.run(dom.window.document, {runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}});
+    dom.window.close();
+    assert.equal(results.violations.length, 0, `${name}: ${results.violations.map(violation => violation.id).join(', ')}`);
+}
+
 const bootDom = installBrowser();
 const {initializeTaskApplication, normalizeTaskFilter} = await import('../dist/app/assets/script/index.js');
 
 test('production output is valid, accessible static HTML', async () => {
-    const html = await readFile('_deploy/index.html', 'utf8');
-    const validator = new HtmlValidate({extends: ['html-validate:recommended']});
-    const validation = await validator.validateString(html);
-    assert.equal(validation.valid, true, validation.results.flatMap(result => result.messages).map(message => message.message).join('\n'));
-    const dom = new JSDOM(html, {runScripts: 'dangerously', url: 'https://example.com/'});
-    dom.window.eval(axe.source);
-    const results = await dom.window.axe.run(dom.window.document, {runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}});
-    assert.equal(results.violations.length, 0, results.violations.map(violation => violation.id).join(', '));
+    const [html, notFound] = await Promise.all(['index.html', '404.html'].map(file => readFile(`_deploy/${file}`, 'utf8')));
+    await assertAccessible('index', html);
+    await assertAccessible('404', notFound);
 
+    const dom = new JSDOM(html);
     const root = dom.window.document;
     assert.equal(root.querySelector('.skip-link').getAttribute('href'), '#main');
     assert.equal(root.querySelector('main#main').getAttribute('tabindex'), '-1');
+    assert.equal(root.querySelector('[data-task-status]').getAttribute('role'), 'status');
     assert.equal(root.querySelector('[data-task-status]').getAttribute('aria-live'), 'polite');
     assert.equal(root.querySelector('[data-task-status]').getAttribute('aria-atomic'), 'true');
+    assert.equal(root.querySelector('[data-task-app] [data-task-status]'), null);
     assert.equal(root.querySelector('[data-task-filter][aria-current="page"]').dataset.taskFilter, 'all');
     assert.ok([...root.querySelectorAll('[data-task-filter]')].every(link => link instanceof dom.window.HTMLAnchorElement && link.hasAttribute('href')));
     assert.ok(root.querySelector('[data-task-form] label[for="task-title"]'));
@@ -43,6 +64,7 @@ test('production output is valid, accessible static HTML', async () => {
     const codeBlocks = [...root.querySelectorAll('pre > code')];
     assert.ok(codeBlocks.length > 0);
     assert.ok(codeBlocks.every(code => code.firstChild === code.firstElementChild && code.lastChild === code.lastElementChild));
+    dom.window.close();
 });
 
 test('production output is crawlable and supplies complete SEO signals', async () => {
@@ -59,31 +81,56 @@ test('production output is crawlable and supplies complete SEO signals', async (
     assert.match(robots, /Sitemap: https:\/\/example\.com\/sitemap\.xml/);
     assert.match(sitemap, /<loc>https:\/\/example\.com\/<\/loc>/);
     assert.doesNotMatch(html, /service-endpoint|white-label-service|<%|{{/);
+    dom.window.close();
 });
 
-test('all client packages cooperate through the task application', () => {
+test('all client packages cooperate through the task application without losing focus', async () => {
     const dom = installBrowser();
     const application = initializeTaskApplication(dom.window.document);
     const input = dom.window.document.querySelector('[name="task"]');
     input.value = 'Verify generated app';
     dom.window.document.querySelector('[data-task-form]').dispatchEvent(new dom.window.Event('submit', {bubbles: true, cancelable: true}));
     assert.equal(application.model.get().tasks.length, 3);
+    assert.equal(dom.window.document.activeElement.getAttribute('name'), 'task');
+    assert.match(dom.window.document.querySelector('[data-task-status]').textContent, /Showing 3 tasks for the all filter/);
 
-    dom.window.document.querySelector('[data-task-id="2"]').dispatchEvent(new dom.window.Event('change', {bubbles: true}));
+    const toggle = dom.window.document.querySelector('[data-task-id="2"]');
+    toggle.focus();
+    toggle.dispatchEvent(new dom.window.Event('change', {bubbles: true}));
     assert.equal(application.model.get().tasks[1].complete, true);
+    assert.equal(dom.window.document.activeElement.dataset.taskId, '2');
 
-    dom.window.document.querySelector('[data-task-filter="active"]').dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
+    const activeFilter = dom.window.document.querySelector('[data-task-filter="active"]');
+    activeFilter.focus();
+    activeFilter.dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
+    await Promise.resolve();
     assert.equal(application.model.get().filter, 'active');
-    assert.match(dom.window.document.querySelector('[data-task-status]').textContent, /Showing 1 tasks/);
+    assert.match(dom.window.document.querySelector('[data-task-status]').textContent, /Showing 1 task/);
     assert.equal(dom.window.location.search, '?tasks=active');
+    assert.equal(dom.window.document.activeElement.dataset.taskFilter, 'active');
 
-    dom.window.document.querySelector('[data-task-filter="completed"]').dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
+    const completedFilter = dom.window.document.querySelector('[data-task-filter="completed"]');
+    completedFilter.focus();
+    completedFilter.dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
+    await Promise.resolve();
     assert.equal(application.model.get().filter, 'completed');
     assert.match(dom.window.document.querySelector('[data-task-status]').textContent, /Showing 2 tasks/);
+    assert.equal(dom.window.document.activeElement.dataset.taskFilter, 'completed');
 
     assert.equal(normalizeTaskFilter('nope'), 'all');
     application.destroy();
     assert.equal(application.mediator.listenerCount('task:add'), 0);
+});
+
+test('starter code syntax colors remain grayscale and meet AA contrast', async () => {
+    const styles = await readFile('app/assets/style/global.css', 'utf8');
+    const codeColors = [...styles.matchAll(/\.(?:code-block__number|code-syntax-(?:keyword|type|value|muted))\s*\{[^}]*color:\s*(#[0-9a-f]{6})/gi)]
+        .map(match => match[1].toLowerCase());
+    assert.equal(codeColors.length, 5);
+    for (const color of codeColors) {
+        assert.match(color, /^#([0-9a-f]{2})\1\1$/i);
+        assert.ok(contrastRatio(color, '#f4f4f4') >= 4.5, `${color} must meet 4.5:1 against the code background`);
+    }
 });
 
 test.after(() => {

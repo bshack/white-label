@@ -1,11 +1,6 @@
-import type {TaskFilter, TaskItem, TaskState} from './task-state.js';
+import {getVisibleTasks, type TaskFilter, type TaskState} from './task-state.js';
 
 const filters: TaskFilter[] = ['all', 'active', 'completed'];
-const taskPredicates: Record<TaskFilter, (task: TaskItem) => boolean> = {
-    active: task => !task.complete,
-    all: () => true,
-    completed: task => task.complete
-};
 
 /**
  * Render the task example from state only.
@@ -15,7 +10,7 @@ const taskPredicates: Record<TaskFilter, (task: TaskItem) => boolean> = {
  * static and interactive versions of the example from drifting apart.
  */
 export default function TaskExample({state}: {state: TaskState}) {
-    const visibleTasks = state.tasks.filter(taskPredicates[state.filter]);
+    const visibleTasks = getVisibleTasks(state);
     const completed = state.tasks.filter(task => task.complete).length;
 
     return (
@@ -40,10 +35,6 @@ export default function TaskExample({state}: {state: TaskState}) {
                     </a>
                 ))}
             </nav>
-
-            <p className="visually-hidden" aria-live="polite" aria-atomic="true" data-task-status>
-                Showing {visibleTasks.length} tasks for the {state.filter} filter.
-            </p>
 
             <ul className="task-list">
                 {visibleTasks.map(task => (

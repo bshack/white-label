@@ -111,6 +111,7 @@ test('programmatic scaffold API creates a complete non-JSX site', async t => {
     const html = await readFile(path.join(destination, '_deploy/index.html'), 'utf8');
     assert.match(html, /<!DOCTYPE html>/i);
     assert.doesNotMatch(html, /<%|\{\{/);
+    execFileSync(process.execPath, ['--test', 'test/site.test.js'], {cwd: destination, stdio: 'pipe'});
 });
 
 test('packaged project creator creates a strictly typed Tailwind and JSX site that builds in development and production', async t => {

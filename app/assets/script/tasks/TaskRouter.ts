@@ -20,7 +20,10 @@ export function createTaskRouter(documentRoot: Document, mediator: TaskMediator)
     router.scope = documentRoot.querySelector('main');
     router.mediator = mediator;
     const route = (_scope: Element | null, location: {data: {query: Record<string, string>}}): void => {
-        mediator.emit('task:filter', normalizeTaskFilter(location.data.query.tasks));
+        const filter = normalizeTaskFilter(location.data.query.tasks);
+        const restoreFocus = documentRoot.activeElement?.hasAttribute('data-task-filter') === true;
+        mediator.emit('task:filter', filter);
+        if (restoreFocus) {documentRoot.querySelector<HTMLAnchorElement>(`[data-task-filter="${filter}"]`)!.focus();}
     };
     router.routes = {'/': route, defaultRoute: route};
     return router.initialize();
