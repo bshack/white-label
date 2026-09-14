@@ -61,7 +61,7 @@ export default function TaskExample({state}: {state: TaskState}) {
                 ))}
             </ul>
 
-            <dl className="demo__trace" aria-label="White Label application flow">
+            <dl className="demo__trace">
                 <div><dt>Router</dt><dd>/?tasks={state.filter}</dd></div>
                 <div><dt>Mediator</dt><dd>task:* application events</dd></div>
                 <div><dt>Model</dt><dd>{state.tasks.length} tasks · {completed} complete</dd></div>
