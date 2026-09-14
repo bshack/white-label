@@ -27,8 +27,8 @@ export default function PackageDocsSection() {
                     <article>
                         <p className="eyebrow">Model</p><h3>State is observable, not magical.</h3>
                         <CodeBlock lines={[
-                            <><span style={syntax.keyword}>const</span> model = <span style={syntax.keyword}>new</span> <span style={syntax.type}>Model</span>({'{'}count: 0{'}'});</>,
-                            <>model.on(<span style={syntax.value}>'change'</span>, state =&gt; render(state));</>,
+                            <><span className={syntax.keyword}>const</span> model = <span className={syntax.keyword}>new</span> <span className={syntax.type}>Model</span>({'{'}count: 0{'}'});</>,
+                            <>model.on(<span className={syntax.value}>'change'</span>, state =&gt; render(state));</>,
                             <>model.update({'{'}count: 1{'}'});</>
                         ]} />
                         <p><a href={repositories.model}>Model documentation</a></p>
@@ -36,7 +36,7 @@ export default function PackageDocsSection() {
                     <article>
                         <p className="eyebrow">View</p><h3>JSX renders through White Label.</h3>
                         <CodeBlock lines={[
-                            <><span style={syntax.keyword}>const</span> view = <span style={syntax.keyword}>new</span> <span style={syntax.type}>View</span>({'{'}</>,
+                            <><span className={syntax.keyword}>const</span> view = <span className={syntax.keyword}>new</span> <span className={syntax.type}>View</span>({'{'}</>,
                             <>  model,</>,
                             <>  template: state =&gt; &lt;p&gt;{'{'}state.count{'}'}&lt;/p&gt;</>,
                             <>{'}'}).initialize();</>
@@ -46,8 +46,8 @@ export default function PackageDocsSection() {
                     <article>
                         <p className="eyebrow">Mediator</p><h3>Modules communicate through events.</h3>
                         <CodeBlock lines={[
-                            <>mediator.on(<span style={syntax.value}>'counter:increment'</span>, increment);</>,
-                            <>mediator.emit(<span style={syntax.value}>'counter:increment'</span>);</>
+                            <>mediator.on(<span className={syntax.value}>'counter:increment'</span>, increment);</>,
+                            <>mediator.emit(<span className={syntax.value}>'counter:increment'</span>);</>
                         ]} />
                         <p><a href={repositories.mediator}>Mediator documentation</a></p>
                     </article>
@@ -55,8 +55,8 @@ export default function PackageDocsSection() {
                         <p className="eyebrow">Router</p><h3>Routes describe intent.</h3>
                         <CodeBlock lines={[
                             <>router.routes = {'{'}</>,
-                            <>  <span style={syntax.value}>'/'</span>: (_scope, location) =&gt; {'{'}</>,
-                            <>    mediator.emit(<span style={syntax.value}>'filter:set'</span>, location.data.query.filter);</>,
+                            <>  <span className={syntax.value}>'/'</span>: (_scope, location) =&gt; {'{'}</>,
+                            <>    mediator.emit(<span className={syntax.value}>'filter:set'</span>, location.data.query.filter);</>,
                             <>  {'}'}</>,
                             <>{'}'};</>
                         ]} />
