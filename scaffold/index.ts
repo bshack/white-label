@@ -104,6 +104,7 @@ export async function createProject({destination, fileSystem = nodeFileSystem, j
         ['pnpm-workspace.yaml', 'pnpm-workspace.yaml'],
         ['app', 'app'],
         ['app/README.md', 'README.md'],
+        ['server', 'server'],
         ['scripts', 'scripts'],
         ['template-test', 'test'],
         ['tsconfig.site.json', 'tsconfig.json']
@@ -113,6 +114,7 @@ export async function createProject({destination, fileSystem = nodeFileSystem, j
         ['pnpm-workspace.yaml', 'pnpm-workspace.yaml'],
         ...commonNoJsxCopies,
         ...noJsxTemplateCopies,
+        ['server', 'server'],
         ['scripts', 'scripts'],
         ['template-test', 'test']
     ] as const;
