@@ -1,0 +1,38 @@
+name: Refresh release lockfile
+
+on:
+  push:
+    branches:
+      - release-generator-8-npm-deps
+    paths:
+      - package.json
+      - .github/workflows/refresh-lockfile.yml
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: release-generator-8-npm-deps
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.21.0
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm install --package-lock-only --ignore-scripts
+      - name: Commit refreshed lockfile
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if git diff --cached --quiet; then
+            echo "package-lock.json already matches package.json"
+            exit 0
+          fi
+          git commit -m "Refresh package lock for released dependencies"
+          git push origin HEAD:release-generator-8-npm-deps
