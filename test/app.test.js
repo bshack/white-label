@@ -72,12 +72,18 @@ test('task example integrates model, view, mediator, router, and JSX without los
     assert.equal(dom.window.location.search, '?tasks=active');
     assert.equal(dom.window.document.activeElement.dataset.taskFilter, 'active');
 
+    const disappearingToggle = dom.window.document.querySelector('[data-task-toggle]');
+    disappearingToggle.focus();
+    disappearingToggle.dispatchEvent(new dom.window.Event('change', {bubbles: true}));
+    assert.match(dom.window.document.querySelector('[data-task-status]').textContent, /Showing 0 tasks for the active filter/);
+    assert.equal(dom.window.document.activeElement.dataset.taskFilter, 'active');
+
     const completedFilter = dom.window.document.querySelector('[data-task-filter="completed"]');
     completedFilter.focus();
     completedFilter.dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
     await Promise.resolve();
     assert.equal(application.model.get().filter, 'completed');
-    assert.match(dom.window.document.querySelector('[data-task-status]').textContent, /Showing 2 tasks for the completed filter/);
+    assert.match(dom.window.document.querySelector('[data-task-status]').textContent, /Showing 3 tasks for the completed filter/);
     assert.equal(dom.window.document.activeElement.dataset.taskFilter, 'completed');
 
     application.destroy();
