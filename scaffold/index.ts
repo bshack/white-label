@@ -40,6 +40,16 @@ export function createSiteManifest() {
             typecheck: 'tsc -p tsconfig.json --noEmit',
             test: 'node --run typecheck && node --run build -- --version=test --production=true --site-url=https://example.com && node --test --experimental-test-coverage --test-coverage-include=dist/app/assets/script/index.js --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 test/*.test.js'
         },
+        allowScripts: {
+            '@parcel/watcher@2.5.1': true,
+            'esbuild@0.28.2': true,
+            'white-label-view@5.1.0': true
+        },
+        dependenciesMeta: {
+            '@parcel/watcher@2.5.1': {built: true},
+            'esbuild@0.28.2': {built: true},
+            'white-label-view@5.1.0': {built: true}
+        },
         devDependencies: {
             '@tailwindcss/cli': '4.3.3',
             '@types/node': '24.13.3',
