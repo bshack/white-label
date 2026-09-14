@@ -84,6 +84,10 @@ test('programmatic scaffold API creates the reviewable site', async t => {
     assert.match(readme, /TypeScript/);
     assert.match(readme, /--directory _deploy/);
     assert.match(readme, /http:\/\/localhost:8080\//);
+    assert.match(await readFile(path.join(destination, '.yarnrc.yml'), 'utf8'), /approvedGitRepositories/);
+    const pnpmWorkspace = await readFile(path.join(destination, 'pnpm-workspace.yaml'), 'utf8');
+    assert.match(pnpmWorkspace, /white-label-view/);
+    assert.match(pnpmWorkspace, /esbuild/);
     assert.match(await readFile(path.join(destination, 'tsconfig.json'), 'utf8'), /jsxImportSource/);
     assert.match(await readFile(path.join(destination, 'scripts/build.ts'), 'utf8'), /tailwindcss/);
     assert.match(await readFile(path.join(destination, 'test/site.test.js'), 'utf8'), /test/);
