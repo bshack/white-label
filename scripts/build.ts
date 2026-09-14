@@ -128,19 +128,15 @@ export async function build(config = parseArguments(process.argv.slice(2)), proj
     await fs.rm(outputRoot, {recursive: true, force: true});
     await fs.mkdir(outputAssets, {recursive: true});
 
-    await Promise.all([
-        fs.cp(path.join(projectRoot, 'app/assets/data'), path.join(outputAssets, 'data'), {recursive: true}),
-        renderMarkup(config, outputRoot, projectRoot),
-        compileStyles(outputAssets, config.production, projectRoot),
-        compileScripts(outputAssets, config.production, projectRoot)
-    ]);
+    await fs.cp(path.join(projectRoot, 'app/assets/data'), path.join(outputAssets, 'data'), {recursive: true});
     await fs.writeFile(path.join(outputAssets, 'data/config.json'), JSON.stringify(config));
+    await renderMarkup(config, outputRoot, projectRoot);
+    await compileStyles(outputAssets, config.production, projectRoot);
+    await compileScripts(outputAssets, config.production, projectRoot);
     const robots = `User-agent: *\nAllow: /\nSitemap: ${config.siteUrl}/sitemap.xml\n`;
+    await fs.writeFile(path.join(outputRoot, 'robots.txt'), robots);
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${config.siteUrl}/</loc></url></urlset>\n`;
-    await Promise.all([
-        fs.writeFile(path.join(outputRoot, 'robots.txt'), robots),
-        fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap)
-    ]);
+    await fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap);
 }
 
 if (path.resolve(process.argv[1] || '') === fileURLToPath(import.meta.url)) {
