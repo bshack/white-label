@@ -1,5 +1,5 @@
 import TaskExample from './assets/view/examples/tasks/TaskExample.js';
-import {createInitialTaskState} from './assets/view/examples/tasks/task-state.js';
+import {createInitialTaskState, describeTaskStatus} from './assets/view/examples/tasks/task-state.js';
 
 interface PageData {
     cdn: string;
@@ -22,7 +22,9 @@ function escapeHtml(value: unknown): string {
 /** Render the generated starter using plain TypeScript and HTML strings. */
 export default function IndexPage(data: Record<string, unknown>): string {
     const page = data as unknown as PageData;
-    const taskExample = TaskExample({state: createInitialTaskState()});
+    const taskState = createInitialTaskState();
+    const taskExample = TaskExample({state: taskState});
+    const taskStatus = describeTaskStatus(taskState);
     const structuredData = JSON.stringify(page.structuredData).replaceAll('<', '\\u003c');
 
     return `<html id="index" lang="en-US" dir="ltr">
@@ -46,7 +48,7 @@ export default function IndexPage(data: Record<string, unknown>): string {
 <header><nav aria-label="Primary"><a href="/">White Label</a></nav></header>
 <main id="main" tabindex="-1">
 <section class="hero"><p class="eyebrow">White Label starter</p><h1>Composable web primitives without a framework lock-in.</h1><p>State, rendering, routing, and application events stay small, explicit, and independently understandable.</p></section>
-<section id="example" data-task-example><h2>Interactive task example</h2>${taskExample}</section>
+<section id="example" data-task-example><h2>Interactive task example</h2>${taskExample}<p class="visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-task-status>${escapeHtml(taskStatus)}</p></section>
 <section><h2>Plain TypeScript templates</h2><p>This project was generated without JSX. Pages and views return HTML strings from ordinary TypeScript functions.</p></section>
 </main>
 <footer><p>Built with White Label.</p></footer>
