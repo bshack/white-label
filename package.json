@@ -25,6 +25,7 @@
     "lint:fix": "node --run lint -- --fix"
   },
   "files": [
+    ".editorconfig",
     ".yarnrc.yml",
     "pnpm-workspace.yaml",
     "app",
