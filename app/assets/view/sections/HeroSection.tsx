@@ -9,7 +9,6 @@ export default function HeroSection() {
     return (
         <section className="hero" id="top" aria-labelledby="hero-title">
             <div className="container hero__inner">
-                <p className="eyebrow">White Label</p>
                 <h1 id="hero-title">Small pieces.<br />Complete applications.</h1>
                 <p className="hero__lede">Framework-independent TypeScript packages for state, rendering, coordination, routing, and project generation.</p>
                 <div className="hero__links">
