@@ -9,7 +9,7 @@ export default function SiteHeader() {
     return (
         <header className="site-header">
             <div className="container site-header__inner">
-                <a className="wordmark" href="#top" aria-label="White Label home">White Label</a>
+                <a className="wordmark" href="#top">White Label</a>
                 <nav aria-label="Primary navigation">
                     <a href="#example">Example</a>
                     <a href="#packages">Packages</a>
