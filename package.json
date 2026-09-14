@@ -33,6 +33,7 @@
     "template-test",
     "README.md",
     "CLI.md",
+    "PACKAGE_MANAGERS.md",
     "dist",
     "tsconfig.site.json",
     "tsconfig.site.no-jsx.json"
