@@ -25,6 +25,8 @@ yarn dlx generator-white-label create my-project
 pnpm dlx generator-white-label create my-project
 ```
 
+The CLI creates into a new or existing **empty** directory. It refuses a non-empty destination so a mistyped path cannot overwrite existing project files.
+
 Then install and test the generated project with npm, Yarn, or pnpm:
 
 ```sh
@@ -64,6 +66,8 @@ await createProject({
 ```
 
 Set `jsx: true` for JSX/TSX templates or `jsx: false` for plain TypeScript and HTML strings. Omitting `jsx` defaults to `true`.
+
+`createProject()` is the lower-level programmatic API and does not apply the CLI's non-empty-directory guard. Applications using it directly own destination-policy decisions.
 
 ## Read the implementation
 
