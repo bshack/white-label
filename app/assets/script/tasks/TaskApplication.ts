@@ -29,10 +29,8 @@ export function initializeTaskApplication(documentRoot: Document): TaskApplicati
     const mediator = createTaskMediator();
     const model = new TaskModel(createInitialTaskState());
     const view = createTaskView(parentElement, model);
-    const status = parentElement.querySelector<HTMLElement>('[data-task-status]');
-    const updateStatus = (): void => {
-        if (status) {status.textContent = describeTaskStatus(model.get());}
-    };
+    const status = parentElement.querySelector<HTMLElement>('[data-task-status]')!;
+    const updateStatus = (): void => {status.textContent = describeTaskStatus(model.get());};
 
     const addTask = (title: string): void => {model.add(title); updateStatus();};
     const toggleTask = (id: number): void => {model.toggle(id); updateStatus();};
@@ -51,23 +49,11 @@ export function initializeTaskApplication(documentRoot: Document): TaskApplicati
     });
     delegated.on('change', '[data-task-toggle]', (event: Event) => {
         const input = event.target as HTMLInputElement;
-        const toggles = [...parentElement.querySelectorAll<HTMLInputElement>('[data-task-toggle]')];
-        const index = Math.max(0, toggles.indexOf(input));
         const id = Number(input.dataset.taskId);
         mediator.emit('task:toggle', id);
-        const replacement = parentElement.querySelector<HTMLInputElement>(`[data-task-id="${id}"]`);
-        const remaining = [...parentElement.querySelectorAll<HTMLInputElement>('[data-task-toggle]')];
-        const fallback = remaining[Math.min(index, Math.max(0, remaining.length - 1))]
-            ?? parentElement.querySelector<HTMLAnchorElement>('[data-task-filter][aria-current="page"]');
-        (replacement ?? fallback)?.focus();
-    });
-    delegated.on('click', '[data-task-filter]', (event: Event) => {
-        const click = event as MouseEvent;
-        if (click.button !== 0 || click.metaKey || click.ctrlKey || click.shiftKey || click.altKey) {return;}
-        const link = event.target as HTMLAnchorElement;
-        const filter = link.dataset.taskFilter;
-        if (!filter) {return;}
-        queueMicrotask(() => parentElement.querySelector<HTMLAnchorElement>(`[data-task-filter="${filter}"]`)?.focus());
+        const focusTarget = parentElement.querySelector<HTMLInputElement>(`[data-task-id="${id}"]`)
+            ?? parentElement.querySelector<HTMLAnchorElement>('[data-task-filter][aria-current="page"]')!;
+        focusTarget.focus();
     });
 
     const router = createTaskRouter(documentRoot, mediator);
