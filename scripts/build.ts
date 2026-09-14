@@ -33,6 +33,11 @@ export function parseArguments(argumentsList: string[]): BuildConfig {
     };
 }
 
+/** Return the local Tailwind executable name for the current platform. */
+export function tailwindExecutable(platform: NodeJS.Platform = process.platform) {
+    return platform === 'win32' ? 'tailwindcss.cmd' : 'tailwindcss';
+}
+
 /** Recursively collect files below a directory, propagating filesystem failures. */
 async function filesUnder(directory: string): Promise<string[]> {
     const entries = await fs.readdir(directory, {withFileTypes: true});
@@ -86,13 +91,12 @@ async function compileStyles(outputAssets: string, production: boolean, projectR
     const styleRoot = path.join(projectRoot, 'app/assets/style');
     await fs.mkdir(path.join(outputAssets, 'style'), {recursive: true});
     const destination = path.join(outputAssets, 'style/global.css');
-    const executable = process.platform === 'win32' ? 'tailwindcss.cmd' : 'tailwindcss';
     const argumentsList = [
         '-i', path.join(styleRoot, 'global.css'),
         '-o', destination
     ];
     if (production) {argumentsList.push('--minify');}
-    await execFileAsync(executable, argumentsList, {cwd: projectRoot});
+    await execFileAsync(tailwindExecutable(), argumentsList, {cwd: projectRoot});
     await fs.copyFile(path.join(styleRoot, 'print.css'), path.join(outputAssets, 'style/print.css'));
 }
 
