@@ -60,6 +60,32 @@ DOM
 
 Both generated variants provide the same application behavior and progressive enhancement. The only difference is template syntax.
 
+## A simple View click event
+
+Use View lifecycle hooks to add and remove browser listeners with the same callback reference:
+
+```ts
+import View from 'white-label-view';
+
+class ButtonView extends View {
+    handleClick = () => {
+        console.log('Clicked');
+    };
+
+    addListeners() {
+        this.element.addEventListener('click', this.handleClick);
+        return this;
+    }
+
+    removeListeners() {
+        this.element.removeEventListener('click', this.handleClick);
+        return this;
+    }
+}
+```
+
+`addListeners()` runs when the View mounts. `removeListeners()` runs before replacement or destruction, so the listener lifecycle stays owned by the View.
+
 ## Read the source
 
 For the default JSX scaffold, a useful reading order is:
@@ -140,7 +166,7 @@ npx generator-white-label create my-project --no-jsx
 
 The same `--jsx` and `--no-jsx` options work through `yarn dlx` and `pnpm dlx`.
 
-If no interactive answer is available and neither flag is supplied, JSX is the default for backward compatibility.
+If no interactive answer is available and neither flag is supplied, JSX is the default.
 
 The generator refuses to layer a scaffold over an existing non-empty destination. This protection is enforced by the shared `createProject()` engine, so it applies to both the CLI and programmatic use. An existing empty directory is allowed; a missing directory is created as part of generation.
 
@@ -233,7 +259,7 @@ Cloud-specific adapters should stay at the boundary. Translate an AWS/Vercel/Net
 
 Generated-project tests exercise sequential warm invocations, concurrent requests, request-data escaping, execution without browser globals, and a browser/Web-target bundle smoke test. They also enforce a 100 kB minified serverless-composition bundle budget and a 750 ms fresh-process handler-import budget. These are regression guards, not universal latency guarantees.
 
-The Web-target bundle smoke test catches unresolved Node built-ins, but it does **not** claim blanket Cloudflare/Deno/edge-provider compatibility. The published runtime packages still document Node as their supported server runtime; verify a specific edge provider before deployment.
+The Web-target bundle smoke test catches unresolved Node built-ins, but it does **not** claim blanket Cloudflare/Deno/edge-provider compatibility. The published runtime packages document Node as their supported server runtime; verify a specific edge provider before deployment.
 
 ## Build and verify
 
