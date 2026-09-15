@@ -43,12 +43,12 @@ export function createSiteManifest() {
         allowScripts: {
             '@parcel/watcher@2.5.1': true,
             'esbuild@0.28.2': true,
-            'white-label-view@5.2.0': true
+            'white-label-view@6.0.0': true
         },
         dependenciesMeta: {
             '@parcel/watcher@2.5.1': {built: true},
             'esbuild@0.28.2': {built: true},
-            'white-label-view@5.2.0': {built: true}
+            'white-label-view@6.0.0': {built: true}
         },
         devDependencies: {
             '@tailwindcss/cli': '4.3.3',
@@ -64,7 +64,7 @@ export function createSiteManifest() {
             'white-label-mediator': '5.0.0',
             'white-label-model': '7.0.0',
             'white-label-router': '6.0.0',
-            'white-label-view': '5.2.0'
+            'white-label-view': '6.0.0'
         }
     };
 }
