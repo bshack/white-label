@@ -87,7 +87,9 @@ test('task example integrates model, view, mediator, router, and JSX without los
     assert.equal(dom.window.document.activeElement.dataset.taskFilter, 'completed');
 
     application.destroy();
-    assert.equal(application.mediator.listenerCount('task:add'), 0);
+    assert.equal(application.model.get().tasks.length, 0);
+    application.mediator.dispatchEvent(new CustomEvent('task:add', {detail: 'Ignored after destroy'}));
+    assert.equal(application.model.get().tasks.length, 0);
 });
 
 test('task modules reject invalid domain and markup input cleanly', () => {
