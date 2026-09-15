@@ -1,20 +1,15 @@
 import Mediator from 'white-label-mediator';
 import type {TaskFilter} from '../../view/examples/tasks/task-state.js';
 
-/**
- * Document the event protocol in one place even though the currently installed
- * Mediator exposes the EventEmitter-compatible runtime without a generic map.
- * Keeping names and payloads explicit still gives learners one clear contract
- * to follow when tracing the example.
- */
+/** Application event vocabulary shared by the generated task modules. */
 export type TaskEvents = {
-    'task:add': [title: string];
-    'task:filter': [filter: TaskFilter];
-    'task:toggle': [id: number];
+    'task:add': string;
+    'task:filter': TaskFilter;
+    'task:toggle': number;
 };
 
-export type TaskMediator = Mediator;
+export type TaskMediator = Mediator<TaskEvents>;
 
 export function createTaskMediator(): TaskMediator {
-    return new Mediator().initialize();
+    return new Mediator<TaskEvents>().initialize();
 }
