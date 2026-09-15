@@ -48,6 +48,32 @@ The build output is `_deploy`. The test suite checks the starter content, progre
 
 Pages live in `app/*.tsx`, page data lives in `app/assets/data/view`, browser code lives in `app/assets/script`, the provider-neutral serverless example lives in `server/handler.ts`, and shared styles live in `app/assets/style`. TypeScript is configured with `jsx: react-jsx` and `jsxImportSource: white-label-view`, so this scaffold's JSX does not require React.
 
+## Simple View click event
+
+View lifecycle hooks are the simplest place to own a browser listener:
+
+```ts
+import View from 'white-label-view';
+
+class ButtonView extends View {
+    handleClick = () => {
+        console.log('Clicked');
+    };
+
+    addListeners() {
+        this.element.addEventListener('click', this.handleClick);
+        return this;
+    }
+
+    removeListeners() {
+        this.element.removeEventListener('click', this.handleClick);
+        return this;
+    }
+}
+```
+
+The same callback reference is used for both registration and cleanup. View calls `removeListeners()` before replacement or destruction.
+
 ## Serverless / function runtimes
 
 `server/handler.ts` demonstrates a cloud-agnostic server function using the Web `Request` and `Response` APIs. It composes a request-scoped Mediator, Model, Router, and server View, then destroys those mutable instances before the invocation completes.
