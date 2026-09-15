@@ -28,7 +28,7 @@ export default function PackageDocsSection() {
                         <p className="eyebrow">Model</p><h3>State is observable, not magical.</h3>
                         <CodeBlock lines={[
                             <><span className={syntax.keyword}>const</span> model = <span className={syntax.keyword}>new</span> <span className={syntax.type}>Model</span>({'{'}count: 0{'}'});</>,
-                            <>model.on(<span className={syntax.value}>'change'</span>, state =&gt; render(state));</>,
+                            <>model.addEventListener(<span className={syntax.value}>'change'</span>, event =&gt; render(event.detail));</>,
                             <>model.update({'{'}count: 1{'}'});</>
                         ]} />
                         <p><a href={repositories.model}>Model documentation</a></p>
