@@ -136,7 +136,7 @@ test('packaged project creator creates a strictly typed Tailwind and JSX site th
     assert.equal(manifest.dependencies['white-label-mediator'], '5.0.0');
     assert.equal(manifest.dependencies['white-label-model'], '7.0.0');
     assert.equal(manifest.dependencies['white-label-router'], '6.0.0');
-    assert.equal(manifest.dependencies['white-label-view'], '5.2.0');
+    assert.equal(manifest.dependencies['white-label-view'], '6.0.0');
     assert.equal(manifest.dependencies.eta, undefined);
     assert.equal(manifest.devDependencies.bootstrap, undefined);
     assert.equal(manifest.devDependencies.sass, undefined);
