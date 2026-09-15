@@ -142,6 +142,8 @@ The same `--jsx` and `--no-jsx` options work through `yarn dlx` and `pnpm dlx`.
 
 If no interactive answer is available and neither flag is supplied, JSX is the default for backward compatibility.
 
+The generator refuses to layer a scaffold over an existing non-empty destination. This protection is enforced by the shared `createProject()` engine, so it applies to both the CLI and programmatic use. An existing empty directory is allowed; a missing directory is created as part of generation.
+
 See [`CLI.md`](CLI.md) for the CLI contract and [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md) for package-manager compatibility details.
 
 ## Programmatic API
@@ -160,9 +162,9 @@ await createProject({
 
 Set `jsx: true` for JSX/TSX templates or `jsx: false` for plain TypeScript and HTML strings. Use `jsx: false` as the starting point for a third-party template engine. Omitting `jsx` defaults to `true`.
 
-`createProject(options)` returns `Promise<void>`. A successful call resolves with `undefined`; file-system failures reject the promise instead of returning a status value.
+`createProject(options)` returns `Promise<void>`. A successful call resolves with `undefined`; file-system failures reject the promise instead of returning a status value. If the destination already exists and contains files, it rejects before copying or writing project content.
 
-`createProject()` is the canonical creation API. The CLI and future integrations are adapters around it rather than separate generation systems.
+`createProject()` is the canonical creation API. The CLI and future integrations are adapters around it rather than separate generation systems. Keeping overwrite policy here prevents adapters from accidentally bypassing the same safety boundary.
 
 This is the same design principle used throughout White Label: one responsibility, one implementation, explicit adapters at environment boundaries.
 
@@ -170,7 +172,7 @@ This is the same design principle used throughout White Label: one responsibilit
 
 | Path | Purpose |
 | --- | --- |
-| `scaffold/index.ts` | Canonical `createProject()` implementation |
+| `scaffold/index.ts` | Canonical `createProject()` implementation and destination-safety boundary |
 | `scaffold/no-jsx/` | Plain-TypeScript template equivalents |
 | `cli/index.ts` | First-party command-line adapter |
 | `app/*.tsx` | Default JSX top-level static pages |
@@ -208,7 +210,7 @@ With `--no-jsx`, the equivalent page is ordinary TypeScript returning an HTML st
 
 For larger pages, compose focused views instead of growing one renderer indefinitely.
 
-JSX expressions are escaped by default. In plain-TypeScript templates or third-party engines, applications own the engine's escaping and raw-output configuration. See [Template engines and JSX options](https://whitelabeljs.org/docs/view/#template-engines) for the tested matrix and trust boundaries.
+White Label JSX HTML-escapes ordinary child text and ordinary attribute values by default, rejects intrinsic `on*` event-handler attributes, and uses runtime-owned identity for trusted JSX/raw values. That escaping is not a general-purpose sanitizer for URL or CSS semantics. Plain-TypeScript templates and third-party engines likewise remain responsible for their own contextual escaping, sanitization, raw-output features, and configuration. See [Template engines and JSX options](https://whitelabeljs.org/docs/view/#template-engines) for the tested matrix and trust boundaries.
 
 ## Progressive enhancement
 
@@ -263,7 +265,7 @@ npm run audit
 npm pack --dry-run
 ```
 
-Tests are part of the documentation. They demonstrate intended contracts while protecting behavior. Executable project source is held to 100% statement, branch, function, and line coverage.
+Tests are part of the documentation. They demonstrate intended contracts while protecting behavior. Executable project source is held to 100% statement, branch, function, and line coverage. CI also checks the documented Node 22.18 minimum, the primary Node 24 line, packed CLI/programmatic API installation, and generated-project compatibility across npm, Yarn, and pnpm.
 
 ## White Label ecosystem
 
