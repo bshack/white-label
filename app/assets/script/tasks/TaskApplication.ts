@@ -32,25 +32,25 @@ export function initializeTaskApplication(documentRoot: Document): TaskApplicati
     const status = parentElement.querySelector<HTMLElement>('[data-task-status]')!;
     const updateStatus = (): void => {status.textContent = describeTaskStatus(model.get());};
 
-    const addTask = (title: string): void => {model.add(title); updateStatus();};
-    const toggleTask = (id: number): void => {model.toggle(id); updateStatus();};
-    const setFilter = (filter: 'all' | 'active' | 'completed'): void => {model.setFilter(filter); updateStatus();};
-    mediator.on('task:add', addTask);
-    mediator.on('task:toggle', toggleTask);
-    mediator.on('task:filter', setFilter);
+    const addTask = (event: CustomEvent<string>): void => {model.add(event.detail); updateStatus();};
+    const toggleTask = (event: CustomEvent<number>): void => {model.toggle(event.detail); updateStatus();};
+    const setFilter = (event: CustomEvent<'all' | 'active' | 'completed'>): void => {model.setFilter(event.detail); updateStatus();};
+    mediator.addEventListener('task:add', addTask);
+    mediator.addEventListener('task:toggle', toggleTask);
+    mediator.addEventListener('task:filter', setFilter);
 
     const delegated = view.delegate(parentElement);
     delegated.on('submit', '[data-task-form]', (event: Event) => {
         event.preventDefault();
         const form = event.target as HTMLFormElement;
         const input = form.querySelector<HTMLInputElement>('[name="task"]')!;
-        mediator.emit('task:add', input.value);
+        mediator.dispatchEvent(new CustomEvent('task:add', {detail: input.value}));
         parentElement.querySelector<HTMLInputElement>('[name="task"]')!.focus();
     });
     delegated.on('change', '[data-task-toggle]', (event: Event) => {
         const input = event.target as HTMLInputElement;
         const id = Number(input.dataset.taskId);
-        mediator.emit('task:toggle', id);
+        mediator.dispatchEvent(new CustomEvent('task:toggle', {detail: id}));
         const focusTarget = parentElement.querySelector<HTMLInputElement>(`[data-task-id="${id}"]`)
             ?? parentElement.querySelector<HTMLAnchorElement>('[data-task-filter][aria-current="page"]')!;
         focusTarget.focus();
@@ -66,9 +66,9 @@ export function initializeTaskApplication(documentRoot: Document): TaskApplicati
         destroy() {
             delegated.clear();
             router.destroy();
-            mediator.removeListener('task:add', addTask);
-            mediator.removeListener('task:toggle', toggleTask);
-            mediator.removeListener('task:filter', setFilter);
+            mediator.removeEventListener('task:add', addTask);
+            mediator.removeEventListener('task:toggle', toggleTask);
+            mediator.removeEventListener('task:filter', setFilter);
             view.destroy();
             model.destroy();
             mediator.destroy();
