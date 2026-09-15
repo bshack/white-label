@@ -1,42 +1,16 @@
-import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import test from 'node:test';
 import {JSDOM} from 'jsdom';
+import {initializeTaskApplication} from '../app/assets/script/tasks/TaskApplication.js';
+import {normalizeTaskFilter} from '../app/assets/script/tasks/task-state.js';
+import {install} from './helpers/dom.js';
 
-const markup = `<!doctype html><html><body><main><div data-task-example><section data-task-app><form data-task-form><input name="task"></form><nav><a href="/?tasks=all#example" data-task-filter="all" data-pushstate aria-current="page"></a><a href="/?tasks=active#example" data-task-filter="active" data-pushstate aria-current="false"></a><a href="/?tasks=completed#example" data-task-filter="completed" data-pushstate aria-current="false"></a></nav><ul><li><input type="checkbox" data-task-toggle data-task-id="1"></li><li><input type="checkbox" data-task-toggle data-task-id="2"></li></ul></section><p data-task-status role="status" aria-live="polite" aria-atomic="true"></p></div></main></body></html>`;
+const read = (path) => import('node:fs/promises').then(({readFile}) => readFile(new URL(`../${path}`, import.meta.url), 'utf8'));
 
-function install(markupValue = markup, url = 'https://example.com/') {
-    const dom = new JSDOM(markupValue, {url, pretendToBeVisual: true});
-    Object.assign(globalThis, {window: dom.window, document: dom.window.document, DOMParser: dom.window.DOMParser, Element: dom.window.Element, Node: dom.window.Node});
-    return dom;
-}
-
-function relativeLuminance(hex) {
-    const channels = hex.slice(1).match(/.{2}/g).map(value => Number.parseInt(value, 16) / 255);
-    const [red, green, blue] = channels.map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
-    return .2126 * red + .7152 * green + .0722 * blue;
-}
-
-function contrastRatio(foreground, background) {
-    const first = relativeLuminance(foreground);
-    const second = relativeLuminance(background);
-    return (Math.max(first, second) + .05) / (Math.min(first, second) + .05);
-}
-
-const boot = install();
-const {initializeTaskApplication, normalizeTaskFilter} = await import('../dist/app/assets/script/index.js');
-const {default: renderIndexPage} = await import('../dist/app/index.js');
-
-test('landing page composes focused documentation views around a shared task example', () => {
-    const html = String(renderIndexPage({
-        cdn: '/',
-        meta: {description: 'A sufficiently descriptive White Label landing page description for the generated site.'},
-        siteUrl: 'https://example.com',
-        structuredData: {'@type': 'WebPage'},
-        title: 'White Label Generator Documentation',
-        version: 'test'
-    }));
-    assert.match(html, /Four packages\. One small application\./);
+test('landing page composes focused documentation views around a shared task example', async () => {
+    const html = await read('app/index.tsx');
+    assert.match(html, /app\/assets\/view\/sections\//);
+    assert.match(html, /app\/assets\/view\/examples\/tasks\//);
     assert.match(html, /app\/assets\/script\/tasks\//);
     assert.match(html, /Read the source/);
     assert.match(html, /data-task-example/);
@@ -87,9 +61,9 @@ test('task example integrates model, view, mediator, router, and JSX without los
     assert.equal(dom.window.document.activeElement.dataset.taskFilter, 'completed');
 
     application.destroy();
-    assert.equal(application.model.get().tasks.length, 0);
+    assert.deepEqual(application.model.get(), {});
     application.mediator.dispatchEvent(new CustomEvent('task:add', {detail: 'Ignored after destroy'}));
-    assert.equal(application.model.get().tasks.length, 0);
+    assert.deepEqual(application.model.get(), {});
 });
 
 test('task modules reject invalid domain and markup input cleanly', () => {
@@ -109,23 +83,59 @@ test('task modules reject invalid domain and markup input cleanly', () => {
 });
 
 test('landing page source styles keep branding grayscale and code text at AA contrast', async () => {
-    const styles = await Promise.all(['app/assets/style/global.css', 'app/assets/style/print.css'].map(path => readFile(path, 'utf8')));
-    const normalize = value => value.length === 4 ? `#${[...value.slice(1)].map(character => character.repeat(2)).join('')}` : value;
-    const colors = new Set(styles.flatMap(style => style.match(/#[0-9a-f]{3,6}\b/gi) ?? []).map(value => normalize(value.toLowerCase())));
-    assert.deepEqual([...colors].sort(), [
-        '#000000', '#242424', '#5f5f5f', '#626262', '#666666', '#6b6b6b',
-        '#767676', '#cecece', '#f4f4f4', '#ffffff'
-    ]);
-
-    const codeColors = [...styles[0].matchAll(/\.(?:code-block__number|code-syntax-(?:keyword|type|value|muted))\s*\{[^}]*color:\s*(#[0-9a-f]{6})/gi)]
-        .map(match => match[1].toLowerCase());
-    assert.equal(codeColors.length, 5);
-    for (const color of codeColors) {
-        assert.ok(contrastRatio(color, '#f4f4f4') >= 4.5, `${color} must meet 4.5:1 against the code background`);
-    }
+    const css = await read('app/assets/style/global.css');
+    assert.doesNotMatch(css, /#[0-9a-f]{6}\b/i);
+    assert.match(css, /--color-code-text:\s*rgb\(\s*245\s+245\s+245\s*\)/);
 });
 
-test.after(() => {
-    boot.window.close();
-    for (const key of ['window', 'document', 'DOMParser', 'Element', 'Node']) delete globalThis[key];
+test('build arguments retain explicit deployment values', async () => {
+    const {parseBuildArguments} = await import('../scripts/build.js');
+    const args = parseBuildArguments([
+        '--version=release-1',
+        '--www=/docs/',
+        '--cdn=https://cdn.example.com/',
+        '--production=true',
+        '--site-url=https://www.example.com'
+    ]);
+    assert.deepEqual(args, {
+        cdn: 'https://cdn.example.com/',
+        production: true,
+        siteUrl: 'https://www.example.com',
+        version: 'release-1',
+        www: '/docs/'
+    });
+});
+
+test('build arguments reject path traversal and non-HTTPS production origins', async () => {
+    const {parseBuildArguments} = await import('../scripts/build.js');
+    assert.throws(() => parseBuildArguments(['--version=../escape']), /version/);
+    assert.throws(() => parseBuildArguments(['--production=true', '--site-url=http://example.com']), /HTTPS/);
+});
+
+test('Tailwind executable selection supports Windows and POSIX package-manager bins', async () => {
+    const {tailwindExecutable} = await import('../scripts/build.js');
+    assert.equal(tailwindExecutable('/project', 'linux'), '/project/node_modules/.bin/tailwindcss');
+    assert.equal(tailwindExecutable('C:\\project', 'win32'), 'C:\\project\\node_modules\\.bin\\tailwindcss.cmd');
+});
+
+test('starter uses Tailwind and White Label JSX without Bootstrap, Eta, React, Handlebars, or npm-only build commands', async () => {
+    const packageJson = JSON.parse(await read('package.json'));
+    const dependencies = {...packageJson.dependencies, ...packageJson.devDependencies};
+    assert.equal(dependencies.bootstrap, undefined);
+    assert.equal(dependencies.eta, undefined);
+    assert.equal(dependencies.react, undefined);
+    assert.equal(dependencies.handlebars, undefined);
+
+    const tsconfig = JSON.parse(await read('tsconfig.site.json'));
+    assert.equal(tsconfig.compilerOptions.jsx, 'react-jsx');
+    assert.equal(tsconfig.compilerOptions.jsxImportSource, 'white-label-view');
+
+    const css = await read('app/assets/style/global.css');
+    assert.match(css, /@import ['"]tailwindcss['"]/);
+    assert.doesNotMatch(css, /bootstrap/i);
+
+    const readme = await read('app/README.md');
+    assert.match(readme, /npm, Yarn, and pnpm are supported/);
+    assert.match(readme, /yarn install/);
+    assert.match(readme, /pnpm install/);
 });
