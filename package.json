@@ -80,7 +80,7 @@
     "tailwindcss": "4.3.3",
     "typescript": "7.0.2",
     "white-label-mediator": "5.0.0",
-    "white-label-model": "7.0.0",
+    "white-label-model": "7.0.1",
     "white-label-router": "6.0.0",
     "white-label-view": "6.0.0",
     "@babel/core": "8.0.5",
