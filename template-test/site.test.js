@@ -141,9 +141,9 @@ test('all client packages cooperate through the task application without losing 
 
     assert.equal(normalizeTaskFilter('nope'), 'all');
     application.destroy();
-    assert.equal(application.model.get().tasks.length, 0);
+    assert.deepEqual(application.model.get(), {});
     application.mediator.dispatchEvent(new CustomEvent('task:add', {detail: 'Ignored after destroy'}));
-    assert.equal(application.model.get().tasks.length, 0);
+    assert.deepEqual(application.model.get(), {});
 });
 
 test('serverless handler keeps warm and concurrent requests isolated', async () => {
