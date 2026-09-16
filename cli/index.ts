@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import {realpathSync} from 'node:fs';
 import {readdir} from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
@@ -106,7 +107,7 @@ export async function runCli(args: readonly string[], dependencies: CliDependenc
 
 const invokedPath = path.resolve(process.argv[1] as string);
 const modulePath = fileURLToPath(import.meta.url);
-if (invokedPath === modulePath) {
+if (realpathSync(invokedPath) === realpathSync(modulePath)) {
     runCli(process.argv.slice(2)).then(
         (exitCode) => {process.exitCode = exitCode;},
         (error: unknown) => {

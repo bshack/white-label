@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
-import {mkdtemp, writeFile} from 'node:fs/promises';
+import {mkdtemp, symlink, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {spawnSync} from 'node:child_process';
 import {PassThrough} from 'node:stream';
@@ -183,6 +183,20 @@ test('CLI error formatting handles Error and non-Error values', () => {
 
 test('compiled CLI executes its main success path', () => {
     const result = spawnSync(process.execPath, ['dist/cli/index.js', '--help'], {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        env: process.env
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /white-label create <directory>/);
+});
+
+test('compiled CLI executes when invoked through a symlink', async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), 'white-label-cli-symlink-'));
+    const executable = path.join(directory, 'white-label');
+    await symlink(path.resolve('dist/cli/index.js'), executable);
+
+    const result = spawnSync(process.execPath, [executable, '--help'], {
         cwd: process.cwd(),
         encoding: 'utf8',
         env: process.env

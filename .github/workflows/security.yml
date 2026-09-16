@@ -45,8 +45,11 @@ jobs:
           printf '{"private":true,"type":"module"}\n' > package.json
           npm install --ignore-scripts "$GITHUB_WORKSPACE/$PACKAGE" >/dev/null
           node --input-type=module -e "const scaffold=await import('generator-white-label'); if (typeof scaffold.createProject !== 'function') process.exit(1)"
-          test -e ./node_modules/.bin/white-label
-          node ./node_modules/generator-white-label/dist/cli/index.js --help | grep -q "white-label create <directory>"
+          for CLI in generator-white-label white-label; do
+            test -e "./node_modules/.bin/$CLI"
+            "./node_modules/.bin/$CLI" --help | grep -q "white-label create <directory>"
+          done
+          npx --yes generator-white-label --help | grep -q "white-label create <directory>"
 
   minimum-node-runtime:
     runs-on: ubuntu-latest
@@ -97,17 +100,20 @@ jobs:
             npm)
               npm install --ignore-scripts "$PACKAGE" >/dev/null
               node --input-type=module -e "const scaffold=await import('generator-white-label'); if (typeof scaffold.createProject !== 'function') process.exit(1)"
-              test -e ./node_modules/.bin/white-label
-              node ./node_modules/generator-white-label/dist/cli/index.js --help | grep -q "white-label create <directory>"
+              ./node_modules/.bin/generator-white-label --help | grep -q "white-label create <directory>"
+              ./node_modules/.bin/white-label --help | grep -q "white-label create <directory>"
+              npx --yes generator-white-label --help | grep -q "white-label create <directory>"
               ;;
             yarn)
               yarn add "$PACKAGE" >/dev/null
               yarn node --input-type=module -e "const scaffold=await import('generator-white-label'); if (typeof scaffold.createProject !== 'function') process.exit(1)"
+              yarn exec generator-white-label --help | grep -q "white-label create <directory>"
               yarn exec white-label --help | grep -q "white-label create <directory>"
               ;;
             pnpm)
               pnpm add --ignore-scripts "$PACKAGE" >/dev/null
               pnpm exec node --input-type=module -e "const scaffold=await import('generator-white-label'); if (typeof scaffold.createProject !== 'function') process.exit(1)"
+              pnpm exec generator-white-label --help | grep -q "white-label create <directory>"
               pnpm exec white-label --help | grep -q "white-label create <directory>"
               ;;
           esac
@@ -147,7 +153,7 @@ jobs:
           case "${{ matrix.package-manager }}" in
             npm)
               npm install --ignore-scripts "$PACKAGE" >/dev/null
-              node ./node_modules/generator-white-label/dist/cli/index.js create ../site --jsx
+              npx --yes generator-white-label create ../site --jsx
               cd ../site
               npm install >/dev/null
               npm test
