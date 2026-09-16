@@ -1,16 +1,33 @@
-# Adopt White Label in an existing application
+# Adopt White Label in an existing server-rendered application
 
-The generator is intentionally for creating a new project. It refuses to scaffold over a non-empty destination. Existing applications should install only the White Label packages they need and integrate them at explicit boundaries instead of regenerating the host application.
+White Label does not require a rewrite. Existing applications should install only the runtime packages a feature needs and integrate them at explicit boundaries.
 
-This works well for server-rendered applications such as commerce storefronts, CMS sites, Rails/PHP/Java/.NET applications, or any site where meaningful HTML already exists before client JavaScript runs.
+The **generator is intentionally for new projects** and refuses to scaffold over a non-empty destination. If an application already exists—SFCC/SFRA, a CMS, Rails, PHP, Java, .NET, another server-rendered stack, or a long-lived frontend—do not regenerate the host application. Add White Label to one feature or DOM region at a time.
+
+This is one of the strongest White Label use cases: modern TypeScript structure and lifecycle where it helps, while the existing platform keeps ownership of routing, business rules, initial HTML, and the rest of the page.
+
+## When this pattern fits
+
+Incremental adoption is a good fit when:
+
+- the server or CMS already renders meaningful HTML;
+- public URLs, SEO, accessibility, or no-JavaScript behavior matter;
+- a rewrite would be disproportionate to the feature being added;
+- teams want observable state, lifecycle, application events, or URL-backed interaction without introducing a full frontend framework;
+- multiple teams/features need clear ownership boundaries on the same page;
+- commerce/account/content flows must keep authoritative business logic on the server.
+
+It is less compelling for experiences that are intentionally fully client-owned and deeply stateful across most of the viewport, such as editors, design tools, complex collaborative workspaces, or other applications where a component framework already provides valuable shared conventions.
 
 ## Install only the needed primitives
+
+Start with the actual responsibility the feature needs:
 
 ```sh
 npm install white-label-view white-label-model
 ```
 
-Add Router or Mediator only when the feature actually needs URL state or cross-module events:
+Add Router or Mediator only when the feature genuinely needs URL state or cross-module events:
 
 ```sh
 npm install white-label-router white-label-mediator
@@ -18,9 +35,17 @@ npm install white-label-router white-label-mediator
 
 White Label packages do not require the generator at runtime and do not require one another unless the application chooses to compose them.
 
+A useful rule is:
+
+```text
+existing platform owns the page
+        +
+White Label owns a deliberate feature boundary
+```
+
 ## Adopt existing server-rendered markup
 
-`white-label-view` can own the lifecycle around an existing element instead of replacing the host application's rendering system.
+`white-label-view` can own lifecycle around an element that already exists instead of replacing the host application's rendering system.
 
 ```ts
 import {Model} from 'white-label-model';
@@ -43,9 +68,11 @@ const statusView = new View({
 }).initialize();
 ```
 
-No client template is required when the existing element should be updated in place. The host remains responsible for the initial HTML; View owns only the adopted root and its lifecycle.
+No client template is required when an attached existing element can be updated in place. The host remains responsible for the initial HTML; View owns only the adopted root and its lifecycle.
 
-Keep ownership narrow. Unrelated server-rendered siblings, headers, forms, and page chrome should remain outside the View unless the feature genuinely owns them.
+Keep ownership narrow. Unrelated server-rendered siblings, headers, forms, navigation, and page chrome should remain outside the View unless the feature genuinely owns them.
+
+`destroy()` removes the root the View owns. If the host application expects that element to remain after enhancement teardown, choose an ownership boundary that can be removed safely rather than treating host-owned markup as disposable.
 
 ## Scope progressive routing to one enhanced region
 
@@ -70,6 +97,14 @@ Only eligible links whose click event reaches that navigation root are enhanced 
 
 `navigationRoot` controls click-listener ownership. It is deliberately separate from `router.scope`, which remains the value passed to route handlers.
 
+## Add state and events only where needed
+
+A feature does not need the full White Label stack.
+
+Use `white-label-model` when the feature needs observable state. Load data through the application's existing fetch/client/service layer, validate it at that boundary when appropriate, then apply it to Model. Model should not replace a backend API, persistence layer, or framework store solely for architectural symmetry.
+
+Use `white-label-mediator` when separate modules need to exchange intent without importing one another. Direct function calls are clearer when there is already an ownership relationship. Avoid turning a mediator into an unstructured global event namespace.
+
 ## Preserve the host application's server contract
 
 White Label should not duplicate or bypass server-owned responsibilities. Keep these in the existing platform when it already owns them:
@@ -78,9 +113,25 @@ White Label should not duplicate or bypass server-owned responsibilities. Keep t
 - pricing, inventory, tax, promotions, checkout, and other authoritative business rules;
 - canonical URLs and directly requestable public routes;
 - initial semantic content and crawlable navigation;
-- CSRF/session protections and trusted API boundaries.
+- CSRF/session protections and trusted API boundaries;
+- CMS/content governance and server-side personalization rules;
+- persistence, queues, retries, and cross-process workflows.
 
 Use White Label where a client-side state, lifecycle, event, or URL boundary adds value. Normal server navigation is still the right choice when enhancement does not materially improve the interaction.
+
+## SEO and accessibility boundary
+
+For public content, keep the important information in the initial response. Progressive enhancement should improve interaction rather than become a prerequisite for discovery or comprehension.
+
+Prefer:
+
+- real `href` values and directly requestable routes;
+- semantic headings, forms, controls, landmarks, and status regions in initial HTML;
+- server/static ownership of canonical URLs, titles, descriptions, robots directives, and structured data;
+- deliberate focus handling after meaningful client-side navigation or content replacement;
+- client behavior that preserves keyboard, context-menu, modified-click, and no-JavaScript behavior.
+
+Do not treat source-level metadata as proof of search-engine indexing. Validate deployed behavior and indexing with actual production/search-console evidence.
 
 ## Teardown
 
@@ -92,12 +143,13 @@ router.destroy();
 filters.destroy();
 ```
 
-Destroying an adopted View removes the root it owns. If a host platform intends to keep that element after the enhancement lifecycle ends, structure ownership accordingly rather than calling `destroy()` while the host still expects the root to remain.
+Also destroy a feature-owned Mediator when that event boundary leaves the application lifecycle.
 
-## Commerce example
+## Commerce and SFCC example
 
 The White Label demo repository contains a concrete Salesforce B2C Commerce / SFRA example using the same incremental boundary:
 
 - [SFCC / SFRA progressive enhancement recipe](https://github.com/bshack/white-label-demo-site/blob/main/docs/recipes/sfcc-sfra-progressive-enhancement.md)
+- [Incremental JavaScript for server-rendered applications](https://whitelabeljs.org/guides/incremental-javascript-for-server-rendered-apps/)
 
 The same pattern applies to other server-rendered stacks: keep the server as the source of truth, then adopt only the client-side regions that need richer behavior.
