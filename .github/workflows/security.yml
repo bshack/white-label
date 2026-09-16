@@ -49,6 +49,7 @@ jobs:
             test -e "./node_modules/.bin/$CLI"
             "./node_modules/.bin/$CLI" --help | grep -q "white-label create <directory>"
           done
+          npx --yes generator-white-label --help | grep -q "white-label create <directory>"
 
   minimum-node-runtime:
     runs-on: ubuntu-latest
@@ -101,6 +102,7 @@ jobs:
               node --input-type=module -e "const scaffold=await import('generator-white-label'); if (typeof scaffold.createProject !== 'function') process.exit(1)"
               ./node_modules/.bin/generator-white-label --help | grep -q "white-label create <directory>"
               ./node_modules/.bin/white-label --help | grep -q "white-label create <directory>"
+              npx --yes generator-white-label --help | grep -q "white-label create <directory>"
               ;;
             yarn)
               yarn add "$PACKAGE" >/dev/null
@@ -151,7 +153,7 @@ jobs:
           case "${{ matrix.package-manager }}" in
             npm)
               npm install --ignore-scripts "$PACKAGE" >/dev/null
-              ./node_modules/.bin/generator-white-label create ../site --jsx
+              npx --yes generator-white-label create ../site --jsx
               cd ../site
               npm install >/dev/null
               npm test
