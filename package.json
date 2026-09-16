@@ -37,6 +37,7 @@
     "README.md",
     "CLI.md",
     "PACKAGE_MANAGERS.md",
+    "EXISTING_APPLICATIONS.md",
     "dist",
     "tsconfig.site.json",
     "tsconfig.site.no-jsx.json"
@@ -52,7 +53,6 @@
     "progressive-enhancement",
     "serverless",
     "esbuild",
-    "tailwindcss",
     "jsx",
     "cli",
     "scaffolding",
