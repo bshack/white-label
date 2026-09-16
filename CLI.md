@@ -7,7 +7,7 @@ CLI ──────> createProject() ──────> project
 Node API ─┘
 ```
 
-`createProject()` owns the scaffold. The CLI translates command-line input into that API.
+`createProject()` owns the scaffold, including destination safety. The CLI translates command-line input into that API.
 
 ## Create a project
 
@@ -25,7 +25,7 @@ yarn dlx generator-white-label create my-project
 pnpm dlx generator-white-label create my-project
 ```
 
-The CLI creates into a new or existing **empty** directory. It refuses a non-empty destination so a mistyped path cannot overwrite existing project files.
+Project creation accepts a missing or existing **empty** directory. A non-empty destination is rejected before scaffold files are copied or written.
 
 Then install and test the generated project with npm, Yarn, or pnpm:
 
@@ -52,7 +52,7 @@ npx generator-white-label create my-project --no-jsx
 
 The same `--jsx` and `--no-jsx` flags work through `yarn dlx` and `pnpm dlx`.
 
-If no choice can be asked interactively and neither flag is supplied, JSX remains the default for backward compatibility.
+If no choice can be asked interactively and neither flag is supplied, JSX is the default.
 
 Run `white-label --help` for usage. See [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md) for package-manager compatibility details.
 
@@ -69,13 +69,13 @@ await createProject({
 
 Set `jsx: true` for JSX/TSX templates or `jsx: false` for plain TypeScript and HTML strings. Use `jsx: false` as the starting point when another template engine should own rendering. Omitting `jsx` defaults to `true`.
 
-`createProject()` is the lower-level programmatic API and does not apply the CLI's non-empty-directory guard. Applications using it directly own destination-policy decisions.
+`createProject()` uses the same destination-safety rule as the CLI: missing and empty directories are allowed; non-empty directories are rejected before project content is written.
 
 ## Read the implementation
 
 The source is intentionally small enough to teach the design:
 
-- `scaffold/index.ts` — project creation
+- `scaffold/index.ts` — project creation and destination-safety boundary
 - `cli/index.ts` — command-line adapter
 - `test/` — executable contracts
 

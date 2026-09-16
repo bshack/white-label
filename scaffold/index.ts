@@ -1,5 +1,5 @@
 /** @module scaffold */
-import {cp, mkdir, writeFile} from 'node:fs/promises';
+import {cp, mkdir, readdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -27,6 +27,17 @@ const nodeFileSystem: ScaffoldFileSystem = {
     }
 };
 
+/** Refuse to layer a generated project over existing user files. */
+async function assertDestinationAvailable(destination: string) {
+    try {
+        const entries = await readdir(destination);
+        if (entries.length) {throw new Error(`Destination directory must be empty: ${destination}`);}
+    } catch (error) {
+        if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {return;}
+        throw error;
+    }
+}
+
 /** Return the package manifest used by generated White Label projects. */
 export function createSiteManifest() {
     return {
@@ -43,12 +54,12 @@ export function createSiteManifest() {
         allowScripts: {
             '@parcel/watcher@2.5.1': true,
             'esbuild@0.28.2': true,
-            'white-label-view@5.1.0': true
+            'white-label-view@6.0.0': true
         },
         dependenciesMeta: {
             '@parcel/watcher@2.5.1': {built: true},
             'esbuild@0.28.2': {built: true},
-            'white-label-view@5.1.0': {built: true}
+            'white-label-view@6.0.0': {built: true}
         },
         devDependencies: {
             '@tailwindcss/cli': '4.3.3',
@@ -61,10 +72,10 @@ export function createSiteManifest() {
             'typescript': '7.0.2'
         },
         dependencies: {
-            'white-label-mediator': '4.0.0',
-            'white-label-model': '6.0.0',
-            'white-label-router': '5.0.0',
-            'white-label-view': '5.1.0'
+            'white-label-mediator': '5.0.0',
+            'white-label-model': '7.0.1',
+            'white-label-router': '6.0.0',
+            'white-label-view': '6.0.0'
         }
     };
 }
@@ -91,13 +102,14 @@ const noJsxTemplateCopies = [
 ] as const;
 
 /**
- * Create a White Label project.
+ * Create a White Label project without overwriting a non-empty destination.
  *
  * This is the shared implementation behind every creation interface. Adapters
- * translate their environment into these options instead of owning templates or
- * project-generation behavior themselves.
+ * translate their environment into these options instead of owning templates,
+ * overwrite policy, or project-generation behavior themselves.
  */
 export async function createProject({destination, fileSystem = nodeFileSystem, jsx = true}: CreateProjectOptions) {
+    await assertDestinationAvailable(destination);
     const copies = jsx ? [
         ['.editorconfig', '.editorconfig'],
         ['.yarnrc.yml', '.yarnrc.yml'],

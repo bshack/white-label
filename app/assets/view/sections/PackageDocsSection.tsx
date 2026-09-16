@@ -28,7 +28,7 @@ export default function PackageDocsSection() {
                         <p className="eyebrow">Model</p><h3>State is observable, not magical.</h3>
                         <CodeBlock lines={[
                             <><span className={syntax.keyword}>const</span> model = <span className={syntax.keyword}>new</span> <span className={syntax.type}>Model</span>({'{'}count: 0{'}'});</>,
-                            <>model.on(<span className={syntax.value}>'change'</span>, state =&gt; render(state));</>,
+                            <>model.addEventListener(<span className={syntax.value}>'change'</span>, event =&gt; render(event.detail));</>,
                             <>model.update({'{'}count: 1{'}'});</>
                         ]} />
                         <p><a href={repositories.model}>Model documentation</a></p>
@@ -46,8 +46,8 @@ export default function PackageDocsSection() {
                     <article>
                         <p className="eyebrow">Mediator</p><h3>Modules communicate through events.</h3>
                         <CodeBlock lines={[
-                            <>mediator.on(<span className={syntax.value}>'counter:increment'</span>, increment);</>,
-                            <>mediator.emit(<span className={syntax.value}>'counter:increment'</span>);</>
+                            <>mediator.addEventListener(<span className={syntax.value}>'counter:increment'</span>, increment);</>,
+                            <>mediator.dispatchEvent(<span className={syntax.keyword}>new</span> <span className={syntax.type}>CustomEvent</span>(<span className={syntax.value}>'counter:increment'</span>));</>
                         ]} />
                         <p><a href={repositories.mediator}>Mediator documentation</a></p>
                     </article>
@@ -56,7 +56,7 @@ export default function PackageDocsSection() {
                         <CodeBlock lines={[
                             <>router.routes = {'{'}</>,
                             <>  <span className={syntax.value}>'/'</span>: (_scope, location) =&gt; {'{'}</>,
-                            <>    mediator.emit(<span className={syntax.value}>'filter:set'</span>, location.data.query.filter);</>,
+                            <>    mediator.dispatchEvent(<span className={syntax.keyword}>new</span> <span className={syntax.type}>CustomEvent</span>(<span className={syntax.value}>'filter:set'</span>, {'{'}detail: location.data.query.filter{'}'}));</>,
                             <>  {'}'}</>,
                             <>{'}'};</>
                         ]} />

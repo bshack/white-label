@@ -34,6 +34,32 @@ pnpm build
 pnpm test
 ```
 
+## Simple View click event
+
+View lifecycle hooks can own a browser listener directly:
+
+```ts
+import View from 'white-label-view';
+
+class ButtonView extends View {
+    handleClick = () => {
+        console.log('Clicked');
+    };
+
+    addListeners() {
+        this.element.addEventListener('click', this.handleClick);
+        return this;
+    }
+
+    removeListeners() {
+        this.element.removeEventListener('click', this.handleClick);
+        return this;
+    }
+}
+```
+
+The same callback reference is used for both registration and cleanup. View calls `removeListeners()` before replacement or destruction.
+
 ## Serverless / function runtimes
 
 `server/handler.ts` is the same provider-neutral serverless example included in the JSX scaffold. It uses Web `Request` and `Response`, request-scoped Model/View/Router/Mediator instances, and the server View entrypoint; it does not require JSX or a provider SDK.

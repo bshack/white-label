@@ -22,7 +22,7 @@ export function createTaskRouter(documentRoot: Document, mediator: TaskMediator)
     const route = (_scope: Element | null, location: {data: {query: Record<string, string>}}): void => {
         const filter = normalizeTaskFilter(location.data.query.tasks);
         const restoreFocus = documentRoot.activeElement?.hasAttribute('data-task-filter') === true;
-        mediator.emit('task:filter', filter);
+        mediator.dispatchEvent(new CustomEvent('task:filter', {detail: filter}));
         if (restoreFocus) {documentRoot.querySelector<HTMLAnchorElement>(`[data-task-filter="${filter}"]`)!.focus();}
     };
     router.routes = {'/': route, defaultRoute: route};
