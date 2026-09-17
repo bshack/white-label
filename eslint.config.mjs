@@ -2,5 +2,5 @@ import babelParser from '@babel/eslint-parser';
 import js from '@eslint/js';
 export default [
   {ignores: ['dist/**', 'coverage/**', 'node_modules/**', 'template-test/**']},
-  {files: ['cli/**/*.ts', 'scripts/**/*.ts', 'scaffold/**/*.ts', 'generators/**/*.ts', 'server/**/*.ts', 'app/**/*.{ts,tsx}'], languageOptions: {parser: babelParser, parserOptions: {requireConfigFile: false, sourceType: 'module', babelOptions: {presets: ['@babel/preset-typescript'], plugins: ['@babel/plugin-syntax-jsx']}}}, rules: {...js.configs.recommended.rules, 'no-undef': 'off', 'no-unused-vars': 'off', curly: ['error', 'all'], eqeqeq: ['error', 'always'], 'no-eval': 'error', 'no-implied-eval': 'error', 'no-new-wrappers': 'error', 'no-var': 'error', 'prefer-const': 'error'}},
+  {files: ['cli/**/*.ts', 'scripts/**/*.ts', 'scaffold/**/*.ts', 'generators/**/*.ts', 'server/**/*.ts', 'app/**/*.ts'], languageOptions: {parser: babelParser, parserOptions: {requireConfigFile: false, sourceType: 'module', babelOptions: {presets: ['@babel/preset-typescript']}}}, rules: {...js.configs.recommended.rules, 'no-undef': 'off', 'no-unused-vars': 'off', curly: ['error', 'all'], eqeqeq: ['error', 'always'], 'no-eval': 'error', 'no-implied-eval': 'error', 'no-new-wrappers': 'error', 'no-var': 'error', 'prefer-const': 'error'}},
 ];
