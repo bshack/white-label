@@ -20,7 +20,7 @@ async function availablePort() {
         probe.listen(0, '127.0.0.1', () => {
             const address = probe.address();
             if (!address || typeof address === 'string') {
-                probe.close(() => reject(new Error('Unable to allocate a local preview port')));
+                probe.close(() => reject(new Error('Unable to allocate a local preview port'));
                 return;
             }
             probe.close(error => error ? reject(error) : resolve(address.port));
@@ -74,6 +74,8 @@ async function verifyLocalPreview(destination) {
     }
 }
 
+const taggedTemplateDescription = /tagged(?: HTML)? templates?|tagged-template/i;
+
 test('programmatic scaffold API creates the canonical tagged-template site', async t => {
     const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-scaffold-'));
     t.after(() => rm(temporary, {recursive: true, force: true}));
@@ -81,7 +83,7 @@ test('programmatic scaffold API creates the canonical tagged-template site', asy
     await createProject({destination});
     assert.deepEqual(JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8')), createSiteManifest());
     const readme = await readFile(path.join(destination, 'README.md'), 'utf8');
-    assert.match(readme, /tagged template|tagged-template/i);
+    assert.match(readme, taggedTemplateDescription);
     assert.match(readme, /--directory _deploy/);
     assert.match(readme, /http:\/\/localhost:8080\//);
     const yarnConfig = await readFile(path.join(destination, '.yarnrc.yml'), 'utf8');
@@ -126,7 +128,7 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
     assert.equal(manifest.dependencies.react, undefined);
     assert.equal(manifest.dependencies.handlebars, undefined);
     assert.equal(manifest.engines.node, '^22.18.0 || >=24.11.0');
-    assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), /tagged template|tagged-template/i);
+    assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), taggedTemplateDescription);
     assert.match(manifest.scripts.typecheck, /tsc/);
     await symlink(path.join(root, 'node_modules'), path.join(destination, 'node_modules'));
 
