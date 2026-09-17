@@ -43,7 +43,7 @@ test('landing page composes focused documentation views around a shared task exa
     assert.match(html, /data-task-status/);
 });
 
-test('task example integrates model, view, mediator, router, and JSX without losing focus', async () => {
+test('task example integrates model, view, mediator, router, and tagged HTML without losing focus', async () => {
     const dom = install();
     const application = initializeTaskApplication(dom.window.document);
     assert.equal(application.model.get().tasks.length, 2);
