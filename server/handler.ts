@@ -2,21 +2,13 @@ import Mediator from 'white-label-mediator';
 import {Model} from 'white-label-model';
 import Router from 'white-label-router';
 import View from 'white-label-view/server';
+import {html} from 'white-label-view/html';
 
 type ServerState = {
     status: number;
     title: string;
     message: string;
 };
-
-function escapeHtml(value: string) {
-    return value
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
-}
 
 /**
  * Provider-neutral serverless example using the Web Request/Response contract.
@@ -37,7 +29,7 @@ export async function handleRequest(request: Request): Promise<Response> {
         model,
         template(data) {
             const state = data as ServerState;
-            return `<main><h1>${escapeHtml(state.title)}</h1><p>${escapeHtml(state.message)}</p></main>`;
+            return html`<main><h1>${state.title}</h1><p>${state.message}</p></main>`;
         }
     });
 
