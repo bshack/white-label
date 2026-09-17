@@ -13,6 +13,7 @@ test('build arguments retain and normalize explicit deployment values', () => {
         parseArguments(['--www=https://www.example.test/', '--version=release-2']).www,
         'https://www.example.test/'
     );
+    assert.equal(parseArguments(['--production=false']).production, false);
 });
 
 test('build arguments reject unsafe deployment URL values', () => {
@@ -28,6 +29,14 @@ test('build arguments reject unsafe deployment URL values', () => {
     assert.throws(() => parseArguments(['--www=/safe\nbad']), /www/);
     assert.throws(() => parseArguments(['--cdn=/assets/\"><script>']), /cdn/);
     assert.throws(() => parseArguments(['--production=true', '--cdn=http://cdn.example.test/']), /HTTPS/);
+});
+
+test('build arguments reject mistyped production values and option names', () => {
+    assert.throws(() => parseArguments(['--production=tru']), /Production must be true or false/);
+    assert.throws(() => parseArguments(['--production=1']), /Production must be true or false/);
+    assert.throws(() => parseArguments(['--production']), /must use --production=value/);
+    assert.throws(() => parseArguments(['--prodution=true']), /Unknown build option/);
+    assert.throws(() => parseArguments(['production=true']), /Unknown build option/);
 });
 
 test('programmatic build validates configuration before changing the deployment directory', async t => {
