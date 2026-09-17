@@ -273,7 +273,7 @@ Tests are part of the documentation. Executable project source is held to 100% s
 
 ## Coordinated View 7 release
 
-Generator 10 targets `white-label-view@7`, which provides the tagged-template entrypoint. While that coordinated runtime release is still being prepared, this branch's CI verifies against a packed View 7 build from its release PR without replacing the generator's registry lockfile with a Git dependency. Publishing View 7 remains a release prerequisite for a normal registry install of Generator 10.
+Generator 10 targets `white-label-view@7`, which provides the tagged-template entrypoint. View 7's implementation is merged but has not yet been published to npm. Until publication, coordinated CI builds and injects the exact merged View 7 revision for integration testing without replacing the generator's registry lockfile with a Git dependency. Publishing View 7 remains a release prerequisite for a normal registry install of Generator 10.
 
 ## White Label ecosystem
 
