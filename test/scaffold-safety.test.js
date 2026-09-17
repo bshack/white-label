@@ -30,7 +30,7 @@ test('programmatic project creation accepts an existing empty destination', asyn
         writeJSON() {manifests += 1;}
     };
 
-    await createProject({destination, fileSystem, jsx: false});
+    await createProject({destination, fileSystem});
     assert.ok(copies > 0);
     assert.equal(manifests, 1);
 });
