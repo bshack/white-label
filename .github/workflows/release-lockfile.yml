@@ -3,6 +3,8 @@ name: Regenerate release lockfile
 on:
   push:
     branches: [final-documentation-accuracy-sweep]
+  pull_request:
+    branches: [final-documentation-accuracy-sweep]
 
 permissions:
   contents: read
