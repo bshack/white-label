@@ -71,7 +71,7 @@ export function createSiteManifest() {
         dependencies: {
             'white-label-mediator': '5.0.0',
             'white-label-model': '7.0.1',
-            'white-label-router': '6.0.0',
+            'white-label-router': '6.1.0',
             'white-label-view': '7.0.0'
         }
     };
