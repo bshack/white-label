@@ -7,6 +7,10 @@ test('build arguments retain and normalize explicit deployment values', () => {
     assert.deepEqual(parseArguments(['--www=/site', '--cdn=https://cdn.example.test/assets', '--version=release-1', '--production=true', '--site-url=https://www.example.test/']), {
         cdn: 'https://cdn.example.test/assets/', production: true, siteUrl: 'https://www.example.test', version: 'release-1', www: '/site/'
     });
+    assert.equal(
+        parseArguments(['--www=https://www.example.test/', '--version=release-2']).www,
+        'https://www.example.test/'
+    );
 });
 
 test('build arguments reject unsafe deployment URL values', () => {
@@ -18,6 +22,7 @@ test('build arguments reject unsafe deployment URL values', () => {
     assert.throws(() => parseArguments(['--site-url=https://example.test\nSitemap: https://evil.test']), /HTTP/);
     assert.throws(() => parseArguments(['--www=javascript:alert(1)']), /www/);
     assert.throws(() => parseArguments(['--www=//evil.example.test/']), /www/);
+    assert.throws(() => parseArguments(['--www=/safe\nbad']), /www/);
     assert.throws(() => parseArguments(['--cdn=/assets/\"><script>']), /cdn/);
     assert.throws(() => parseArguments(['--production=true', '--cdn=http://cdn.example.test/']), /HTTPS/);
 });
