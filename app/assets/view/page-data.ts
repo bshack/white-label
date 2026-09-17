@@ -1,8 +1,8 @@
 /**
  * Build-time data available to every page template.
  *
- * Keeping this contract separate from the page component makes the top-level
- * JSX read like application composition instead of deployment plumbing.
+ * Keeping this contract separate from the renderer keeps top-level tagged
+ * HTML focused on application composition instead of deployment plumbing.
  */
 export interface PageData {
     cdn: string;

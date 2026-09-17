@@ -9,7 +9,32 @@ permissions:
   contents: read
 
 jobs:
+  view-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: bshack/white-label-view
+          ref: 3fc721e1673653236b76f796e874eda360a27dc3
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24.21.0
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - name: Create packed View package
+        run: npm pack --silent --pack-destination "$RUNNER_TEMP"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: white-label-view-package
+          path: ${{ runner.temp }}/white-label-view-*.tgz
+          if-no-files-found: error
+          retention-days: 7
+
   test-build-audit:
+    needs: view-package
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -20,7 +45,13 @@ jobs:
         with:
           node-version: 24.21.0
           cache: npm
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: white-label-view-package
+          path: view-package
       - run: npm ci --ignore-scripts
+      - name: Use coordinated View 7 package
+        run: npm install --ignore-scripts --no-save --package-lock=false "$(realpath view-package/*.tgz)"
       - run: npm run lint
       - run: npm run compile
       - run: npm run typecheck
@@ -52,6 +83,7 @@ jobs:
           npx --yes generator-white-label --help | grep -q "white-label create <directory>"
 
   minimum-node-runtime:
+    needs: view-package
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -62,7 +94,13 @@ jobs:
         with:
           node-version: 22.18.0
           cache: npm
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: white-label-view-package
+          path: view-package
       - run: npm ci --ignore-scripts
+      - name: Use coordinated View 7 package
+        run: npm install --ignore-scripts --no-save --package-lock=false "$(realpath view-package/*.tgz)"
       - run: npm test
 
   package-manager-compatibility:
@@ -119,7 +157,7 @@ jobs:
           esac
 
   generated-project-compatibility:
-    needs: test-build-audit
+    needs: [test-build-audit, view-package]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
@@ -134,6 +172,10 @@ jobs:
         with:
           name: packed-package
           path: package
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: white-label-view-package
+          path: view-package
       - name: Configure package manager
         if: matrix.package-manager != 'npm'
         run: |
@@ -146,6 +188,7 @@ jobs:
       - name: Generate, install, and test project
         run: |
           PACKAGE="$(realpath package/*.tgz)"
+          VIEW_PACKAGE="$(realpath view-package/*.tgz)"
           TEMP="$(mktemp -d)"
           mkdir "$TEMP/runner"
           cd "$TEMP/runner"
@@ -153,22 +196,25 @@ jobs:
           case "${{ matrix.package-manager }}" in
             npm)
               npm install --ignore-scripts "$PACKAGE" >/dev/null
-              npx --yes generator-white-label create ../site --jsx
+              npx --yes generator-white-label create ../site
               cd ../site
+              npm pkg set dependencies.white-label-view="file:$VIEW_PACKAGE"
               npm install >/dev/null
               npm test
               ;;
             yarn)
               YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn add "$PACKAGE" >/dev/null
-              yarn exec white-label create ../site --jsx
+              yarn exec white-label create ../site
               cd ../site
+              npm pkg set dependencies.white-label-view="file:$VIEW_PACKAGE"
               YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
               yarn test
               ;;
             pnpm)
               pnpm add --ignore-scripts "$PACKAGE" >/dev/null
-              pnpm exec white-label create ../site --jsx
+              pnpm exec white-label create ../site
               cd ../site
+              npm pkg set dependencies.white-label-view="file:$VIEW_PACKAGE"
               pnpm install >/dev/null
               pnpm test
               ;;

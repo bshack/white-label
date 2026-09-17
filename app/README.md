@@ -1,10 +1,22 @@
 # White Label starter application
 
-This static starter was generated with the **JSX/TSX** template option. It uses TypeScript and the White Label JSX runtime for page and client-side View rendering, with Tailwind CSS 4 for styling. It makes no API or service calls.
+This static starter uses ordinary TypeScript and White Label View's first-party tagged HTML templates, with Tailwind CSS 4 for styling. It makes no API or service calls.
 
-JSX is optional in White Label. If you prefer plain TypeScript or want a third-party template engine to own rendering, generate with `--no-jsx` (or answer **No** to the generator's JSX question), then install and call that renderer from the View `template` function. The Model, View, Router, Mediator, progressive-enhancement behavior, and generated feature set remain equivalent.
+The rendering path is intentionally small and explicit:
 
-See [Template engines and JSX options](https://whitelabeljs.org/docs/view/#template-engines) for the tested third-party engines, rendering contract, and no-JSX setup.
+```ts
+import {html} from 'white-label-view/html';
+
+export default function Page(data: {title: string}) {
+    return html`<main><h1>${data.title}</h1></main>`;
+}
+```
+
+Dynamic text and quoted-attribute values are HTML-escaped by default. Use `attributes()` for conditional/opening-tag attributes. `unsafeHTML()` is an explicit trust boundary for application-owned content that is already trusted or sanitized; it is not a sanitizer.
+
+White Label View remains template-engine agnostic. If the application prefers JSX, Handlebars, Eta, EJS, Mustache, Nunjucks, Pug, or another renderer, add it to the application and return its rendered output from View's `template` function. JSX is a tested third-party option rather than a White Label runtime requirement.
+
+See [Template engines](https://whitelabeljs.org/docs/view/#template-engines) for tested integrations and rendering/security boundaries.
 
 ## Start developing
 
@@ -42,11 +54,11 @@ python3 -m http.server 8080 --directory _deploy
 
 Open `http://localhost:8080/`.
 
-Serve `_deploy` as the web server's document root. Do **not** browse to `_deploy/index.html` through a server rooted at the project directory (for example, `/white-label-site/_deploy/index.html`), because generated asset URLs such as `/release/local/assets/style/global.css` are intentionally rooted at the deployed site's origin and will otherwise return 404 responses.
+Serve `_deploy` as the web server's document root. Do **not** browse to `_deploy/index.html` through a server rooted at the project directory, because generated asset URLs such as `/release/local/assets/style/global.css` are intentionally rooted at the deployed site's origin.
 
-The build output is `_deploy`. The test suite checks the starter content, progressive interaction, production build, accessibility/indexability signals, serverless request isolation, Web-standard bundling, and serverless size/startup budgets.
+The build output is `_deploy`. The test suite checks starter content, progressive interaction, production build behavior, accessibility/indexability signals, serverless request isolation, Web-standard bundling, and serverless size/startup budgets.
 
-Pages live in `app/*.tsx`, page data lives in `app/assets/data/view`, browser code lives in `app/assets/script`, the provider-neutral serverless example lives in `server/handler.ts`, and shared styles live in `app/assets/style`. TypeScript is configured with `jsx: react-jsx` and `jsxImportSource: white-label-view`, so this scaffold's JSX does not require React.
+Pages live in `app/*.ts`, page data lives in `app/assets/data/view`, browser code lives in `app/assets/script`, the provider-neutral serverless example lives in `server/handler.ts`, and shared styles live in `app/assets/style`.
 
 ## Simple View click event
 
@@ -100,4 +112,4 @@ npm run build -- --version=release-1 --production=true --site-url=https://www.ex
 
 Build flags use `--key=value`. `--www` and `--cdn` default to `/`; `--version` selects `_deploy/release/<version>/assets`; without a version, the current timestamp is used. Production builds require a real HTTPS `--site-url` for canonical, Open Graph, robots, and sitemap output. Each build replaces `_deploy`.
 
-Edit TypeScript/TSX sources, not `dist`. JSX expressions are escaped by the White Label runtime; reserve `raw()` for trusted application-authored markup. Replace the starter copy with application content while retaining the tested accessibility and progressive-enhancement patterns.
+Edit TypeScript sources, not `dist`. Keep untrusted values in normal `html` interpolations; use `unsafeHTML()` only when the application has deliberately established trust or sanitization. Replace the starter copy with application content while retaining the tested accessibility and progressive-enhancement patterns.

@@ -74,14 +74,16 @@ async function verifyLocalPreview(destination) {
     }
 }
 
-test('programmatic scaffold API creates the reviewable site', async t => {
+const taggedTemplateDescription = /tagged(?: HTML)? templates?|tagged-template/i;
+
+test('programmatic scaffold API creates the canonical tagged-template site', async t => {
     const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-scaffold-'));
     t.after(() => rm(temporary, {recursive: true, force: true}));
     const destination = path.join(temporary, 'site');
     await createProject({destination});
     assert.deepEqual(JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8')), createSiteManifest());
     const readme = await readFile(path.join(destination, 'README.md'), 'utf8');
-    assert.match(readme, /TypeScript/);
+    assert.match(readme, taggedTemplateDescription);
     assert.match(readme, /--directory _deploy/);
     assert.match(readme, /http:\/\/localhost:8080\//);
     const yarnConfig = await readFile(path.join(destination, '.yarnrc.yml'), 'utf8');
@@ -93,35 +95,17 @@ test('programmatic scaffold API creates the reviewable site', async t => {
     assert.match(yarnConfig, /white-label-view/);
     assert.doesNotMatch(yarnConfig, /approvedGitRepositories/);
     const pnpmWorkspace = await readFile(path.join(destination, 'pnpm-workspace.yaml'), 'utf8');
-    assert.match(pnpmWorkspace, /white-label-view/);
+    assert.doesNotMatch(pnpmWorkspace, /white-label-view/);
+    assert.match(pnpmWorkspace, /@parcel\/watcher/);
     assert.match(pnpmWorkspace, /esbuild/);
-    assert.match(await readFile(path.join(destination, 'tsconfig.json'), 'utf8'), /jsxImportSource/);
+    assert.doesNotMatch(await readFile(path.join(destination, 'tsconfig.json'), 'utf8'), /jsxImportSource|"jsx"/);
+    assert.match(await readFile(path.join(destination, 'app/index.ts'), 'utf8'), /white-label-view\/html/);
+    assert.match(await readFile(path.join(destination, 'app/assets/view/examples/tasks/TaskExample.ts'), 'utf8'), /attributes\(/);
     assert.match(await readFile(path.join(destination, 'scripts/build.ts'), 'utf8'), /tailwindcss/);
     assert.match(await readFile(path.join(destination, 'test/site.test.js'), 'utf8'), /test/);
 });
 
-test('programmatic scaffold API creates a complete non-JSX site', async t => {
-    const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-no-jsx-'));
-    t.after(() => rm(temporary, {recursive: true, force: true}));
-    const destination = path.join(temporary, 'site');
-    await createProject({destination, jsx: false});
-    assert.deepEqual(JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8')), createSiteManifest());
-    assert.doesNotMatch(await readFile(path.join(destination, 'tsconfig.json'), 'utf8'), /jsxImportSource/);
-    assert.match(await readFile(path.join(destination, 'app/index.ts'), 'utf8'), /return `<html/i);
-    assert.match(await readFile(path.join(destination, 'app/404.ts'), 'utf8'), /Page not found/);
-    assert.match(await readFile(path.join(destination, 'app/assets/script/index.ts'), 'utf8'), /TaskApplication/);
-    assert.match(await readFile(path.join(destination, 'app/assets/script/tasks/TaskView.ts'), 'utf8'), /createTaskView/);
-    assert.match(await readFile(path.join(destination, 'app/assets/view/examples/tasks/TaskExample.ts'), 'utf8'), /TaskExample/);
-    assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), /without JSX|plain TypeScript|HTML strings/i);
-    await symlink(path.join(root, 'node_modules'), path.join(destination, 'node_modules'));
-    execFileSync('npm', ['run', 'build', '--', '--version=no-jsx-test', '--production=true', '--site-url=https://example.com'], {cwd: destination, stdio: 'pipe'});
-    const html = await readFile(path.join(destination, '_deploy/index.html'), 'utf8');
-    assert.match(html, /<!DOCTYPE html>/i);
-    assert.doesNotMatch(html, /<%|\{\{/);
-    execFileSync(process.execPath, ['--test', 'test/site.test.js'], {cwd: destination, stdio: 'pipe'});
-});
-
-test('packaged project creator creates a strictly typed Tailwind and JSX site that builds in development and production', async t => {
+test('packaged project creator creates a strictly typed Tailwind and tagged-template site that builds in development and production', async t => {
     const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-generator-'));
     t.after(() => rm(temporary, {recursive: true, force: true}));
     const pack = JSON.parse(execFileSync('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', temporary], {encoding: 'utf8'}))[0];
@@ -136,7 +120,11 @@ test('packaged project creator creates a strictly typed Tailwind and JSX site th
     assert.equal(manifest.dependencies['white-label-mediator'], '5.0.0');
     assert.equal(manifest.dependencies['white-label-model'], '7.0.1');
     assert.equal(manifest.dependencies['white-label-router'], '6.0.0');
-    assert.equal(manifest.dependencies['white-label-view'], '6.0.0');
+    assert.equal(manifest.dependencies['white-label-view'], '7.0.0');
+    assert.equal(manifest.allowScripts['white-label-view@7.0.0'], undefined);
+    assert.equal(manifest.dependenciesMeta['white-label-view@7.0.0'], undefined);
+    assert.equal(manifest.allowScripts['esbuild@0.28.2'], true);
+    assert.equal(manifest.dependenciesMeta['esbuild@0.28.2']?.built, true);
     assert.equal(manifest.dependencies.eta, undefined);
     assert.equal(manifest.devDependencies.bootstrap, undefined);
     assert.equal(manifest.devDependencies.sass, undefined);
@@ -145,7 +133,7 @@ test('packaged project creator creates a strictly typed Tailwind and JSX site th
     assert.equal(manifest.dependencies.react, undefined);
     assert.equal(manifest.dependencies.handlebars, undefined);
     assert.equal(manifest.engines.node, '^22.18.0 || >=24.11.0');
-    assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), /TypeScript/);
+    assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), taggedTemplateDescription);
     assert.match(manifest.scripts.typecheck, /tsc/);
     await symlink(path.join(root, 'node_modules'), path.join(destination, 'node_modules'));
 
@@ -166,17 +154,17 @@ test('packaged project creator creates a strictly typed Tailwind and JSX site th
     await build(parseArguments(['--version=production', '--production=true', '--site-url=https://example.com']), destination);
     assert.ok((await readFile(path.join(destination, '_deploy/release/production/assets/style/global.css'), 'utf8')).length < css.length);
 
-    await writeFile(path.join(destination, 'app/no-data.tsx'), "export default function Page(data: Record<string, unknown>) { return <p>{String(data.www)}</p>; }\n");
+    await writeFile(path.join(destination, 'app/no-data.ts'), "import {html} from 'white-label-view/html';\nexport default function Page(data: Record<string, unknown>) { return html`<p>${String(data.www)}</p>`; }\n");
     compileSite(destination);
     await build(parseArguments(['--version=no-data']), destination);
     assert.ok((await readFile(path.join(destination, '_deploy/no-data.html'), 'utf8')).includes('<p>/</p>'));
     assert.match(await readFile(path.join(destination, '_deploy/robots.txt'), 'utf8'), /Allow: \//);
     assert.match(await readFile(path.join(destination, '_deploy/sitemap.xml'), 'utf8'), /http:\/\/localhost:8080/);
 
-    await writeFile(path.join(destination, 'app/bad.tsx'), 'export default 1;\n');
+    await writeFile(path.join(destination, 'app/bad.ts'), 'export default 1;\n');
     compileSite(destination);
     await assert.rejects(build(parseArguments(['--version=bad-page']), destination), /must export a default render function/);
-    await rm(path.join(destination, 'app/bad.tsx'));
+    await rm(path.join(destination, 'app/bad.ts'));
 
     await writeFile(path.join(destination, 'app/assets/data/view/no-data.json'), '{invalid');
     await assert.rejects(build(parseArguments(['--version=invalid']), destination), SyntaxError);

@@ -13,7 +13,6 @@ export interface ScaffoldFileSystem {
 export interface CreateProjectOptions {
     destination: string;
     fileSystem?: ScaffoldFileSystem;
-    jsx?: boolean;
 }
 
 const nodeFileSystem: ScaffoldFileSystem = {
@@ -53,13 +52,11 @@ export function createSiteManifest() {
         },
         allowScripts: {
             '@parcel/watcher@2.5.1': true,
-            'esbuild@0.28.2': true,
-            'white-label-view@6.0.0': true
+            'esbuild@0.28.2': true
         },
         dependenciesMeta: {
             '@parcel/watcher@2.5.1': {built: true},
-            'esbuild@0.28.2': {built: true},
-            'white-label-view@6.0.0': {built: true}
+            'esbuild@0.28.2': {built: true}
         },
         devDependencies: {
             '@tailwindcss/cli': '4.3.3',
@@ -75,65 +72,28 @@ export function createSiteManifest() {
             'white-label-mediator': '5.0.0',
             'white-label-model': '7.0.1',
             'white-label-router': '6.0.0',
-            'white-label-view': '6.0.0'
+            'white-label-view': '7.0.0'
         }
     };
 }
 
-const commonNoJsxCopies = [
-    ['app/assets/data', 'app/assets/data'],
-    ['app/assets/style', 'app/assets/style'],
-    ['app/assets/script/tasks/TaskApplication.ts', 'app/assets/script/tasks/TaskApplication.ts'],
-    ['app/assets/script/tasks/TaskMediator.ts', 'app/assets/script/tasks/TaskMediator.ts'],
-    ['app/assets/script/tasks/TaskModel.ts', 'app/assets/script/tasks/TaskModel.ts'],
-    ['app/assets/script/tasks/TaskRouter.ts', 'app/assets/script/tasks/TaskRouter.ts'],
-    ['app/assets/view/examples/tasks/task-state.ts', 'app/assets/view/examples/tasks/task-state.ts'],
-    ['app/package.json', 'app/package.json']
+const scaffoldCopies = [
+    ['.editorconfig', '.editorconfig'],
+    ['.yarnrc.yml', '.yarnrc.yml'],
+    ['pnpm-workspace.yaml', 'pnpm-workspace.yaml'],
+    ['app', 'app'],
+    ['app/README.md', 'README.md'],
+    ['server', 'server'],
+    ['scripts', 'scripts'],
+    ['template-test', 'test'],
+    ['tsconfig.site.json', 'tsconfig.json']
 ] as const;
 
-const noJsxTemplateCopies = [
-    ['scaffold/no-jsx/app/index.ts', 'app/index.ts'],
-    ['scaffold/no-jsx/app/404.ts', 'app/404.ts'],
-    ['scaffold/no-jsx/app/assets/script/index.ts', 'app/assets/script/index.ts'],
-    ['scaffold/no-jsx/app/assets/script/tasks/TaskView.ts', 'app/assets/script/tasks/TaskView.ts'],
-    ['scaffold/no-jsx/app/assets/view/examples/tasks/TaskExample.ts', 'app/assets/view/examples/tasks/TaskExample.ts'],
-    ['scaffold/no-jsx/README.md', 'README.md'],
-    ['tsconfig.site.no-jsx.json', 'tsconfig.json']
-] as const;
-
-/**
- * Create a White Label project without overwriting a non-empty destination.
- *
- * This is the shared implementation behind every creation interface. Adapters
- * translate their environment into these options instead of owning templates,
- * overwrite policy, or project-generation behavior themselves.
- */
-export async function createProject({destination, fileSystem = nodeFileSystem, jsx = true}: CreateProjectOptions) {
+/** Create the canonical tagged-template White Label starter without overwriting user files. */
+export async function createProject({destination, fileSystem = nodeFileSystem}: CreateProjectOptions) {
     await assertDestinationAvailable(destination);
-    const copies = jsx ? [
-        ['.editorconfig', '.editorconfig'],
-        ['.yarnrc.yml', '.yarnrc.yml'],
-        ['pnpm-workspace.yaml', 'pnpm-workspace.yaml'],
-        ['app', 'app'],
-        ['app/README.md', 'README.md'],
-        ['server', 'server'],
-        ['scripts', 'scripts'],
-        ['template-test', 'test'],
-        ['tsconfig.site.json', 'tsconfig.json']
-    ] as const : [
-        ['.editorconfig', '.editorconfig'],
-        ['.yarnrc.yml', '.yarnrc.yml'],
-        ['pnpm-workspace.yaml', 'pnpm-workspace.yaml'],
-        ...commonNoJsxCopies,
-        ...noJsxTemplateCopies,
-        ['server', 'server'],
-        ['scripts', 'scripts'],
-        ['template-test', 'test']
-    ] as const;
-
-    for (const [source, target] of copies) {
+    for (const [source, target] of scaffoldCopies) {
         await fileSystem.copy(path.join(packageRoot, source), path.join(destination, target));
     }
-
     await fileSystem.writeJSON(path.join(destination, 'package.json'), createSiteManifest());
 }

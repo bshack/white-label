@@ -11,8 +11,6 @@
     "outDir": "dist",
     "rootDir": ".",
     "resolveJsonModule": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "white-label-view",
     "types": ["node"],
     "noEmitOnError": true,
     "noUncheckedIndexedAccess": true,
@@ -25,7 +23,6 @@
     "scripts/**/*.ts",
     "scaffold/index.ts",
     "server/**/*.ts",
-    "app/**/*.ts",
-    "app/**/*.tsx"
+    "app/**/*.ts"
   ]
 }
