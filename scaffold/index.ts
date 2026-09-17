@@ -18,11 +18,11 @@ export interface CreateProjectOptions {
 const nodeFileSystem: ScaffoldFileSystem = {
     async copy(source, destination) {
         await mkdir(path.dirname(destination), {recursive: true});
-        await cp(source, destination, {recursive: true});
+        await cp(source, destination, {recursive: true, force: false, errorOnExist: true});
     },
     async writeJSON(destination, value) {
         await mkdir(path.dirname(destination), {recursive: true});
-        await writeFile(destination, `${JSON.stringify(value, null, 2)}\n`);
+        await writeFile(destination, `${JSON.stringify(value, null, 2)}\n`, {flag: 'wx'});
     }
 };
 
