@@ -20,6 +20,4 @@ These instructions are more specific than the repository-root agent guide for fi
 
 ## Coordinated release dependency
 
-Generator 10 targets `white-label-mediator@5`, `white-label-model@7`, `white-label-router@6`, and `white-label-view@7`.
-
-Until View 7 is published, CI may build and inject the packed View 7 release branch solely to verify coordinated code. Do not replace the release lockfile's registry dependency with a Git reference or treat that temporary CI bridge as a published dependency. Registry installation of the final coordinated versions remains a release gate.
+Generator 10 targets the exact published coordinated runtime versions: `white-label-mediator@5.0.0`, `white-label-model@7.0.1`, `white-label-router@6.1.0`, and `white-label-view@7.0.0`. Keep the release lockfile registry-based and regenerate it with the package manager when coordinated runtime versions change.
