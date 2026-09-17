@@ -10,12 +10,18 @@ import {build as buildJavaScript} from 'esbuild';
 const execFileAsync = promisify(execFile);
 const defaultProjectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const relativePublicPrefix = /^\/(?!\/)[A-Za-z0-9._~!$&'()*+,;=:@%/-]*$/;
-const controls = /[\u0000-\u001F\u007F]/;
+
+function hasControlCharacters(value: string): boolean {
+    return [...value].some(character => {
+        const code = character.charCodeAt(0);
+        return code <= 0x1f || code === 0x7f;
+    });
+}
 
 function normalizeSiteUrl(value: string, production: boolean): string {
     let url: URL;
     try {url = new URL(value);} catch {throw new Error('Site URL must be an absolute HTTP(S) URL; production builds require HTTPS');}
-    if (controls.test(value) || (url.protocol !== 'http:' && url.protocol !== 'https:') ||
+    if (hasControlCharacters(value) || (url.protocol !== 'http:' && url.protocol !== 'https:') ||
         url.username || url.password || url.search || url.hash || (production && url.protocol !== 'https:')) {
         throw new Error('Site URL must be an absolute HTTP(S) URL without credentials, query, or fragment; production builds require HTTPS');
     }
@@ -23,7 +29,7 @@ function normalizeSiteUrl(value: string, production: boolean): string {
 }
 
 function normalizePublicPrefix(value: string, name: 'www' | 'cdn', production: boolean): string {
-    if (controls.test(value)) {throw new Error(`${name} must be a root-relative or absolute HTTP(S) URL prefix`);}
+    if (hasControlCharacters(value)) {throw new Error(`${name} must be a root-relative or absolute HTTP(S) URL prefix`);}
     if (relativePublicPrefix.test(value)) {return value.endsWith('/') ? value : `${value}/`;}
     let url: URL;
     try {url = new URL(value);} catch {throw new Error(`${name} must be a root-relative or absolute HTTP(S) URL prefix`);}
