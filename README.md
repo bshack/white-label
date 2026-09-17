@@ -273,7 +273,7 @@ Tests are part of the documentation. Executable project source is held to 100% s
 
 ## Coordinated runtime release
 
-Generator 10 targets the published White Label runtime line: `white-label-mediator@5.0.0`, `white-label-model@7.0.1`, `white-label-router@6.1.0`, and `white-label-view@7.0.0`. Release and CI verification use those registry packages directly.
+Generator 10 targets the published White Label runtime line: `white-label-mediator@5.0.0`, `white-label-model@7.0.1`, `white-label-router@6.1.0`, and `white-label-view@7.0.0`. The release and install baseline is registry-backed; CI additionally substitutes a fixed packed View 7 source revision in coordinated integration jobs.
 
 ## White Label ecosystem
 
