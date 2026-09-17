@@ -10,9 +10,9 @@ yarn dlx generator-white-label create my-project
 pnpm dlx generator-white-label create my-project
 ```
 
-The same `--jsx` and `--no-jsx` options are available through every invocation path. JSX is optional: use `--jsx` for the first-party White Label JSX runtime, or `--no-jsx` for plain TypeScript templates and as the starting point for a third-party template engine.
+Every invocation creates the same canonical TypeScript/tagged-template starter. There are no renderer-selection flags.
 
-See [Template engines and JSX options](https://whitelabeljs.org/docs/view/#template-engines) for tested third-party renderers and the View rendering contract.
+White Label View remains template-engine agnostic. Projects that prefer JSX or a third-party renderer can install it after generation and return its rendered output from View's `template` function. See [Template engines](https://whitelabeljs.org/docs/view/#template-engines) for tested integrations and trust boundaries.
 
 ## Work with a generated project
 
@@ -26,10 +26,12 @@ pnpm install && pnpm test
 
 Generated manifests require the supported Node.js runtime but do not require a specific package manager. Nested scripts use Node's `--run` support instead of invoking npm internally.
 
-Generated projects use exact npm versions for the four first-party White Label packages. They also carry narrow install-script approvals for the dependencies that actually need lifecycle builds: `esbuild`, `@parcel/watcher`, and `white-label-view`. npm uses pinned `allowScripts` entries, Yarn uses pinned `dependenciesMeta` build permissions, and pnpm uses `onlyBuiltDependencies`.
+Generated projects use exact npm versions for the four first-party White Label packages. They also carry narrow install/build approvals for dependencies that may require lifecycle work in supported package managers, including `esbuild`, `@parcel/watcher`, and `white-label-view`. npm uses pinned `allowScripts` entries, Yarn uses pinned `dependenciesMeta` build permissions, and pnpm uses `onlyBuiltDependencies`.
 
-Yarn's package-age security gate is left enabled for ordinary dependencies. The generated `.yarnrc.yml` preapproves only `white-label-mediator`, `white-label-model`, `white-label-router`, and `white-label-view` so a newly published White Label release can be installed immediately without disabling Yarn's protection for the rest of the dependency graph.
+Yarn's package-age security gate is left enabled for ordinary dependencies. The generated `.yarnrc.yml` preapproves only `white-label-mediator`, `white-label-model`, `white-label-router`, and `white-label-view` so a newly published coordinated White Label release can be installed immediately without disabling Yarn's protection for the rest of the dependency graph.
 
 ## Repository development
 
 The committed `package-lock.json` remains the generator repository's canonical dependency lockfile and npm remains the maintenance/audit path used by primary CI. Compatibility CI packs the real generator artifact and verifies its API and CLI under npm, Yarn, and pnpm. Alternate lockfiles are not committed merely for compatibility testing.
+
+Generator 10 depends on the coordinated View 7 release. While that release is still being prepared, branch CI may inject a packed View 7 artifact for integration testing. The release lockfile must stay registry-based; do not replace it with a Git dependency to bypass an unpublished version.
