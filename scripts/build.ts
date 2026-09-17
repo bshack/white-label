@@ -52,20 +52,18 @@ interface PageModule {
     default(data: Record<string, unknown>): {toString(): string} | string;
 }
 
-/** Render compiled TypeScript or TSX pages using global, page-specific, and deployment data. */
+/** Render compiled TypeScript pages using global, page-specific, and deployment data. */
 async function renderMarkup(config: BuildConfig, outputRoot: string, projectRoot: string) {
     const globalData = JSON.parse(await fs.readFile(
         path.join(projectRoot, 'app/assets/data/view/global.json'), 'utf8'
     )) as Record<string, unknown>;
     const appRoot = path.join(projectRoot, 'app');
     const pages = (await filesUnder(appRoot))
-        .filter((file) => /\.tsx?$/.test(file) && !file.includes(`${path.sep}assets${path.sep}`));
+        .filter((file) => /\.ts$/.test(file) && !file.endsWith('.d.ts') && !file.includes(`${path.sep}assets${path.sep}`));
 
     await Promise.all(pages.map(async (page) => {
         const relative = path.relative(appRoot, page);
-        const pageDataPath = path.join(
-            projectRoot, 'app/assets/data/view', relative.replace(/\.tsx?$/, '.json')
-        );
+        const pageDataPath = path.join(projectRoot, 'app/assets/data/view', relative.replace(/\.ts$/, '.json'));
         let pageData: Record<string, unknown> = {};
         try {
             pageData = JSON.parse(await fs.readFile(pageDataPath, 'utf8')) as Record<string, unknown>;
@@ -74,13 +72,13 @@ async function renderMarkup(config: BuildConfig, outputRoot: string, projectRoot
                 throw error;
             }
         }
-        const compiledPage = path.join(projectRoot, 'dist/app', relative.replace(/\.tsx?$/, '.js'));
+        const compiledPage = path.join(projectRoot, 'dist/app', relative.replace(/\.ts$/, '.js'));
         const module = await import(pathToFileURL(compiledPage).href) as PageModule;
         if (typeof module.default !== 'function') {
             throw new TypeError(`Page module ${relative} must export a default render function`);
         }
         const markup = module.default({...globalData, ...pageData, ...config});
-        const destination = path.join(outputRoot, relative.replace(/\.tsx?$/, '.html'));
+        const destination = path.join(outputRoot, relative.replace(/\.ts$/, '.html'));
         await fs.mkdir(path.dirname(destination), {recursive: true});
         await fs.writeFile(destination, `<!DOCTYPE html>\n${String(markup)}\n`);
     }));
@@ -100,11 +98,11 @@ async function compileStyles(outputAssets: string, production: boolean, projectR
     await fs.copyFile(path.join(styleRoot, 'print.css'), path.join(outputAssets, 'style/print.css'));
 }
 
-/** Bundle TypeScript entry points for browsers, excluding declaration-only files. */
+/** Bundle plain TypeScript browser entry points, excluding declaration-only files. */
 async function compileScripts(outputAssets: string, production: boolean, projectRoot: string) {
     const scriptRoot = path.join(projectRoot, 'app/assets/script');
     const entries = (await fs.readdir(scriptRoot, {withFileTypes: true}))
-        .filter((entry) => entry.isFile() && !entry.name.endsWith('.d.ts') && /\.tsx?$/.test(entry.name))
+        .filter((entry) => entry.isFile() && !entry.name.endsWith('.d.ts') && entry.name.endsWith('.ts'))
         .map((entry) => path.join(scriptRoot, entry.name));
     await fs.mkdir(path.join(outputAssets, 'script'), {recursive: true});
     await buildJavaScript({
@@ -112,7 +110,7 @@ async function compileScripts(outputAssets: string, production: boolean, project
         entryNames: '[name].compiled',
         entryPoints: entries,
         format: 'iife',
-        loader: {'.ts': 'ts', '.tsx': 'tsx'},
+        loader: {'.ts': 'ts'},
         minify: production,
         outdir: path.join(outputAssets, 'script'),
         sourcemap: !production,
