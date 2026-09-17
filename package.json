@@ -1,7 +1,7 @@
 {
   "name": "generator-white-label",
-  "version": "9.0.0",
-  "description": "Framework-independent TypeScript project generator for accessible, SEO-friendly, HTML-first sites with progressive enhancement, optional JSX, and provider-neutral serverless composition.",
+  "version": "10.0.0",
+  "description": "Framework-independent TypeScript project generator for accessible, SEO-friendly, HTML-first sites with progressive enhancement, tagged HTML templates, and provider-neutral serverless composition.",
   "type": "module",
   "main": "dist/scaffold/index.js",
   "bin": {
@@ -12,16 +12,16 @@
     "node": "^22.18.0 || >=24.11.0"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json && node dist/scripts/build.js",
+    "build": "node --run compile && node dist/scripts/build.js",
     "test": "node --run compile && node --run test:types && node --run test:unit",
     "audit": "npm audit --audit-level=low",
-    "compile": "tsc -p tsconfig.json",
+    "compile": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:unit": "node --test test/*.test.js",
     "coverage": "node --run compile && node --run test:types && c8 node --run test:unit",
     "prepack": "node --run compile",
     "test:types": "tsc -p tsconfig.consumer.json",
-    "lint": "eslint \"cli/**/*.ts\" \"scripts/**/*.ts\" \"scaffold/**/*.ts\" \"server/**/*.ts\" \"app/**/*.{ts,tsx}\" --max-warnings=0",
+    "lint": "eslint \"cli/**/*.ts\" \"scripts/**/*.ts\" \"scaffold/**/*.ts\" \"server/**/*.ts\" \"app/**/*.ts\" --max-warnings=0",
     "lint:fix": "node --run lint -- --fix"
   },
   "files": [
@@ -39,8 +39,7 @@
     "PACKAGE_MANAGERS.md",
     "EXISTING_APPLICATIONS.md",
     "dist",
-    "tsconfig.site.json",
-    "tsconfig.site.no-jsx.json"
+    "tsconfig.site.json"
   ],
   "keywords": [
     "typescript",
@@ -50,6 +49,8 @@
     "web-development",
     "framework-independent",
     "html-first",
+    "html-template",
+    "tagged-template",
     "accessibility",
     "seo",
     "seo-friendly",
@@ -57,7 +58,6 @@
     "serverless",
     "web-standards",
     "esbuild",
-    "jsx",
     "cli",
     "scaffolding",
     "white-label"
@@ -89,7 +89,6 @@
     "white-label-view": "6.0.0",
     "@babel/core": "8.0.5",
     "@babel/eslint-parser": "8.0.5",
-    "@babel/plugin-syntax-jsx": "8.0.1",
     "@babel/preset-typescript": "8.0.1",
     "@eslint/js": "10.0.1",
     "eslint": "10.10.0"
@@ -102,8 +101,7 @@
       "scripts/**/*.ts",
       "scaffold/**/*.ts",
       "server/**/*.ts",
-      "app/**/*.ts",
-      "app/**/*.tsx"
+      "app/**/*.ts"
     ],
     "reporter": [
       "text",
@@ -120,8 +118,7 @@
     "perFile": true,
     "exclude": [
       "**/*.d.ts",
-      "app/assets/view/page-data.ts",
-      "scaffold/no-jsx/app/**"
+      "app/assets/view/page-data.ts"
     ]
   },
   "exports": {
