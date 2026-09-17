@@ -9,11 +9,7 @@ export const syntax = {
 
 /** Render a readable code example with stable line numbers and caller-supplied syntax spans. */
 export default function CodeBlock({lines}: {lines: HTMLMarkup[]}) {
-    return html`
-        <pre class="code-block"><code>${lines.map((line, index) => html`
-            <span class="code-block__line">
+    return html`<pre class="code-block"><code>${lines.map((line, index) => html`<span class="code-block__line">
                 <span aria-hidden="true" class="code-block__number">${index + 1}</span><span>${line}</span>
-            </span>
-        `)}</code></pre>
-    `;
+            </span>`)}</code></pre>`;
 }

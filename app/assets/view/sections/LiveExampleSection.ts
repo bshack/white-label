@@ -6,8 +6,7 @@ import {createInitialTaskState, describeTaskStatus} from '../examples/tasks/task
 export default function LiveExampleSection() {
     const state = createInitialTaskState();
 
-    return html`
-        <section class="section" id="example" aria-labelledby="example-title">
+    return html`<section class="section" id="example" aria-labelledby="example-title">
             <div class="container">
                 <div class="section-intro">
                     <p class="eyebrow">Live example</p>
@@ -21,6 +20,5 @@ export default function LiveExampleSection() {
                     </p>
                 </div>
             </div>
-        </section>
-    `;
+        </section>`;
 }

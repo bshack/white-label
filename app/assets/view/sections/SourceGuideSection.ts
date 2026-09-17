@@ -2,8 +2,7 @@ import {html} from 'white-label-view/html';
 
 /** Point learners at the implementation paths that demonstrate each responsibility. */
 export default function SourceGuideSection() {
-    return html`
-        <section class="section" id="source" aria-labelledby="source-title">
+    return html`<section class="section" id="source" aria-labelledby="source-title">
             <div class="container start-grid">
                 <div class="section-intro">
                     <p class="eyebrow">Read the source</p>
@@ -20,6 +19,5 @@ export default function SourceGuideSection() {
                     <p><a href="https://github.com/bshack/white-label/tree/master/app">Browse the application source</a></p>
                 </div>
             </div>
-        </section>
-    `;
+        </section>`;
 }

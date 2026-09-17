@@ -10,8 +10,7 @@ const repositories = {
 
 /** Package documentation stays close to the example it describes. */
 export default function PackageDocsSection() {
-    return html`
-        <section class="section" id="packages" aria-labelledby="packages-title">
+    return html`<section class="section" id="packages" aria-labelledby="packages-title">
             <div class="container">
                 <div class="section-intro">
                     <p class="eyebrow">Documentation</p>
@@ -66,6 +65,5 @@ export default function PackageDocsSection() {
                     </article>
                 </div>
             </div>
-        </section>
-    `;
+        </section>`;
 }

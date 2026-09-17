@@ -2,8 +2,7 @@ import {html} from 'white-label-view/html';
 
 /** Static navigation remains ordinary crawlable HTML; JavaScript enhances only opted-in links. */
 export default function SiteHeader() {
-    return html`
-        <header class="site-header">
+    return html`<header class="site-header">
             <div class="container site-header__inner">
                 <a class="wordmark" href="#top">White Label</a>
                 <nav aria-label="Primary navigation">
@@ -14,6 +13,5 @@ export default function SiteHeader() {
                     <a href="https://github.com/bshack/white-label">GitHub</a>
                 </nav>
             </div>
-        </header>
-    `;
+        </header>`;
 }

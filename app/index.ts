@@ -17,8 +17,7 @@ function structuredDataScript(value: unknown) {
 export default function IndexPage(data: Record<string, unknown>) {
     const page = data as unknown as PageData;
 
-    return html`
-        <html id="index" lang="en-US" dir="ltr">
+    return html`<html id="index" lang="en-US" dir="ltr">
             <head>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -47,6 +46,5 @@ export default function IndexPage(data: Record<string, unknown>) {
                 ${SiteFooter()}
                 <script src="${page.cdn}release/${page.version}/assets/script/index.compiled.js" defer></script>
             </body>
-        </html>
-    `;
+        </html>`;
 }

@@ -8,8 +8,7 @@ export default function TaskExample({state}: {state: TaskState}) {
     const visibleTasks = getVisibleTasks(state);
     const completed = state.tasks.filter(task => task.complete).length;
 
-    return html`
-        <section class="task-app" data-task-app aria-label="Interactive task example">
+    return html`<section class="task-app" data-task-app aria-label="Interactive task example">
             <form class="task-form" data-task-form action="#example" method="get">
                 <label for="task-title">New task</label>
                 <div class="task-form__controls">
@@ -19,19 +18,16 @@ export default function TaskExample({state}: {state: TaskState}) {
             </form>
 
             <nav class="task-filters" aria-label="Filter tasks">
-                ${filters.map(filter => html`
-                    <a ${attributes({
-                        href: `/?tasks=${filter}#example`,
-                        'data-task-filter': filter,
-                        'data-pushstate': true,
-                        'aria-current': state.filter === filter ? 'page' : 'false'
-                    })}>${filter.charAt(0).toUpperCase()}${filter.slice(1)}</a>
-                `)}
+                ${filters.map(filter => html`<a ${attributes({
+                    href: `/?tasks=${filter}#example`,
+                    'data-task-filter': filter,
+                    'data-pushstate': true,
+                    'aria-current': state.filter === filter ? 'page' : 'false'
+                })}>${filter.charAt(0).toUpperCase()}${filter.slice(1)}</a>`)}
             </nav>
 
             <ul class="task-list">
-                ${visibleTasks.map(task => html`
-                    <li>
+                ${visibleTasks.map(task => html`<li>
                         <label>
                             <input ${attributes({
                                 type: 'checkbox',
@@ -41,8 +37,7 @@ export default function TaskExample({state}: {state: TaskState}) {
                             })}>
                             <span>${task.title}</span>
                         </label>
-                    </li>
-                `)}
+                    </li>`)}
             </ul>
 
             <dl class="demo__trace">
@@ -51,6 +46,5 @@ export default function TaskExample({state}: {state: TaskState}) {
                 <div><dt>Model</dt><dd>${state.tasks.length} tasks · ${completed} complete</dd></div>
                 <div><dt>View</dt><dd>${visibleTasks.length} tasks rendered</dd></div>
             </dl>
-        </section>
-    `;
+        </section>`;
 }

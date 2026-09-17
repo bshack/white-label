@@ -3,8 +3,7 @@ import CodeBlock, {syntax} from '../CodeBlock.js';
 
 /** Keep the shortest path from generator install to a verified local build visible. */
 export default function GettingStartedSection() {
-    return html`
-        <section class="section" id="start" aria-labelledby="start-title">
+    return html`<section class="section" id="start" aria-labelledby="start-title">
             <div class="container start-grid">
                 <div class="section-intro">
                     <p class="eyebrow">Get started</p>
@@ -23,6 +22,5 @@ export default function GettingStartedSection() {
                     <p><a href="https://github.com/bshack/white-label#readme">Read the complete generator documentation</a></p>
                 </div>
             </div>
-        </section>
-    `;
+        </section>`;
 }

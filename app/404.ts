@@ -8,8 +8,7 @@ interface PageData {
 
 export default function NotFoundPage(data: Record<string, unknown>) {
     const page = data as unknown as PageData;
-    return html`
-        <html lang="en-US" dir="ltr">
+    return html`<html lang="en-US" dir="ltr">
             <head>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,6 +24,5 @@ export default function NotFoundPage(data: Record<string, unknown>) {
                     <p class="mt-6"><a class="font-bold underline" href="${page.www}">Return to the White Label starter</a></p>
                 </main>
             </body>
-        </html>
-    `;
+        </html>`;
 }
