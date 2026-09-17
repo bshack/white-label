@@ -72,13 +72,17 @@
     "url": "https://github.com/bshack/white-label/issues"
   },
   "homepage": "https://whitelabeljs.org/docs/generator/",
-  "dependencies": {},
   "devDependencies": {
+    "@babel/core": "8.0.5",
+    "@babel/eslint-parser": "8.0.5",
+    "@babel/preset-typescript": "8.0.1",
+    "@eslint/js": "10.0.1",
     "@tailwindcss/cli": "4.3.3",
     "@types/node": "24.13.3",
     "axe-core": "4.13.0",
     "c8": "12.0.0",
     "esbuild": "0.28.2",
+    "eslint": "10.10.0",
     "html-validate": "11.15.0",
     "jsdom": "30.0.1",
     "tailwindcss": "4.3.3",
@@ -86,12 +90,7 @@
     "white-label-mediator": "5.0.0",
     "white-label-model": "7.0.1",
     "white-label-router": "6.1.0",
-    "white-label-view": "7.0.0",
-    "@babel/core": "8.0.5",
-    "@babel/eslint-parser": "8.0.5",
-    "@babel/preset-typescript": "8.0.1",
-    "@eslint/js": "10.0.1",
-    "eslint": "10.10.0"
+    "white-label-view": "7.0.0"
   },
   "types": "dist/scaffold/index.d.ts",
   "c8": {
