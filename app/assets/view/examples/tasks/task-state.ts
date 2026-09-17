@@ -1,4 +1,4 @@
-/** Shared state shape used by build-time JSX and the browser application. */
+/** Shared state shape used by build-time tagged HTML and the browser application. */
 export type TaskFilter = 'all' | 'active' | 'completed';
 
 export interface TaskItem {
