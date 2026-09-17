@@ -1,6 +1,6 @@
 # generator-white-label
 
-`generator-white-label` is a framework-independent TypeScript project generator for small, accessible, SEO-friendly, HTML-first sites with progressive enhancement, composable White Label primitives, optional JSX, and a provider-neutral Node.js function example.
+`generator-white-label` is a framework-independent TypeScript project generator for small, accessible, SEO-friendly, HTML-first sites with progressive enhancement, composable White Label primitives, first-party tagged HTML templates, and a provider-neutral Node.js function example.
 
 [Documentation](https://whitelabeljs.org/docs/generator/) · [API reference](https://whitelabeljs.org/api/#generator) · [Demo site](https://whitelabeljs.org/)
 
@@ -13,9 +13,9 @@ Use the generator when starting a **new** site or small web application and you 
 - meaningful static HTML before client JavaScript runs;
 - progressive enhancement instead of an SPA requirement;
 - explicit Model/View/Mediator/Router boundaries;
-- optional JSX rather than a mandatory component framework;
+- ordinary TypeScript with readable HTML-shaped templates;
 - accessibility and search-oriented defaults;
-- a small TypeScript codebase that remains easy for humans and coding agents to inspect;
+- a small codebase that remains easy for humans and coding agents to inspect;
 - provider-neutral Web `Request`/`Response` serverless composition.
 
 The generated project is especially well suited to public sites, documentation/content experiences, agency or multi-client work, small product/account surfaces, and teams that want application structure without handing architecture to a full framework.
@@ -44,21 +44,61 @@ URL / user action
       DOM
 ```
 
-These are responsibilities, not mandatory layers. Static content can stay plain JSX or plain TypeScript HTML strings. A feature that does not need routing does not need a router; a feature that only needs local state can use Model by itself.
+These are responsibilities, not mandatory layers. Static content can stay a plain TypeScript function that returns tagged HTML. A feature that does not need routing does not need a router; a feature that only needs local state can use Model by itself.
 
 - [`white-label-router`](https://github.com/bshack/white-label-router) turns location into application intent.
 - [`white-label-mediator`](https://github.com/bshack/white-label-mediator) coordinates application events.
 - [`white-label-model`](https://github.com/bshack/white-label-model) owns observable state.
 - [`white-label-view`](https://github.com/bshack/white-label-view) owns rendering and DOM lifecycle.
-- [`white-label-view/jsx-runtime`](https://github.com/bshack/white-label-view) provides optional escaped JSX without React or another template engine.
+- `white-label-view/html` provides the first-party tagged-template helpers used by the generator.
 
 The goal is simple boundaries with explicit composition.
+
+## Tagged HTML templates
+
+Generated pages and View templates are ordinary `.ts` functions:
+
+```ts
+import {html} from 'white-label-view/html';
+
+export default function Page(data: {title: string}) {
+    return html`
+        <main>
+            <h1>${data.title}</h1>
+        </main>
+    `;
+}
+```
+
+Normal text and quoted-attribute interpolations are escaped. Tagged markup composes without double escaping, so small view functions can remain reusable without introducing a component runtime.
+
+Conditional or grouped opening-tag attributes use `attributes()`:
+
+```ts
+import {attributes, html} from 'white-label-view/html';
+
+const input = html`
+    <input ${attributes({
+        type: 'checkbox',
+        checked: complete,
+        'data-task-id': taskId
+    })}>
+`;
+```
+
+`unsafeHTML()` is deliberately explicit. Use it only for application-owned content that is already trusted or sanitized, such as controlled JSON-LD after applying the application's serialization policy. It is not a sanitizer and it is not a replacement for contextual URL/CSS validation.
+
+The tagged-template runtime rejects interpolation in ambiguous or dangerous contexts such as script/style bodies, comments, tag names, and unquoted attribute positions rather than pretending generic escaping makes those contexts safe.
+
+White Label View remains template-engine agnostic. JSX, Handlebars, Eta, EJS, Mustache, Nunjucks, Pug, and other renderers can remain application dependencies and return their rendered output from View's `template` function. JSX is a tested third-party option rather than a White Label-owned runtime.
+
+See [Template engines](https://whitelabeljs.org/docs/view/#template-engines) for tested integrations and trust boundaries.
 
 ## Learn from the generated application
 
 The project is also a teaching tool. The generated landing page demonstrates the same architecture its source and tests document.
 
-The task example shows all four packages working together:
+The task example shows all four runtime packages working together:
 
 ```text
 TaskRouter
@@ -68,23 +108,19 @@ TaskMediator
 TaskModel
     ↓ observable state
 TaskView
-    ↓ render
+    ↓ tagged HTML render
 DOM
 ```
 
-Both generated variants provide the same behavior and progressive enhancement. The only difference is template syntax.
+A useful reading order is:
 
-A useful reading order for the default JSX scaffold is:
-
-1. [`app/index.tsx`](app/index.tsx) — page composition.
-2. [`app/assets/view/sections/LiveExampleSection.tsx`](app/assets/view/sections/LiveExampleSection.tsx) — static composition around an interactive feature.
-3. [`app/assets/view/examples/tasks/TaskExample.tsx`](app/assets/view/examples/tasks/TaskExample.tsx) — shared JSX rendering.
+1. [`app/index.ts`](app/index.ts) — page composition.
+2. [`app/assets/view/sections/LiveExampleSection.ts`](app/assets/view/sections/LiveExampleSection.ts) — static composition around an interactive feature.
+3. [`app/assets/view/examples/tasks/TaskExample.ts`](app/assets/view/examples/tasks/TaskExample.ts) — shared tagged-template rendering.
 4. [`app/assets/script/tasks/TaskApplication.ts`](app/assets/script/tasks/TaskApplication.ts) — explicit dependency wiring.
 5. `TaskRouter`, `TaskMediator`, `TaskModel`, and `TaskView` — one responsibility at a time.
 6. [`server/handler.ts`](server/handler.ts) — provider-neutral `Request`/`Response` composition.
 7. Tests — executable contracts for browser and generated-project behavior.
-
-The `--no-jsx` scaffold mirrors the same structure with `.ts` files and HTML-string rendering functions.
 
 ## Create a project
 
@@ -118,52 +154,11 @@ npm install && npm test
 # or: pnpm install && pnpm test
 ```
 
-Interactive creation asks whether templates should use JSX/TSX. Choose **Yes** for White Label JSX or **No** for plain TypeScript functions that return HTML strings. Both choices generate the same functional starter application.
-
-For explicit/non-interactive use:
-
-```sh
-white-label create my-project --jsx
-white-label create my-project --no-jsx
-
-npx generator-white-label create my-project --jsx
-npx generator-white-label create my-project --no-jsx
-```
-
-The same options work through `yarn dlx` and `pnpm dlx`. If no interactive answer is available and neither flag is supplied, JSX is the default.
+There is one canonical scaffold. The CLI has no renderer prompt and no `--jsx`/`--no-jsx` mode switch.
 
 The generator refuses to layer a scaffold over an existing non-empty destination. This protection is enforced by the shared `createProject()` engine for both CLI and programmatic use. An existing empty directory is allowed; a missing directory is created.
 
 See [`CLI.md`](CLI.md), [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md), and [`EXISTING_APPLICATIONS.md`](EXISTING_APPLICATIONS.md).
-
-## Template choice: JSX or no JSX
-
-JSX is optional. When enabled, TypeScript uses the White Label JSX runtime:
-
-```json
-{
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "white-label-view"
-  }
-}
-```
-
-A page remains an ordinary function:
-
-```tsx
-export default function Page(data: Record<string, unknown>) {
-    return <main><h1>{String(data.title)}</h1></main>;
-}
-```
-
-With `--no-jsx`, the equivalent page is ordinary TypeScript returning an HTML string. The application architecture and generated feature set remain equivalent.
-
-The no-JSX scaffold is also the intended starting point when Handlebars, Eta, EJS, Mustache, Nunjucks, Pug, or another renderer should remain the project's template convention. Install/configure that engine in the generated application and call it from View's `template` function; no White Label adapter is required.
-
-White Label JSX HTML-escapes ordinary child text and ordinary attribute values by default, rejects intrinsic `on*` event-handler attributes, and uses runtime-owned identity for trusted JSX/raw values. That escaping is not a general sanitizer for URL or CSS semantics. Plain-TypeScript templates and third-party engines likewise remain responsible for their own contextual escaping, raw-output features, and security configuration.
-
-See [Template engines and JSX options](https://whitelabeljs.org/docs/view/#template-engines) for tested versions and trust boundaries.
 
 ## Progressive enhancement and SEO
 
@@ -174,7 +169,7 @@ HTML owns semantics.
 JavaScript enhances behavior.
 ```
 
-Public content should remain readable, navigable, and crawlable without executing the enhancement bundle. Generated pages include the structures needed for canonical URLs, page titles/descriptions, robots metadata, semantic navigation, and sitemap-oriented builds; deployment still needs to serve the generated output correctly.
+Public content should remain readable, navigable, and crawlable without executing the enhancement bundle. Generated pages include canonical URLs, page titles/descriptions, robots metadata, semantic navigation, JSON-LD, and sitemap-oriented output; deployment still needs to serve the generated files correctly.
 
 Do not treat metadata in source code as proof of search-engine indexing. Verify deployed behavior and indexing with actual production/search-console evidence.
 
@@ -210,12 +205,9 @@ Project creation has one implementation:
 import {createProject} from 'generator-white-label';
 
 await createProject({
-    destination: new URL('./my-project', import.meta.url).pathname,
-    jsx: false
+    destination: new URL('./my-project', import.meta.url).pathname
 });
 ```
-
-Set `jsx: true` for JSX/TSX or `jsx: false` for plain TypeScript/HTML strings. Omitting `jsx` defaults to `true`.
 
 `createProject(options)` returns `Promise<void>`. A successful call resolves with `undefined`; file-system failures reject. If the destination exists and contains files, it rejects before copying or writing project content.
 
@@ -238,10 +230,9 @@ The Web-target smoke test does **not** claim blanket Cloudflare/Deno/edge-provid
 | Path | Purpose |
 | --- | --- |
 | `scaffold/index.ts` | Canonical `createProject()` implementation and destination-safety boundary |
-| `scaffold/no-jsx/` | Plain-TypeScript equivalents |
 | `cli/index.ts` | First-party command-line adapter |
-| `app/*.tsx` | Default JSX static pages |
-| `app/assets/view/` | Default JSX views and sections |
+| `app/*.ts` | Static pages using tagged HTML templates |
+| `app/assets/view/` | Reusable tagged-template views and sections |
 | `app/assets/script/tasks/` | Model/View/Mediator/Router example |
 | `server/handler.ts` | Provider-neutral serverless Request → Response example |
 | `scripts/build.ts` | Static rendering and asset build |
@@ -280,10 +271,14 @@ npm pack --dry-run
 
 Tests are part of the documentation. Executable project source is held to 100% statement, branch, function, and line coverage. CI checks supported Node versions, packed CLI/programmatic installation, production builds, and generated-project compatibility across npm, Yarn, and pnpm.
 
+## Coordinated View 7 release
+
+Generator 10 targets `white-label-view@7`, which provides the tagged-template entrypoint. While that coordinated runtime release is still being prepared, this branch's CI verifies against a packed View 7 build from its release PR without replacing the generator's registry lockfile with a Git dependency. Publishing View 7 remains a release prerequisite for a normal registry install of Generator 10.
+
 ## White Label ecosystem
 
 - [`white-label-model`](https://github.com/bshack/white-label-model) — observable state.
-- [`white-label-view`](https://github.com/bshack/white-label-view) — rendering, existing-DOM lifecycle, optional JSX, and a template-engine-agnostic contract.
+- [`white-label-view`](https://github.com/bshack/white-label-view) — rendering, existing-DOM lifecycle, tagged HTML templates, server rendering, and a template-engine-agnostic contract.
 - [`white-label-mediator`](https://github.com/bshack/white-label-mediator) — application events.
 - [`white-label-router`](https://github.com/bshack/white-label-router) — progressive routing and URL state.
 
