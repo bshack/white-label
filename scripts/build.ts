@@ -10,6 +10,7 @@ import {build as buildJavaScript} from 'esbuild';
 const execFileAsync = promisify(execFile);
 const defaultProjectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const relativePublicPrefix = /^\/(?!\/)[A-Za-z0-9._~!$&'()*+,;=:@%/-]*$/;
+const buildOptionNames = new Set(['cdn', 'production', 'site-url', 'version', 'www']);
 
 function hasControlCharacters(value: string): boolean {
     return [...value].some(character => {
@@ -71,11 +72,24 @@ function normalizeBuildConfig(config: BuildConfig): BuildConfig {
 
 /** Read deployment flags and reject unsafe or invalid deployment values. */
 export function parseArguments(argumentsList: string[]): BuildConfig {
-    const values = Object.fromEntries(argumentsList.map((argument) => {
-        const [key, ...value] = argument.replace(/^--/, '').split('=');
-        return [key, value.join('=')];
-    }));
-    const production = values.production === 'true';
+    const values: Record<string, string> = {};
+    for (const argument of argumentsList) {
+        if (!argument.startsWith('--')) {throw new Error(`Unknown build option: ${argument}`);}
+        const separator = argument.indexOf('=');
+        const key = argument.slice(2, separator === -1 ? undefined : separator);
+        if (!buildOptionNames.has(key)) {throw new Error(`Unknown build option: --${key}`);}
+        if (separator === -1) {throw new Error(`Build option --${key} must use --${key}=value`);}
+        values[key] = argument.slice(separator + 1);
+    }
+
+    let production = false;
+    if (values.production !== undefined) {
+        if (values.production !== 'true' && values.production !== 'false') {
+            throw new Error('Production must be true or false');
+        }
+        production = values.production === 'true';
+    }
+
     return normalizeBuildConfig({
         cdn: values.cdn || '/',
         production,

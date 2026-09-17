@@ -52,7 +52,7 @@ export async function handleRequest(request: Request): Promise<Response> {
     };
 
     try {
-        router.navigate(`${url.pathname}${url.search}`);
+        router.navigate(url.toString());
         view.initialize();
         return new Response(`<!doctype html>${view.toString()}`, {
             status: model.get().status,
