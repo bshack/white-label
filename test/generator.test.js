@@ -95,7 +95,8 @@ test('programmatic scaffold API creates the canonical tagged-template site', asy
     assert.match(yarnConfig, /white-label-view/);
     assert.doesNotMatch(yarnConfig, /approvedGitRepositories/);
     const pnpmWorkspace = await readFile(path.join(destination, 'pnpm-workspace.yaml'), 'utf8');
-    assert.match(pnpmWorkspace, /white-label-view/);
+    assert.doesNotMatch(pnpmWorkspace, /white-label-view/);
+    assert.match(pnpmWorkspace, /@parcel\/watcher/);
     assert.match(pnpmWorkspace, /esbuild/);
     assert.doesNotMatch(await readFile(path.join(destination, 'tsconfig.json'), 'utf8'), /jsxImportSource|"jsx"/);
     assert.match(await readFile(path.join(destination, 'app/index.ts'), 'utf8'), /white-label-view\/html/);
@@ -120,6 +121,10 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
     assert.equal(manifest.dependencies['white-label-model'], '7.0.1');
     assert.equal(manifest.dependencies['white-label-router'], '6.0.0');
     assert.equal(manifest.dependencies['white-label-view'], '7.0.0');
+    assert.equal(manifest.allowScripts['white-label-view@7.0.0'], undefined);
+    assert.equal(manifest.dependenciesMeta['white-label-view@7.0.0'], undefined);
+    assert.equal(manifest.allowScripts['esbuild@0.28.2'], true);
+    assert.equal(manifest.dependenciesMeta['esbuild@0.28.2']?.built, true);
     assert.equal(manifest.dependencies.eta, undefined);
     assert.equal(manifest.devDependencies.bootstrap, undefined);
     assert.equal(manifest.devDependencies.sass, undefined);
