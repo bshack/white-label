@@ -9,6 +9,31 @@ import {build as buildJavaScript} from 'esbuild';
 
 const execFileAsync = promisify(execFile);
 const defaultProjectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const relativePublicPrefix = /^\/(?!\/)[A-Za-z0-9._~!$&'()*+,;=:@%/-]*$/;
+const controls = /[\u0000-\u001F\u007F]/;
+
+function normalizeSiteUrl(value: string, production: boolean): string {
+    let url: URL;
+    try {url = new URL(value);} catch {throw new Error('Site URL must be an absolute HTTP(S) URL; production builds require HTTPS');}
+    if (controls.test(value) || (url.protocol !== 'http:' && url.protocol !== 'https:') ||
+        url.username || url.password || url.search || url.hash || (production && url.protocol !== 'https:')) {
+        throw new Error('Site URL must be an absolute HTTP(S) URL without credentials, query, or fragment; production builds require HTTPS');
+    }
+    return url.toString().replace(/\/$/, '');
+}
+
+function normalizePublicPrefix(value: string, name: 'www' | 'cdn', production: boolean): string {
+    if (controls.test(value)) {throw new Error(`${name} must be a root-relative or absolute HTTP(S) URL prefix`);}
+    if (relativePublicPrefix.test(value)) {return value.endsWith('/') ? value : `${value}/`;}
+    let url: URL;
+    try {url = new URL(value);} catch {throw new Error(`${name} must be a root-relative or absolute HTTP(S) URL prefix`);}
+    if ((url.protocol !== 'http:' && url.protocol !== 'https:') || url.username || url.password ||
+        url.search || url.hash || (production && url.protocol !== 'https:')) {
+        throw new Error(`${name} must be a root-relative or absolute HTTP(S) URL prefix${production ? ' using HTTPS in production' : ''}`);
+    }
+    const normalized = url.toString();
+    return normalized.endsWith('/') ? normalized : `${normalized}/`;
+}
 
 /** Read deployment flags and reject unsafe or invalid deployment values. */
 export function parseArguments(argumentsList: string[]): BuildConfig {
@@ -20,16 +45,13 @@ export function parseArguments(argumentsList: string[]): BuildConfig {
     if (!/^[A-Za-z0-9._-]+$/.test(version)) {
         throw new Error('Version may contain only letters, numbers, dots, underscores, and hyphens');
     }
-    const siteUrl = (values['site-url'] || 'http://localhost:8080').replace(/\/$/, '');
-    if (!URL.canParse(siteUrl) || (values.production === 'true' && !siteUrl.startsWith('https://'))) {
-        throw new Error('Production builds require an absolute HTTPS --site-url');
-    }
+    const production = values.production === 'true';
     return {
-        cdn: values.cdn || '/',
-        production: values.production === 'true',
-        siteUrl,
+        cdn: normalizePublicPrefix(values.cdn || '/', 'cdn', production),
+        production,
+        siteUrl: normalizeSiteUrl(values['site-url'] || 'http://localhost:8080', production),
         version,
-        www: values.www || '/'
+        www: normalizePublicPrefix(values.www || '/', 'www', production)
     };
 }
 
@@ -119,6 +141,15 @@ async function compileScripts(outputAssets: string, production: boolean, project
     await fs.writeFile(path.join(outputAssets, 'script/global.compiled.js'), '');
 }
 
+function escapeXml(value: string): string {
+    return value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&apos;');
+}
+
 /** Replace the deployment directory with compiled pages, scripts, styles, and static assets. */
 export async function build(config = parseArguments(process.argv.slice(2)), projectRoot = defaultProjectRoot) {
     const outputRoot = path.join(projectRoot, '_deploy');
@@ -133,7 +164,7 @@ export async function build(config = parseArguments(process.argv.slice(2)), proj
     await compileScripts(outputAssets, config.production, projectRoot);
     const robots = `User-agent: *\nAllow: /\nSitemap: ${config.siteUrl}/sitemap.xml\n`;
     await fs.writeFile(path.join(outputRoot, 'robots.txt'), robots);
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${config.siteUrl}/</loc></url></urlset>\n`;
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${escapeXml(`${config.siteUrl}/`)}</loc></url></urlset>\n`;
     await fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap);
 }
 
