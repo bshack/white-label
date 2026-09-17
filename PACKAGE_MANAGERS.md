@@ -26,9 +26,9 @@ pnpm install && pnpm test
 
 Generated manifests require the supported Node.js runtime but do not require a specific package manager. Nested scripts use Node's `--run` support instead of invoking npm internally.
 
-Generated projects use exact npm versions for the four first-party White Label packages. They also carry narrow install/build approvals for dependencies that may require lifecycle work in supported package managers, including `esbuild`, `@parcel/watcher`, and `white-label-view`. npm uses pinned `allowScripts` entries, Yarn uses pinned `dependenciesMeta` build permissions, and pnpm uses `onlyBuiltDependencies`.
+Generated projects use exact npm versions for the four first-party White Label packages. Install/build lifecycle approvals are limited to dependencies that need native or generated artifacts during installation: `esbuild` and `@parcel/watcher`. npm uses pinned `allowScripts` entries, Yarn uses pinned `dependenciesMeta` build permissions, and pnpm uses `onlyBuiltDependencies`. Published White Label runtime packages include their built output and do not receive lifecycle-script approval in generated projects.
 
-Yarn's package-age security gate is left enabled for ordinary dependencies. The generated `.yarnrc.yml` preapproves only `white-label-mediator`, `white-label-model`, `white-label-router`, and `white-label-view` so a newly published coordinated White Label release can be installed immediately without disabling Yarn's protection for the rest of the dependency graph.
+Yarn's package-age security gate is left enabled for ordinary dependencies. The generated `.yarnrc.yml` preapproves only `white-label-mediator`, `white-label-model`, `white-label-router`, and `white-label-view` so a newly published coordinated White Label release can be installed immediately without disabling Yarn's protection for the rest of the dependency graph. Package-age preapproval does not grant lifecycle-script execution.
 
 ## Repository development
 
