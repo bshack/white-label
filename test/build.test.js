@@ -3,16 +3,23 @@ import {readFile} from 'node:fs/promises';
 import test from 'node:test';
 import {parseArguments, tailwindExecutable} from '../dist/scripts/build.js';
 
-test('build arguments retain explicit deployment values', () => {
-    assert.deepEqual(parseArguments(['--www=/site/', '--cdn=/assets/', '--version=release-1', '--production=true', '--site-url=https://www.example.test/']), {
-        cdn: '/assets/', production: true, siteUrl: 'https://www.example.test', version: 'release-1', www: '/site/'
+test('build arguments retain and normalize explicit deployment values', () => {
+    assert.deepEqual(parseArguments(['--www=/site', '--cdn=https://cdn.example.test/assets', '--version=release-1', '--production=true', '--site-url=https://www.example.test/']), {
+        cdn: 'https://cdn.example.test/assets/', production: true, siteUrl: 'https://www.example.test', version: 'release-1', www: '/site/'
     });
 });
 
-test('build arguments reject path traversal and non-HTTPS production origins', () => {
+test('build arguments reject unsafe deployment URL values', () => {
     assert.throws(() => parseArguments(['--version=../../outside']), /Version/);
     assert.throws(() => parseArguments(['--production=true', '--site-url=http://example.test']), /HTTPS/);
-    assert.throws(() => parseArguments(['--site-url=not-a-url']), /HTTPS/);
+    assert.throws(() => parseArguments(['--site-url=not-a-url']), /HTTP/);
+    assert.throws(() => parseArguments(['--site-url=https://user:pass@example.test']), /credentials/);
+    assert.throws(() => parseArguments(['--site-url=https://example.test/?next=<script>']), /query/);
+    assert.throws(() => parseArguments(['--site-url=https://example.test\nSitemap: https://evil.test']), /HTTP/);
+    assert.throws(() => parseArguments(['--www=javascript:alert(1)']), /www/);
+    assert.throws(() => parseArguments(['--www=//evil.example.test/']), /www/);
+    assert.throws(() => parseArguments(['--cdn=/assets/\"><script>']), /cdn/);
+    assert.throws(() => parseArguments(['--production=true', '--cdn=http://cdn.example.test/']), /HTTPS/);
 });
 
 test('Tailwind executable selection supports Windows and POSIX package-manager bins', () => {
