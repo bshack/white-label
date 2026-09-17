@@ -20,14 +20,15 @@ test('Tailwind executable selection supports Windows and POSIX package-manager b
     assert.equal(tailwindExecutable('linux'), 'tailwindcss');
 });
 
-test('starter uses Tailwind and White Label JSX without Bootstrap, Eta, React, Handlebars, or npm-only build commands', async () => {
+test('starter uses Tailwind and White Label tagged HTML without Bootstrap, Eta, React, Handlebars, or npm-only build commands', async () => {
     const [manifest, build, style, page] = await Promise.all([
-        'package.json', 'scripts/build.ts', 'app/assets/style/global.css', 'app/index.tsx'
+        'package.json', 'scripts/build.ts', 'app/assets/style/global.css', 'app/index.ts'
     ].map(file => readFile(file, 'utf8')));
     assert.match(manifest, /"tailwindcss": "4\.3\.3"/);
     assert.match(manifest, /"@tailwindcss\/cli": "4\.3\.3"/);
     assert.match(style, /@import "tailwindcss"/);
-    assert.match(page, /white-label-view\/jsx-runtime/);
+    assert.match(page, /white-label-view\/html/);
+    assert.doesNotMatch(page, /white-label-view\/jsx-runtime/);
     assert.doesNotMatch(build, /\bnpx\b/);
     assert.doesNotMatch(`${manifest}${build}${style}${page}`, /bootstrap|\beta\b|handlebars|react-dom|from 'react'/i);
     assert.doesNotMatch(style, /@font-face|assets\/font/);
