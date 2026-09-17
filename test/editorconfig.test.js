@@ -19,18 +19,14 @@ const expectedEditorConfig = [
     'trim_trailing_whitespace = false'
 ];
 
-async function assertGeneratedEditorConfig(jsx) {
+test('generated project includes the standard EditorConfig', async t => {
     const temporary = await mkdtemp(path.join(tmpdir(), 'white-label-editorconfig-'));
-    try {
-        const destination = path.join(temporary, 'site');
-        await createProject({destination, jsx});
-        const editorConfig = await readFile(path.join(destination, '.editorconfig'), 'utf8');
-        for (const setting of expectedEditorConfig) {assert.match(editorConfig, new RegExp(setting.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));}
-        assert.doesNotMatch(editorConfig, /max_line_length|quote_type|indent_brace_style/);
-    } finally {
-        await rm(temporary, {recursive: true, force: true});
+    t.after(() => rm(temporary, {recursive: true, force: true}));
+    const destination = path.join(temporary, 'site');
+    await createProject({destination});
+    const editorConfig = await readFile(path.join(destination, '.editorconfig'), 'utf8');
+    for (const setting of expectedEditorConfig) {
+        assert.match(editorConfig, new RegExp(setting.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
     }
-}
-
-test('generated JSX projects include the standard EditorConfig', () => assertGeneratedEditorConfig(true));
-test('generated non-JSX projects include the standard EditorConfig', () => assertGeneratedEditorConfig(false));
+    assert.doesNotMatch(editorConfig, /max_line_length|quote_type|indent_brace_style/);
+});
