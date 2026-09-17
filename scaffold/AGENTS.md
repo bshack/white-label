@@ -22,4 +22,4 @@ These instructions are more specific than the repository-root agent guide for fi
 
 Generator 10 targets `white-label-mediator@5`, `white-label-model@7`, `white-label-router@6`, and `white-label-view@7`.
 
-Until View 7 is published, CI may build and inject the packed View 7 release branch solely to verify coordinated code. Do not replace the release lockfile's registry dependency with a Git reference or treat that temporary CI bridge as a published dependency. Registry installation of the final coordinated versions remains a release gate.
+View 7's implementation is merged but not yet published. Until publication, CI may build and inject the exact merged View 7 revision solely to verify coordinated code. Do not replace the release lockfile's registry dependency with a Git reference or treat that temporary packed artifact as a published dependency. Registry installation of the final coordinated versions remains a release gate.
