@@ -52,13 +52,11 @@ export function createSiteManifest() {
         },
         allowScripts: {
             '@parcel/watcher@2.5.1': true,
-            'esbuild@0.28.2': true,
-            'white-label-view@7.0.0': true
+            'esbuild@0.28.2': true
         },
         dependenciesMeta: {
             '@parcel/watcher@2.5.1': {built: true},
-            'esbuild@0.28.2': {built: true},
-            'white-label-view@7.0.0': {built: true}
+            'esbuild@0.28.2': {built: true}
         },
         devDependencies: {
             '@tailwindcss/cli': '4.3.3',
