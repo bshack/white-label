@@ -20,7 +20,7 @@ async function availablePort() {
         probe.listen(0, '127.0.0.1', () => {
             const address = probe.address();
             if (!address || typeof address === 'string') {
-                probe.close(() => reject(new Error('Unable to allocate a local preview port'));
+                probe.close(() => reject(new Error('Unable to allocate a local preview port')));
                 return;
             }
             probe.close(error => error ? reject(error) : resolve(address.port));
