@@ -119,7 +119,7 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
     assert.equal(manifest.type, 'module');
     assert.equal(manifest.dependencies['white-label-mediator'], '5.0.0');
     assert.equal(manifest.dependencies['white-label-model'], '7.0.1');
-    assert.equal(manifest.dependencies['white-label-router'], '6.0.0');
+    assert.equal(manifest.dependencies['white-label-router'], '6.1.0');
     assert.equal(manifest.dependencies['white-label-view'], '7.0.0');
     assert.equal(manifest.allowScripts['white-label-view@7.0.0'], undefined);
     assert.equal(manifest.dependenciesMeta['white-label-view@7.0.0'], undefined);

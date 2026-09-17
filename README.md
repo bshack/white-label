@@ -271,9 +271,9 @@ npm pack --dry-run
 
 Tests are part of the documentation. Executable project source is held to 100% statement, branch, function, and line coverage. CI checks supported Node versions, packed CLI/programmatic installation, production builds, and generated-project compatibility across npm, Yarn, and pnpm.
 
-## Coordinated View 7 release
+## Coordinated runtime release
 
-Generator 10 targets `white-label-view@7`, which provides the tagged-template entrypoint. View 7's implementation is merged but has not yet been published to npm. Until publication, coordinated CI builds and injects the exact merged View 7 revision for integration testing without replacing the generator's registry lockfile with a Git dependency. Publishing View 7 remains a release prerequisite for a normal registry install of Generator 10.
+Generator 10 targets the published White Label runtime line: `white-label-mediator@5.0.0`, `white-label-model@7.0.1`, `white-label-router@6.1.0`, and `white-label-view@7.0.0`. Release and CI verification use those registry packages directly.
 
 ## White Label ecosystem
 
