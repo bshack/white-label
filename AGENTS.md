@@ -2,13 +2,13 @@
 
 # Repository Guide — white-label
 
-Generator and first-party CLI for production-oriented static TypeScript sites using Tailwind CSS, esbuild, and the White Label model, view, router, mediator, and JSX packages.
+Generator and first-party CLI for production-oriented static TypeScript sites using Tailwind CSS, esbuild, the White Label Model/View/Router/Mediator packages, and first-party tagged HTML templates.
 
-Verified against `package.json`, `README.md`, and `.github/workflows/security.yml` on September 13, 2026. Recheck those files when commands or supported environments change.
+Verified against `package.json`, `README.md`, `PACKAGE_MANAGERS.md`, and `.github/workflows/security.yml` on September 17, 2026. Recheck those files when commands or supported environments change.
 
 ## Code map
 
-`scaffold/` contains the project-creation engine; `cli/` contains the command-line adapter; `app/` contains site templates, browser TypeScript, styles, and data; `scripts/build.ts` builds the site; `test/` holds tests; `dist/` contains compiled code. The package entry is `dist/scaffold/index.js`.
+`scaffold/` contains the project-creation engine; `cli/` contains the command-line adapter; `app/` contains tagged-HTML site templates, browser TypeScript, styles, and data; `scripts/build.ts` builds the site; `test/` holds tests; `dist/` contains compiled code. The package entry is `dist/scaffold/index.js`.
 
 ## Toolchain and checks
 
@@ -44,7 +44,7 @@ Edit authored TypeScript and templates, not compiled JavaScript or declarations.
 
 ## Architectural boundaries
 
-Preserve initial rendered HTML, escaped JSX output, framework-independent package boundaries, and crawlable progressive enhancement. Changes to generator templates affect generated applications: validate both generator behavior and generated output. The starter uses system fonts.
+Preserve initial rendered HTML, escaped tagged-template output, framework-independent package boundaries, and crawlable progressive enhancement. The generated application has one canonical first-party rendering path through `white-label-view/html`; do not reintroduce a White Label JSX runtime or separate JSX/no-JSX scaffold modes. External JSX and other renderers remain application-owned integrations through View's template contract. Changes to generator templates affect generated applications: validate both generator behavior and generated output. The starter uses system fonts.
 
 ---
 
