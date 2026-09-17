@@ -117,12 +117,12 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
     const manifest = JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8'));
     assert.deepEqual(manifest, createSiteManifest());
     assert.equal(manifest.type, 'module');
-    assert.equal(manifest.dependencies['white-label-mediator'], '5.0.0');
-    assert.equal(manifest.dependencies['white-label-model'], '7.0.1');
-    assert.equal(manifest.dependencies['white-label-router'], '6.1.0');
-    assert.equal(manifest.dependencies['white-label-view'], '7.0.0');
-    assert.equal(manifest.allowScripts['white-label-view@7.0.0'], undefined);
-    assert.equal(manifest.dependenciesMeta['white-label-view@7.0.0'], undefined);
+    assert.equal(manifest.dependencies['white-label-mediator'], '5.0.1');
+    assert.equal(manifest.dependencies['white-label-model'], '7.0.2');
+    assert.equal(manifest.dependencies['white-label-router'], '6.1.1');
+    assert.equal(manifest.dependencies['white-label-view'], '7.0.1');
+    assert.equal(manifest.allowScripts['white-label-view@7.0.1'], undefined);
+    assert.equal(manifest.dependenciesMeta['white-label-view@7.0.1'], undefined);
     assert.equal(manifest.allowScripts['esbuild@0.28.2'], true);
     assert.equal(manifest.dependenciesMeta['esbuild@0.28.2']?.built, true);
     assert.equal(manifest.dependencies.eta, undefined);
