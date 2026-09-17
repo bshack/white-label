@@ -49,6 +49,8 @@ test('programmatic build validates configuration before changing the deployment 
     assert.equal(await readFile(marker, 'utf8'), 'keep');
     await assert.rejects(build({...config, production: 'true'}, projectRoot), /Production/);
     assert.equal(await readFile(marker, 'utf8'), 'keep');
+    await assert.rejects(build({...config, siteUrl: 42}, projectRoot), /Site URL/);
+    assert.equal(await readFile(marker, 'utf8'), 'keep');
 });
 
 test('Tailwind executable selection supports Windows and POSIX package-manager bins', () => {
