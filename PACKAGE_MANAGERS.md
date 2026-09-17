@@ -34,4 +34,4 @@ Yarn's package-age security gate is left enabled for ordinary dependencies. The 
 
 The committed `package-lock.json` remains the generator repository's canonical dependency lockfile and npm remains the maintenance/audit path used by primary CI. Compatibility CI packs the real generator artifact and verifies its API and CLI under npm, Yarn, and pnpm. Alternate lockfiles are not committed merely for compatibility testing.
 
-Generator 10 depends on the coordinated View 7 release. While that release is still being prepared, branch CI may inject a packed View 7 artifact for integration testing. The release lockfile must stay registry-based; do not replace it with a Git dependency to bypass an unpublished version.
+Generator 10 depends on View 7. The View 7 changes are merged but not yet published to npm, so repository CI builds and injects a packed View 7 artifact for coordinated integration testing. The release lockfile remains registry-based; do not replace it with a Git dependency to bypass the unpublished version. After View 7 is published, normal registry installation becomes the source of truth and the temporary packed-artifact coordination can be removed.
