@@ -20,4 +20,4 @@ These instructions are more specific than the repository-root agent guide for fi
 
 ## Coordinated release dependency
 
-Generator 10 targets the exact published coordinated runtime versions: `white-label-mediator@5.0.1`, `white-label-model@7.0.2`, `white-label-router@6.1.1`, and `white-label-view@7.0.1`. Keep the release lockfile registry-based and regenerate it with the package manager when coordinated runtime versions change.
+Generator 10 targets the exact published coordinated runtime versions: `white-label-mediator@5.0.1`, `white-label-model@7.0.3`, `white-label-router@6.1.2`, and `white-label-view@7.0.2`. Keep the release lockfile registry-based and regenerate it with the package manager when coordinated runtime versions change.

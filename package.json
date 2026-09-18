@@ -1,6 +1,6 @@
 {
   "name": "generator-white-label",
-  "version": "10.0.1",
+  "version": "10.0.3",
   "description": "Framework-independent TypeScript project generator for accessible, SEO-friendly, HTML-first sites with progressive enhancement, tagged HTML templates, and provider-neutral serverless composition.",
   "type": "module",
   "main": "dist/scaffold/index.js",
@@ -88,9 +88,9 @@
     "tailwindcss": "4.3.3",
     "typescript": "7.0.2",
     "white-label-mediator": "5.0.1",
-    "white-label-model": "7.0.2",
-    "white-label-router": "6.1.1",
-    "white-label-view": "7.0.1"
+    "white-label-model": "7.0.3",
+    "white-label-router": "6.1.2",
+    "white-label-view": "7.0.2"
   },
   "types": "dist/scaffold/index.d.ts",
   "c8": {
