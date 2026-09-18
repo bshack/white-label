@@ -154,7 +154,7 @@ npm install && npm test
 # or: pnpm install && pnpm test
 ```
 
-There is one canonical scaffold. The CLI has no renderer prompt and no `--jsx`/`--no-jsx` mode switch.
+There is one canonical scaffold. The CLI has no renderer prompt or renderer-specific mode switch.
 
 The generator refuses to layer a scaffold over an existing non-empty destination. This protection is enforced by the shared `createProject()` engine for both CLI and programmatic use. An existing empty directory is allowed; a missing directory is created.
 
