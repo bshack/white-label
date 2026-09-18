@@ -634,7 +634,7 @@ When modifying existing:
 - Data structures
 - Public behavior
 
-do not preserve backward compatibility through aliases, deprecated signatures, fallback code paths, adapters, or other compatibility shims. When the current contract requires an incompatible public change, implement the clean current API and communicate it with a Semantic Versioning major release and migration notes.
+the Generator is intentionally outside the runtime packages' backward-compatibility preservation mandate. Do not add aliases, deprecated signatures, fallback code paths, adapters, or other compatibility shims merely to preserve older generator behavior. When the current generator contract requires an incompatible public change, implement it deliberately, use the appropriate Semantic Versioning major release, and provide migration notes.
 
 Identify breaking changes before implementation.
 
