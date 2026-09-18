@@ -44,7 +44,7 @@ Edit authored TypeScript and templates, not compiled JavaScript or declarations.
 
 ## Architectural boundaries
 
-Preserve initial rendered HTML, escaped tagged-template output, framework-independent package boundaries, and crawlable progressive enhancement. The generated application has one canonical first-party rendering path through `white-label-view/html`; do not reintroduce a White Label JSX runtime or separate JSX/no-JSX scaffold modes. External JSX and other renderers remain application-owned integrations through View's template contract. Changes to generator templates affect generated applications: validate both generator behavior and generated output. The starter uses system fonts.
+Preserve initial rendered HTML, escaped tagged-template output, framework-independent package boundaries, and crawlable progressive enhancement. The generated application has one canonical first-party rendering path through `white-label-view/html`; do not introduce renderer-specific scaffold modes or a White Label-owned third-party renderer runtime. Alternative renderers remain application-owned integrations through View's template contract. Changes to generator templates affect generated applications: validate both generator behavior and generated output. The starter uses system fonts.
 
 ---
 
@@ -634,7 +634,7 @@ When modifying existing:
 - Data structures
 - Public behavior
 
-do not preserve backward compatibility through aliases, deprecated signatures, fallback code paths, adapters, or other compatibility shims. When the current contract requires an incompatible public change, implement the clean current API and communicate it with a Semantic Versioning major release and migration notes.
+the Generator is intentionally outside the runtime packages' backward-compatibility preservation mandate. Do not add aliases, deprecated signatures, fallback code paths, adapters, or other compatibility shims merely to preserve older generator behavior. When the current generator contract requires an incompatible public change, implement it deliberately, use the appropriate Semantic Versioning major release, and provide migration notes.
 
 Identify breaking changes before implementation.
 
