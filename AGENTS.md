@@ -44,7 +44,7 @@ Edit authored TypeScript and templates, not compiled JavaScript or declarations.
 
 ## Architectural boundaries
 
-Preserve initial rendered HTML, escaped tagged-template output, framework-independent package boundaries, and crawlable progressive enhancement. The generated application has one canonical first-party rendering path through `white-label-view/html`; do not reintroduce a White Label JSX runtime or separate JSX/no-JSX scaffold modes. External JSX and other renderers remain application-owned integrations through View's template contract. Changes to generator templates affect generated applications: validate both generator behavior and generated output. The starter uses system fonts.
+Preserve initial rendered HTML, escaped tagged-template output, framework-independent package boundaries, and crawlable progressive enhancement. The generated application has one canonical first-party rendering path through `white-label-view/html`; do not introduce renderer-specific scaffold modes or a White Label-owned third-party renderer runtime. Alternative renderers remain application-owned integrations through View's template contract. Changes to generator templates affect generated applications: validate both generator behavior and generated output. The starter uses system fonts.
 
 ---
 
