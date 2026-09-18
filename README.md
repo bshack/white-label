@@ -90,7 +90,7 @@ const input = html`
 
 The tagged-template runtime rejects interpolation in ambiguous or dangerous contexts such as script/style bodies, comments, tag names, and unquoted attribute positions rather than pretending generic escaping makes those contexts safe.
 
-White Label View remains template-engine agnostic. JSX, Handlebars, Eta, EJS, Mustache, Nunjucks, Pug, and other renderers can remain application dependencies and return their rendered output from View's `template` function. JSX is a tested third-party option rather than a White Label-owned runtime.
+White Label View remains template-engine agnostic. Handlebars, Eta, EJS, Mustache, Nunjucks, Pug, KitaJS HTML, and other compatible renderers can remain application dependencies and return their rendered output through View's normal `template` contract.
 
 See [Template engines](https://whitelabeljs.org/docs/view/#template-engines) for tested integrations and trust boundaries.
 
@@ -239,7 +239,7 @@ The Web-target smoke test does **not** claim blanket Cloudflare/Deno/edge-provid
 | `test/` | Executable contracts and integration tests |
 | `template-test/` | Generated-project validation |
 
-No React, Bootstrap, Sass, Eta, Handlebars, Mustache, Nunjucks, Pug, web font, cloud SDK, or browser-side template framework is required. Optional renderers/providers remain application dependencies.
+No React, Bootstrap, Sass, Eta, Handlebars, Mustache, Nunjucks, Pug, KitaJS HTML, web font, cloud SDK, or browser-side template framework is required. Optional renderers/providers remain application dependencies.
 
 ## Build and verify
 
