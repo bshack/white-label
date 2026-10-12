@@ -6,6 +6,10 @@ Generator and first-party CLI for production-oriented static TypeScript sites us
 
 Verified against `package.json`, `README.md`, `PACKAGE_MANAGERS.md`, and `.github/workflows/security.yml` on September 17, 2026. Recheck those files when commands or supported environments change.
 
+## Response style
+
+The owner requires concise, neutral, evidence-based responses (October 12, 2026). Do not add personality, enthusiasm, flattery or filler.
+
 ## Code map
 
 `scaffold/` contains the project-creation engine; `cli/` contains the command-line adapter; `app/` contains tagged-HTML site templates, browser TypeScript, styles, and data; `scripts/build.ts` builds the site; `test/` holds tests; `dist/` contains compiled code. The package entry is `dist/scaffold/index.js`.
