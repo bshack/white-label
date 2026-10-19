@@ -88,7 +88,7 @@ The same callback reference is used for both registration and cleanup. View call
 
 ## Serverless / function runtimes
 
-`server/handler.ts` demonstrates a cloud-agnostic server function using the Web `Request` and `Response` APIs. It composes a request-scoped Mediator, Model, Router, and server View, then destroys those mutable instances before the invocation completes.
+`server/handler.ts` demonstrates a cloud-agnostic server function using the Web `Request` and `Response` APIs. It composes a request-scoped Mediator, Model, Router, and server View, then destroys those mutable instances before the invocation completes. Its HTML responses set baseline `Content-Security-Policy` (same-origin resources only), `Referrer-Policy`, and `X-Content-Type-Options: nosniff` headers; widen the policy deliberately if pages load assets from another origin.
 
 ```ts
 import {handleRequest} from './dist/server/handler.js';

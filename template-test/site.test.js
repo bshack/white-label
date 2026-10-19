@@ -186,6 +186,8 @@ test('serverless handler keeps warm and concurrent requests isolated', async () 
         const second = await handleRequest(new Request('https://example.com/hello?name=Grace'));
         assert.equal(first.status, 200);
         assert.equal(second.status, 200);
+        assert.equal(first.headers.get('x-content-type-options'), 'nosniff');
+        assert.match(first.headers.get('content-security-policy'), /default-src 'self'/);
         assert.match(await first.text(), /Hello Ada\./);
         assert.match(await second.text(), /Hello Grace\./);
 

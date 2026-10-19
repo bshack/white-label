@@ -209,13 +209,13 @@ await createProject({
 });
 ```
 
-`createProject(options)` returns `Promise<void>`. A successful call resolves with `undefined`; file-system failures reject. If the destination exists and contains files, it rejects before copying or writing project content.
+`createProject(options)` returns `Promise<void>`. A successful call resolves with `undefined`; file-system failures reject. If the destination exists and contains files, it rejects before copying or writing project content. An empty or non-string `destination` is rejected. If creation fails part-way, the entries and directories the call created are removed before it rejects; pre-existing files are never removed.
 
 `createProject()` is the canonical creation API. The CLI and future integrations are adapters around it rather than separate generation systems. Keeping overwrite policy here prevents adapters from bypassing the same safety boundary.
 
 ## Serverless and function runtimes
 
-Every generated project includes `server/handler.ts`, a provider-neutral example built around Web `Request` and `Response`. It composes Router, Mediator, Model, and `white-label-view/server` without Express or a provider SDK.
+Every generated project includes `server/handler.ts`, a provider-neutral example built around Web `Request` and `Response`. It composes Router, Mediator, Model, and `white-label-view/server` without Express or a provider SDK. Its HTML responses carry baseline `Content-Security-Policy` (same-origin resources only), `Referrer-Policy`, and `X-Content-Type-Options: nosniff` headers; widen the policy deliberately if pages load assets from another origin.
 
 Mutable White Label instances are created inside `handleRequest()`. Serverless hosts can reuse a warm process for many requests, so mutable module-level state can leak request data or listeners. Immutable configuration can still live at module scope when its lifetime is intentionally process-wide.
 

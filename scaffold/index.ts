@@ -1,5 +1,5 @@
 /** @module scaffold */
-import {cp, mkdir, readdir, writeFile} from 'node:fs/promises';
+import {cp, lstat, mkdir, readdir, rm, rmdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -26,14 +26,47 @@ const nodeFileSystem: ScaffoldFileSystem = {
     }
 };
 
-/** Refuse to layer a generated project over existing user files. */
+function isMissing(error: unknown) {
+    return error instanceof Error && 'code' in error && error.code === 'ENOENT';
+}
+
+function exists(location: string) {
+    return lstat(location).then(() => true, () => false);
+}
+
+/**
+ * Refuse to layer a generated project over existing user files.
+ *
+ * Returns the directories, deepest first, that are missing and will be created for the destination, so a failed
+ * creation can remove them again.
+ */
 async function assertDestinationAvailable(destination: string) {
     try {
         const entries = await readdir(destination);
         if (entries.length) {throw new Error(`Destination directory must be empty: ${destination}`);}
+        return [];
     } catch (error) {
-        if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {return;}
-        throw error;
+        if (!isMissing(error)) {throw error;}
+    }
+    const missing: string[] = [];
+    for (let directory = destination; !await exists(directory); directory = path.dirname(directory)) {
+        missing.push(directory);
+    }
+    return missing;
+}
+
+/**
+ * Undo a failed creation: remove the scaffold entries this call created, then the directories it created while
+ * they are empty. Entries that already existed when the call reached them are never removed.
+ */
+async function removeCreated(entries: readonly string[], directories: readonly string[]) {
+    await Promise.allSettled(entries.map(entry => rm(entry, {recursive: true, force: true})));
+    for (const directory of directories) {
+        try {
+            await rmdir(directory);
+        } catch {
+            return;
+        }
     }
 }
 
@@ -45,10 +78,11 @@ export function createSiteManifest() {
         private: true,
         type: 'module',
         engines: {node: '^22.18.0 || >=24.11.0'},
+        // `build` compiles with `noEmitOnError`, which type checks, so `test` does not run a separate `typecheck` pass.
         scripts: {
             build: 'tsc -p tsconfig.json && node dist/scripts/build.js',
             typecheck: 'tsc -p tsconfig.json --noEmit',
-            test: 'node --run typecheck && node --run build -- --version=test --production=true --site-url=https://example.com && node --test --experimental-test-coverage --test-coverage-include="dist/app/assets/script/**/*.js" --test-coverage-include="dist/app/assets/view/examples/tasks/*.js" --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 test/*.test.js'
+            test: 'node --run build -- --version=test --production=true --site-url=https://example.com && node --test --experimental-test-coverage --test-coverage-include="dist/app/assets/script/**/*.js" --test-coverage-include="dist/app/assets/view/examples/tasks/*.js" --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 test/*.test.js'
         },
         allowScripts: {
             '@parcel/watcher@2.5.1': true,
@@ -77,8 +111,10 @@ export function createSiteManifest() {
     };
 }
 
+// npm never packs files named .gitignore, so the generated project's ignore rules ship under another name.
 const scaffoldCopies = [
     ['.editorconfig', '.editorconfig'],
+    ['scaffold/gitignore', '.gitignore'],
     ['.yarnrc.yml', '.yarnrc.yml'],
     ['pnpm-workspace.yaml', 'pnpm-workspace.yaml'],
     ['app', 'app'],
@@ -89,11 +125,35 @@ const scaffoldCopies = [
     ['tsconfig.site.json', 'tsconfig.json']
 ] as const;
 
-/** Create the canonical tagged-template White Label starter without overwriting user files. */
+/**
+ * Create the canonical tagged-template White Label starter without overwriting user files.
+ *
+ * If creation fails part-way, the entries and directories this call created are removed before the error is
+ * rethrown, so a failed call does not leave a half-written project behind.
+ */
 export async function createProject({destination, fileSystem = nodeFileSystem}: CreateProjectOptions) {
-    await assertDestinationAvailable(destination);
-    for (const [source, target] of scaffoldCopies) {
-        await fileSystem.copy(path.join(packageRoot, source), path.join(destination, target));
+    if (typeof destination !== 'string' || destination === '') {
+        throw new TypeError('Destination must be a non-empty path');
     }
-    await fileSystem.writeJSON(path.join(destination, 'package.json'), createSiteManifest());
+    const createdDirectories = await assertDestinationAvailable(destination);
+    const createdEntries: string[] = [];
+    /** Record a target as created by this call only if nothing occupied it beforehand. */
+    const create = async (target: string, write: () => void | Promise<void>) => {
+        if (!await exists(target)) {createdEntries.push(target);}
+        await write();
+    };
+    try {
+        // Copies target distinct top-level entries, so they can run concurrently; the manifest is written last.
+        const copies = await Promise.allSettled(scaffoldCopies.map(([source, target]) => {
+            const location = path.join(destination, target);
+            return create(location, () => fileSystem.copy(path.join(packageRoot, source), location));
+        }));
+        const failure = copies.find((result): result is PromiseRejectedResult => result.status === 'rejected');
+        if (failure) {throw failure.reason;}
+        const manifest = path.join(destination, 'package.json');
+        await create(manifest, () => fileSystem.writeJSON(manifest, createSiteManifest()));
+    } catch (error) {
+        await removeCreated(createdEntries, createdDirectories);
+        throw error;
+    }
 }

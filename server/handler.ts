@@ -4,6 +4,16 @@ import Router from 'white-label-router';
 import View from 'white-label-view/server';
 import {html} from 'white-label-view/html';
 
+/**
+ * Baseline response headers for the example's HTML. The policy allows same-origin resources only, which covers the
+ * starter's root-relative assets and JSON-LD data block; widen it deliberately if pages load from a separate CDN.
+ */
+const securityHeaders = {
+    'content-security-policy': "default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff'
+} as const;
+
 type ServerState = {
     status: number;
     title: string;
@@ -56,7 +66,7 @@ export async function handleRequest(request: Request): Promise<Response> {
         view.initialize();
         return new Response(`<!doctype html>${view.toString()}`, {
             status: model.get().status,
-            headers: {'content-type': 'text/html; charset=utf-8'}
+            headers: {...securityHeaders, 'content-type': 'text/html; charset=utf-8'}
         });
     } finally {
         view.destroy();

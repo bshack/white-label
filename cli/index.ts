@@ -27,6 +27,10 @@ function usage() {
     ].join('\n');
 }
 
+function isHelpFlag(value: string | undefined) {
+    return value === '--help' || value === '-h';
+}
+
 export function formatCliError(error: unknown) {
     return error instanceof Error ? error.message : String(error);
 }
@@ -51,12 +55,13 @@ export async function runCli(args: readonly string[], dependencies: CliDependenc
     const stderr = dependencies.stderr ?? process.stderr;
     const [command, destination, ...options] = args;
 
-    if (command === '--help' || command === '-h' || args.length === 0) {
+    if (isHelpFlag(command) || args.length === 0 || (command === 'create' && isHelpFlag(destination) && !options.length)) {
         stdout.write(`${usage()}\n`);
         return 0;
     }
 
-    if (command !== 'create' || !destination || options.length) {
+    // An option-like destination is almost always a mistyped flag; refuse it rather than create a directory named `--flag`.
+    if (command !== 'create' || !destination || destination.startsWith('-') || options.length) {
         stderr.write(`${usage()}\n`);
         return 1;
     }
@@ -68,9 +73,17 @@ export async function runCli(args: readonly string[], dependencies: CliDependenc
     return 0;
 }
 
-const invokedPath = path.resolve(process.argv[1] as string);
-const modulePath = fileURLToPath(import.meta.url);
-if (realpathSync(invokedPath) === realpathSync(modulePath)) {
+/** Run only as the entry script; importing the module (including from `node -e`, which has no script path) must not. */
+function isEntryScript(invokedPath: string | undefined) {
+    if (!invokedPath) {return false;}
+    try {
+        return realpathSync(path.resolve(invokedPath)) === realpathSync(fileURLToPath(import.meta.url));
+    } catch {
+        return false;
+    }
+}
+
+if (isEntryScript(process.argv[1])) {
     runCli(process.argv.slice(2)).then(
         (exitCode) => {process.exitCode = exitCode;},
         (error: unknown) => {

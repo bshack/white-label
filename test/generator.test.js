@@ -88,6 +88,10 @@ test('programmatic scaffold API creates the canonical tagged-template site', asy
     assert.match(readme, taggedTemplateDescription);
     assert.match(readme, /--directory _deploy/);
     assert.match(readme, /http:\/\/localhost:8080\//);
+    const gitignore = (await readFile(path.join(destination, '.gitignore'), 'utf8')).split('\n');
+    for (const pattern of ['node_modules/', 'dist/', '_deploy/', 'coverage/', '*.tgz']) {
+        assert.ok(gitignore.includes(pattern), `.gitignore must ignore ${pattern}`);
+    }
     const yarnConfig = await readFile(path.join(destination, '.yarnrc.yml'), 'utf8');
     assert.match(yarnConfig, /nodeLinker:\s*node-modules/);
     assert.match(yarnConfig, /npmPreapprovedPackages/);
@@ -158,6 +162,8 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
     assert.equal(manifest.dependencies.handlebars, undefined);
     assert.equal(manifest.engines.node, '^22.18.0 || >=24.11.0');
     assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), taggedTemplateDescription);
+    // npm never packs a file named .gitignore, so the packed generator must still produce one.
+    assert.match(await readFile(path.join(destination, '.gitignore'), 'utf8'), /^_deploy\/$/m);
     assert.match(manifest.scripts.typecheck, /tsc/);
     await symlink(path.join(root, 'node_modules'), path.join(destination, 'node_modules'));
 

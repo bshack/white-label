@@ -25,7 +25,7 @@ yarn dlx generator-white-label create my-project
 pnpm dlx generator-white-label create my-project
 ```
 
-Project creation accepts a missing or existing **empty** directory. A non-empty destination is rejected before scaffold files are copied or written.
+Project creation accepts a missing or existing **empty** directory. A non-empty destination is rejected before scaffold files are copied or written. If creation fails part-way, the files and directories it created are removed again; pre-existing files are never removed.
 
 Then install and test the generated project with npm, Yarn, or pnpm:
 
@@ -52,7 +52,7 @@ There is no generator renderer prompt and no `--jsx` or `--no-jsx` flag. If a pr
 
 See [Template engines](https://whitelabeljs.org/docs/view/#template-engines) for tested integrations and trust boundaries.
 
-Run `white-label --help` for usage. See [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md) for package-manager compatibility details.
+Run `white-label --help` (or `white-label create --help`) for usage. A destination that begins with `-` is treated as a mistyped option and rejected with a usage error; to create a directory whose name starts with `-`, pass it as a path such as `./-my-project`. See [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md) for package-manager compatibility details.
 
 ## Use the API
 

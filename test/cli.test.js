@@ -44,6 +44,38 @@ test('CLI accepts explicit help flags', async () => {
     }
 });
 
+test('CLI shows help for create help flags without scaffolding', async () => {
+    for (const flag of ['--help', '-h']) {
+        const stdout = captureStream();
+        let called = false;
+        const exitCode = await runCli(['create', flag], {
+            cwd: () => '/workspace',
+            createProject: async () => {called = true;},
+            stdout: stdout.stream,
+            stderr: captureStream().stream
+        });
+        assert.equal(exitCode, 0);
+        assert.equal(called, false);
+        assert.match(stdout.read(), /white-label create <directory>/);
+    }
+});
+
+test('CLI rejects option-like create destinations instead of creating them', async () => {
+    for (const destination of ['--force', '-x', '-', '--help=yes']) {
+        const stderr = captureStream();
+        let called = false;
+        const exitCode = await runCli(['create', destination], {
+            cwd: () => '/workspace',
+            createProject: async () => {called = true;},
+            stdout: captureStream().stream,
+            stderr: stderr.stream
+        });
+        assert.equal(exitCode, 1, destination);
+        assert.equal(called, false, destination);
+        assert.match(stderr.read(), /Usage:/);
+    }
+});
+
 test('CLI rejects malformed create commands and removed renderer flags', async () => {
     for (const args of [['unknown'], ['create'], ['create', 'site', 'extra'], ['create', 'site', '--jsx'], ['create', 'site', '--no-jsx']]) {
         const stderr = captureStream();
@@ -135,6 +167,19 @@ test('compiled CLI executes when invoked through a symlink', async t => {
     });
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /white-label create <directory>/);
+});
+
+test('compiled CLI can be imported without a matching entry script', () => {
+    const cli = path.resolve('dist/cli/index.js');
+    for (const extra of [[], ['missing-entry-script']]) {
+        const result = spawnSync(process.execPath, ['--input-type=module', '-e', `await import(${JSON.stringify(new URL(`file://${cli}`).href)})`, ...extra], {
+            cwd: process.cwd(),
+            encoding: 'utf8',
+            env: process.env
+        });
+        assert.equal(result.status, 0, result.stderr);
+        assert.equal(result.stdout, '');
+    }
 });
 
 test('compiled CLI executes its main error path', async t => {

@@ -2,6 +2,7 @@
 export interface BuildConfig {cdn: string; production: boolean; siteUrl: string; version: string; www: string}
 import {execFile} from 'node:child_process';
 import fs from 'node:fs/promises';
+import {createRequire} from 'node:module';
 import path from 'node:path';
 import {promisify} from 'node:util';
 import {fileURLToPath, pathToFileURL} from 'node:url';
@@ -104,6 +105,20 @@ export function tailwindExecutable(platform: NodeJS.Platform = process.platform)
     return platform === 'win32' ? 'tailwindcss.cmd' : 'tailwindcss';
 }
 
+/**
+ * Resolve the project's own Tailwind CLI entry script.
+ *
+ * Running it with the current Node executable avoids PATH lookups and Windows `.cmd` shims, which `execFile` can no
+ * longer launch without a shell.
+ */
+async function tailwindEntry(projectRoot: string) {
+    const manifestPath = createRequire(path.join(projectRoot, 'package.json')).resolve('@tailwindcss/cli/package.json');
+    const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as {bin?: Record<string, string>};
+    const entry = manifest.bin?.tailwindcss;
+    if (!entry) {throw new Error('@tailwindcss/cli does not declare a tailwindcss executable');}
+    return path.join(path.dirname(manifestPath), entry);
+}
+
 /** Recursively collect files below a directory, propagating filesystem failures. */
 async function filesUnder(directory: string): Promise<string[]> {
     const entries = await fs.readdir(directory, {withFileTypes: true});
@@ -125,10 +140,11 @@ async function renderMarkup(config: BuildConfig, outputRoot: string, projectRoot
     )) as Record<string, unknown>;
     const appRoot = path.join(projectRoot, 'app');
     const pages = (await filesUnder(appRoot))
-        .filter((file) => /\.ts$/.test(file) && !file.endsWith('.d.ts') && !file.includes(`${path.sep}assets${path.sep}`));
+        .map((file) => path.relative(appRoot, file))
+        // Match assets/ only below app/, so a project stored under an `assets` directory still renders its pages.
+        .filter((relative) => /\.ts$/.test(relative) && !relative.endsWith('.d.ts') && !`${path.sep}${relative}`.includes(`${path.sep}assets${path.sep}`));
 
-    await Promise.all(pages.map(async (page) => {
-        const relative = path.relative(appRoot, page);
+    await Promise.all(pages.map(async (relative) => {
         const pageDataPath = path.join(projectRoot, 'app/assets/data/view', relative.replace(/\.ts$/, '.json'));
         let pageData: Record<string, unknown> = {};
         try {
@@ -160,7 +176,7 @@ async function compileStyles(outputAssets: string, production: boolean, projectR
         '-o', destination
     ];
     if (production) {argumentsList.push('--minify');}
-    await execFileAsync(tailwindExecutable(), argumentsList, {cwd: projectRoot});
+    await execFileAsync(process.execPath, [await tailwindEntry(projectRoot), ...argumentsList], {cwd: projectRoot});
     await fs.copyFile(path.join(styleRoot, 'print.css'), path.join(outputAssets, 'style/print.css'));
 }
 
@@ -202,15 +218,21 @@ export async function build(config = parseArguments(process.argv.slice(2)), proj
     await fs.rm(outputRoot, {recursive: true, force: true});
     await fs.mkdir(outputAssets, {recursive: true});
 
-    await fs.cp(path.join(projectRoot, 'app/assets/data'), path.join(outputAssets, 'data'), {recursive: true});
-    await fs.writeFile(path.join(outputAssets, 'data/config.json'), JSON.stringify(safeConfig));
-    await renderMarkup(safeConfig, outputRoot, projectRoot);
-    await compileStyles(outputAssets, safeConfig.production, projectRoot);
-    await compileScripts(outputAssets, safeConfig.production, projectRoot);
     const robots = `User-agent: *\nAllow: /\nSitemap: ${safeConfig.siteUrl}/sitemap.xml\n`;
-    await fs.writeFile(path.join(outputRoot, 'robots.txt'), robots);
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${escapeXml(`${safeConfig.siteUrl}/`)}</loc></url></urlset>\n`;
-    await fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap);
+    // Each step writes its own part of the deployment directory, so they run concurrently. Every step settles before a
+    // failure is reported, so no step is still writing when a caller retries or inspects the output.
+    const steps = await Promise.allSettled([
+        fs.cp(path.join(projectRoot, 'app/assets/data'), path.join(outputAssets, 'data'), {recursive: true})
+            .then(() => fs.writeFile(path.join(outputAssets, 'data/config.json'), JSON.stringify(safeConfig))),
+        renderMarkup(safeConfig, outputRoot, projectRoot),
+        compileStyles(outputAssets, safeConfig.production, projectRoot),
+        compileScripts(outputAssets, safeConfig.production, projectRoot),
+        fs.writeFile(path.join(outputRoot, 'robots.txt'), robots),
+        fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap)
+    ]);
+    const failure = steps.find((step): step is PromiseRejectedResult => step.status === 'rejected');
+    if (failure) {throw failure.reason;}
 }
 
 if (path.resolve(process.argv[1] || '') === fileURLToPath(import.meta.url)) {
