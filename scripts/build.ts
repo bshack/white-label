@@ -143,14 +143,6 @@ export function parseArguments(argumentsList: string[]): BuildConfig {
 }
 
 /**
- * Name of the Tailwind executable in `node_modules/.bin` for a platform. The build no longer uses it (it runs the
- * CLI's JavaScript entry directly, see `tailwindEntry`), but it remains exported.
- */
-export function tailwindExecutable(platform: NodeJS.Platform = process.platform) {
-    return platform === 'win32' ? 'tailwindcss.cmd' : 'tailwindcss';
-}
-
-/**
  * Find the JavaScript entry of the project's own `@tailwindcss/cli`.
  *
  * The build runs that file with the current Node executable. That avoids searching PATH and avoids the Windows

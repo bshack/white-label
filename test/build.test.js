@@ -3,7 +3,7 @@ import {mkdtemp, mkdir, readFile, realpath, rm, writeFile} from 'node:fs/promise
 import {tmpdir} from 'node:os';
 import {dirname, join} from 'node:path';
 import test from 'node:test';
-import {build, parseArguments, tailwindExecutable} from '../dist/scripts/build.js';
+import {build, parseArguments} from '../dist/scripts/build.js';
 
 test('build arguments retain and normalize explicit deployment values', () => {
     assert.deepEqual(parseArguments(['--www=/site', '--cdn=https://cdn.example.test/assets', '--version=release-1', '--production=true', '--site-url=https://www.example.test/']), {
@@ -27,7 +27,7 @@ test('build arguments reject unsafe deployment URL values', () => {
     assert.throws(() => parseArguments(['--www=javascript:alert(1)']), /www/);
     assert.throws(() => parseArguments(['--www=//evil.example.test/']), /www/);
     assert.throws(() => parseArguments(['--www=/safe\nbad']), /www/);
-    assert.throws(() => parseArguments(['--cdn=/assets/\"><script>']), /cdn/);
+    assert.throws(() => parseArguments(['--cdn=/assets/"><script>']), /cdn/);
     assert.throws(() => parseArguments(['--production=true', '--cdn=http://cdn.example.test/']), /HTTPS/);
 });
 
@@ -60,11 +60,6 @@ test('programmatic build validates configuration before changing the deployment 
     assert.equal(await readFile(marker, 'utf8'), 'keep');
     await assert.rejects(build({...config, siteUrl: 42}, projectRoot), /Site URL/);
     assert.equal(await readFile(marker, 'utf8'), 'keep');
-});
-
-test('Tailwind executable selection supports Windows and POSIX package-manager bins', () => {
-    assert.equal(tailwindExecutable('win32'), 'tailwindcss.cmd');
-    assert.equal(tailwindExecutable('linux'), 'tailwindcss');
 });
 
 test('starter uses Tailwind and White Label tagged HTML without Bootstrap, Eta, React, Handlebars, or npm-only build commands', async () => {

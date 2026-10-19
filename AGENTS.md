@@ -8,6 +8,7 @@ Verified against `package.json`, `README.md`, `PACKAGE_MANAGERS.md`, and `.githu
 
 - `scaffold/index.ts`: `createProject()`, `createSiteManifest()` (the generated `package.json`), and the list of files copied into a project. Contract in `scaffold/AGENTS.md`.
 - `scaffold/gitignore`: shipped as the generated `.gitignore` (npm never publishes files named `.gitignore`).
+- `scaffold/project-AGENTS.md`: shipped as the generated `AGENTS.md`. Keep it in sync with `app/README.md`, `scripts/build.ts`, `server/handler.ts`, and `createSiteManifest()`.
 - `cli/index.ts`: `runCli()`, the `white-label` / `generator-white-label` bin. Parses arguments only; creation goes through `createProject()`.
 - Copied into generated projects, and also built in place in this repository:
   - `app/`: pages (`app/*.ts`), templates (`app/assets/view/`), browser code (`app/assets/script/`), data, styles.
@@ -18,7 +19,7 @@ Verified against `package.json`, `README.md`, `PACKAGE_MANAGERS.md`, and `.githu
   - `tsconfig.site.json`, `.editorconfig`, `.yarnrc.yml`, `pnpm-workspace.yaml`.
 - `test/`: repository tests (node:test, run against `dist/`). `test-types/`: consumer type checks of the public declarations.
 - `dist/`: compiled output. The package entry is `dist/scaffold/index.js`; bins are `dist/cli/index.js`.
-- No agent guide is shipped into generated projects; `AGENTS.md` files here apply to this repository only.
+- The `AGENTS.md` files here apply to this repository only. Generated projects get their own guide from `scaffold/project-AGENTS.md`.
 
 ## Toolchain
 
@@ -46,7 +47,7 @@ npm run lint && npm run coverage && npm run audit
 - It then runs the consumer type checks and every Node test.
 - It enforces 100% statements, branches, functions, and lines for each implementation file.
 - Because of this, `npm run typecheck` and `npm test` don't need separate runs.
-- Lint warnings are failures. No formatter script is configured.
+- `npm run lint` covers the TypeScript sources plus `test/`, `template-test/`, and `test-types/`. Lint warnings are failures. No formatter script is configured. Generated projects have no lint step; `eslint.config.mjs` is not shipped.
 - If you change `app/`, `server/`, `scripts/`, `template-test/`, `scaffold/`, or the shipped config files, also generate a project and run its own checks: `node dist/cli/index.js create <tmp-dir> && cd <tmp-dir> && npm install && npm test`. Generator changes affect generated applications, so validate both.
 - In CI, the workflow additionally runs the production build, packs the package, and verifies that the packed generator and CLI install and execute correctly.
 
@@ -70,7 +71,7 @@ Pass build flags as `npm run build -- <flags>`, `yarn build <flags>`, or `pnpm b
 
 Edit authored TypeScript and templates, not compiled JavaScript or declarations. Generate `dist/` and deployment output through the existing build or compiler when validating, packaging, or releasing. Do not require a PR to commit compiler output just to satisfy a drift check.
 
-`dist/` is untracked build output, and it is not in `.gitignore`, so never stage or commit it.
+`dist/` is untracked build output and is in `.gitignore`; never commit it.
 
 ## Architectural boundaries
 

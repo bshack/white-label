@@ -49,7 +49,8 @@ The destination may be missing (it is created) or an empty directory. A non-empt
 - `scripts/build.ts`, the static build;
 - `test/site.test.js`, accessibility, SEO, interaction, and serverless tests with a 100% coverage requirement on browser code;
 - `package.json` with exact version pins, `tsconfig.json`, `.gitignore`, `.editorconfig`, `.yarnrc.yml`, and `pnpm-workspace.yaml`;
-- `README.md`, which explains how to run, build, test, deploy, and extend the project ([`app/README.md`](app/README.md) in this repository).
+- `README.md`, which explains how to run, build, test, deploy, and extend the project ([`app/README.md`](app/README.md) in this repository);
+- `AGENTS.md`, a guide for coding agents working on the generated project: code map, the `npm test` gate, architectural rules, and a working agreement ([`scaffold/project-AGENTS.md`](scaffold/project-AGENTS.md) in this repository).
 
 See [`CLI.md`](CLI.md), [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md), and [`EXISTING_APPLICATIONS.md`](EXISTING_APPLICATIONS.md).
 
@@ -223,6 +224,7 @@ The Web-target smoke test does **not** claim blanket Cloudflare/Deno/edge-provid
 | --- | --- |
 | `scaffold/index.ts` | Canonical `createProject()` implementation and destination-safety boundary |
 | `scaffold/gitignore` | The generated project's `.gitignore` (npm does not publish files named `.gitignore`) |
+| `scaffold/project-AGENTS.md` | The generated project's `AGENTS.md` |
 | `cli/index.ts` | First-party command-line adapter |
 | `app/*.ts` | Static pages using tagged HTML templates |
 | `app/assets/view/` | Reusable tagged-template views and sections |

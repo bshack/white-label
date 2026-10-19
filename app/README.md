@@ -42,6 +42,7 @@ app/
 server/handler.ts           Example server function using Web Request/Response
 scripts/build.ts            The site build
 test/site.test.js           Tests for the built site, the task example, and the server function
+AGENTS.md                   Guide for coding agents: code map, the test gate, and the project's rules
 tsconfig.json               One strict TypeScript config for app/, server/, and scripts/
 .gitignore                  Ignores node_modules/, dist/, _deploy/, coverage/, *.tgz
 ```

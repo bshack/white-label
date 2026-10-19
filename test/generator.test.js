@@ -39,7 +39,9 @@ async function waitForPreview(origin, process) {
             const response = await fetch(`${origin}/`);
             if (response.ok) {return response;}
             await response.arrayBuffer();
-        } catch {}
+        } catch {
+            // The preview server is not accepting connections yet; retry after the delay.
+        }
         await new Promise(resolve => setTimeout(resolve, 100));
     }
     throw new Error('Local preview did not become available');
@@ -88,6 +90,7 @@ test('programmatic scaffold API creates the canonical tagged-template site', asy
     assert.match(readme, taggedTemplateDescription);
     assert.match(readme, /--directory _deploy/);
     assert.match(readme, /http:\/\/localhost:8080\//);
+    assert.equal(await readFile(path.join(destination, 'AGENTS.md'), 'utf8'), await readFile(path.join(root, 'scaffold/project-AGENTS.md'), 'utf8'));
     const gitignore = (await readFile(path.join(destination, '.gitignore'), 'utf8')).split('\n');
     for (const pattern of ['node_modules/', 'dist/', '_deploy/', 'coverage/', '*.tgz']) {
         assert.ok(gitignore.includes(pattern), `.gitignore must ignore ${pattern}`);
@@ -172,6 +175,7 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
     assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), taggedTemplateDescription);
     // npm never packs a file named .gitignore, so the packed generator must still produce one.
     assert.match(await readFile(path.join(destination, '.gitignore'), 'utf8'), /^_deploy\/$/m);
+    assert.match(await readFile(path.join(destination, 'AGENTS.md'), 'utf8'), /^# Agent guide$/m);
     assert.match(manifest.scripts.typecheck, /tsc/);
     await symlink(path.join(root, 'node_modules'), path.join(destination, 'node_modules'));
 

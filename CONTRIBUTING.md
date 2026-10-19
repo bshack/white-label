@@ -16,7 +16,7 @@ npm ci --ignore-scripts
 npm run lint && npm run coverage && npm run audit
 ```
 
-- `lint` runs ESLint over all authored TypeScript; warnings fail.
+- `lint` runs ESLint over all authored TypeScript and the test files (`test/`, `template-test/`, `test-types/`); warnings fail.
 - `coverage` compiles with `tsc` (a full type check), type checks the public declarations, runs every test, and requires 100% statement, branch, function, and line coverage per file. You do not need to run `typecheck` or `test` separately.
 - `audit` fails on any npm advisory, including low severity.
 

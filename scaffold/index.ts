@@ -149,6 +149,8 @@ export function createSiteManifest() {
 
 // [source in this package, target in the new project]. npm never publishes files named .gitignore, so the generated
 // project's ignore rules ship as scaffold/gitignore and are renamed on copy. app/README.md becomes the project README.
+// scaffold/project-AGENTS.md becomes the project's AGENTS.md; it has another name here so agents working on this
+// repository do not mistake it for this directory's guide.
 const scaffoldCopies = [
     ['.editorconfig', '.editorconfig'],
     ['scaffold/gitignore', '.gitignore'],
@@ -156,6 +158,7 @@ const scaffoldCopies = [
     ['pnpm-workspace.yaml', 'pnpm-workspace.yaml'],
     ['app', 'app'],
     ['app/README.md', 'README.md'],
+    ['scaffold/project-AGENTS.md', 'AGENTS.md'],
     ['server', 'server'],
     ['scripts', 'scripts'],
     ['template-test', 'test'],
