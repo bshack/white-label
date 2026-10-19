@@ -127,6 +127,14 @@ test('generated manifest pins the same tool and runtime versions this repository
         assert.deepEqual(manifest.dependenciesMeta[approved], {built: true});
     }
     assert.deepEqual(Object.keys(manifest.dependenciesMeta).sort(), Object.keys(manifest.allowScripts).sort());
+    // Generated projects must resolve the same audited transitive versions under npm, Yarn, and pnpm.
+    assert.deepEqual(manifest.overrides, repositoryManifest.overrides);
+    assert.deepEqual(manifest.resolutions, repositoryManifest.overrides);
+    const pnpmWorkspace = await readFile(path.join(root, 'pnpm-workspace.yaml'), 'utf8');
+    for (const [name, version] of Object.entries(repositoryManifest.overrides)) {
+        assert.equal(lockfile.packages[`node_modules/${name}`]?.version, version, `${name} override must be the locked version`);
+        assert.match(pnpmWorkspace, new RegExp(`^overrides:[\\s\\S]*'${name.replace('/', '\\/')}': ${version.replaceAll('.', '\\.')}$`, 'm'));
+    }
     assert.match(manifest.scripts.test, /--test-coverage-include="dist\/app\/assets\/script\/\*\*\/\*\.js"/);
     for (const threshold of ['lines', 'functions', 'branches']) {
         assert.match(manifest.scripts.test, new RegExp(`--test-coverage-${threshold}=100\\b`));

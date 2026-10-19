@@ -85,13 +85,18 @@ export function createSiteManifest() {
             test: 'node --run build -- --version=test --production=true --site-url=https://example.com && node --test --experimental-test-coverage --test-coverage-include="dist/app/assets/script/**/*.js" --test-coverage-include="dist/app/assets/view/examples/tasks/*.js" --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 test/*.test.js'
         },
         allowScripts: {
-            '@parcel/watcher@2.5.1': true,
+            '@parcel/watcher@2.6.0': true,
             'esbuild@0.28.2': true
         },
         dependenciesMeta: {
-            '@parcel/watcher@2.5.1': {built: true},
+            '@parcel/watcher@2.6.0': {built: true},
             'esbuild@0.28.2': {built: true}
         },
+        // @tailwindcss/cli 4.3.3 pins @parcel/watcher 2.5.1, whose micromatch/braces chain has a high-severity
+        // advisory with no patched braces release. 2.6.0 uses picomatch instead. npm reads `overrides`, Yarn reads
+        // `resolutions`, and pnpm reads `overrides` in pnpm-workspace.yaml.
+        overrides: {'@parcel/watcher': '2.6.0'},
+        resolutions: {'@parcel/watcher': '2.6.0'},
         devDependencies: {
             '@tailwindcss/cli': '4.3.3',
             '@types/node': '24.13.3',

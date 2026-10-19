@@ -131,5 +131,8 @@
       "import": "./dist/scaffold/index.js",
       "default": "./dist/scaffold/index.js"
     }
+  },
+  "overrides": {
+    "@parcel/watcher": "2.6.0"
   }
 }
