@@ -1,6 +1,6 @@
 import {html} from 'white-label-view/html';
 
-/** Static presentation stays a plain tagged-template function; View is only needed for lifecycle/state. */
+/** Hero banner. Static content is a plain function; a View is only needed for state or event handling. */
 export default function HeroSection() {
     return html`<section class="hero" id="top" aria-labelledby="hero-title">
             <div class="container hero__inner">

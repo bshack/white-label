@@ -8,12 +8,23 @@ import LiveExampleSection from './assets/view/sections/LiveExampleSection.js';
 import PackageDocsSection from './assets/view/sections/PackageDocsSection.js';
 import SourceGuideSection from './assets/view/sections/SourceGuideSection.js';
 
+/**
+ * Render a JSON-LD `<script>` block.
+ *
+ * `html` refuses interpolation inside `<script>`, so this uses `unsafeHTML()`, the explicit "I trust this markup"
+ * escape hatch. It is safe here only because the value is application-owned page data and every `<` is replaced
+ * with `\u003c`, so the JSON cannot close the script element. Do not pass user-supplied values through it.
+ */
 function structuredDataScript(value: unknown) {
     const json = JSON.stringify(value).replaceAll('<', '\\u003c');
     return unsafeHTML(`<script type="application/ld+json">${json}</script>`);
 }
 
-/** Compose the static page from small tagged-template functions. */
+/**
+ * The home page, rendered to `_deploy/index.html` at build time.
+ *
+ * @param data - `global.json`, `index.json`, and the build config merged together (see `scripts/build.ts`).
+ */
 export default function IndexPage(data: Record<string, unknown>) {
     const page = data as unknown as PageData;
 

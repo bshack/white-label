@@ -8,7 +8,7 @@ const repositories = {
     view: 'https://github.com/bshack/white-label-view'
 };
 
-/** Package documentation stays close to the example it describes. */
+/** Section with a short code sample and documentation link for each White Label package. */
 export default function PackageDocsSection() {
     return html`<section class="section" id="packages" aria-labelledby="packages-title">
             <div class="container">

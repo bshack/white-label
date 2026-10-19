@@ -1,11 +1,13 @@
 import {html} from 'white-label-view/html';
 
+/** The build values this page uses. */
 interface PageData {
     cdn: string;
     version: string;
     www: string;
 }
 
+/** The not-found page, rendered to `_deploy/404.html`. It is marked `noindex` so search engines skip it. */
 export default function NotFoundPage(data: Record<string, unknown>) {
     const page = data as unknown as PageData;
     return html`<html lang="en-US" dir="ltr">

@@ -2,16 +2,23 @@
 
 Generator and first-party CLI for production-oriented static TypeScript sites using Tailwind CSS, esbuild, the White Label Model/View/Router/Mediator packages, and first-party tagged HTML templates.
 
-Verified against `package.json`, `README.md`, `PACKAGE_MANAGERS.md`, and `.github/workflows/security.yml` on September 17, 2026. Recheck those files when commands or supported environments change.
+Verified against `package.json`, `README.md`, `PACKAGE_MANAGERS.md`, and `.github/workflows/security.yml` on October 19, 2026. Recheck those files when commands or supported environments change.
 
 ## Code map
 
-- `scaffold/` contains the project-creation engine (see `scaffold/AGENTS.md`).
-- `cli/` contains the command-line adapter.
-- `app/` contains tagged-HTML site templates, browser TypeScript, styles, and data.
-- `scripts/build.ts` builds the site.
-- `test/` holds tests.
-- `dist/` contains compiled code. The package entry is `dist/scaffold/index.js`.
+- `scaffold/index.ts`: `createProject()`, `createSiteManifest()` (the generated `package.json`), and the list of files copied into a project. Contract in `scaffold/AGENTS.md`.
+- `scaffold/gitignore`: shipped as the generated `.gitignore` (npm never publishes files named `.gitignore`).
+- `cli/index.ts`: `runCli()`, the `white-label` / `generator-white-label` bin. Parses arguments only; creation goes through `createProject()`.
+- Copied into generated projects, and also built in place in this repository:
+  - `app/`: pages (`app/*.ts`), templates (`app/assets/view/`), browser code (`app/assets/script/`), data, styles.
+  - `app/README.md`: becomes the generated `README.md`. It is the main user documentation; keep it in sync with `scripts/build.ts`, `server/handler.ts`, and `createSiteManifest()`.
+  - `server/handler.ts`: Web `Request`/`Response` example with security headers.
+  - `scripts/build.ts`: the static build into `_deploy/`.
+  - `template-test/`: becomes the generated `test/`.
+  - `tsconfig.site.json`, `.editorconfig`, `.yarnrc.yml`, `pnpm-workspace.yaml`.
+- `test/`: repository tests (node:test, run against `dist/`). `test-types/`: consumer type checks of the public declarations.
+- `dist/`: compiled output. The package entry is `dist/scaffold/index.js`; bins are `dist/cli/index.js`.
+- No agent guide is shipped into generated projects; `AGENTS.md` files here apply to this repository only.
 
 ## Toolchain
 
@@ -40,7 +47,7 @@ npm run lint && npm run coverage && npm run audit
 - It enforces 100% statements, branches, functions, and lines for each implementation file.
 - Because of this, `npm run typecheck` and `npm test` don't need separate runs.
 - Lint warnings are failures. No formatter script is configured.
-- If you change generator templates or `scaffold/`, also generate a project into a temporary directory and run its own checks. Generator changes affect generated applications, so validate both the generator and its output.
+- If you change `app/`, `server/`, `scripts/`, `template-test/`, `scaffold/`, or the shipped config files, also generate a project and run its own checks: `node dist/cli/index.js create <tmp-dir> && cd <tmp-dir> && npm install && npm test`. Generator changes affect generated applications, so validate both.
 - In CI, the workflow additionally runs the production build, packs the package, and verifies that the packed generator and CLI install and execute correctly.
 
 Source-first testing policy: authored source and the committed lockfile are authoritative. Keep behavior, type, coverage, production-build, audit, packaging, and consumer/CLI verification strict. Do not use committed generated-output synchronization as a correctness gate unless a repository or release workflow explicitly requires source-controlled artifacts. Reduce CI noise by removing brittle synchronization checks, never by lowering coverage, weakening assertions, skipping type checks, or bypassing package or runtime verification.
@@ -59,6 +66,8 @@ Preview the site at `http://localhost:8080`. Python 3 is needed only for this pr
 - Production builds require the intended HTTPS `--site-url`.
 - `--version` is an asset-directory label, not an npm version bump.
 
+Pass build flags as `npm run build -- <flags>`, `yarn build <flags>`, or `pnpm build <flags>` (pnpm forwards a literal `--`, which the build rejects).
+
 Edit authored TypeScript and templates, not compiled JavaScript or declarations. Generate `dist/` and deployment output through the existing build or compiler when validating, packaging, or releasing. Do not require a PR to commit compiler output just to satisfy a drift check.
 
 `dist/` is untracked build output, and it is not in `.gitignore`, so never stage or commit it.
@@ -70,6 +79,8 @@ Preserve initial rendered HTML, escaped tagged-template output, framework-indepe
 The generated application has one canonical first-party rendering path, through `white-label-view/html`. Do not introduce renderer-specific scaffold modes or a White Label-owned third-party renderer runtime. Alternative renderers remain application-owned integrations through View's template contract.
 
 The starter uses system fonts.
+
+Generated-project dependency contract: exact pins in `createSiteManifest()` must equal this repository's `devDependencies`; `allowScripts`/`dependenciesMeta` versions must equal the locked versions; the `@parcel/watcher` override must match in `package.json` `overrides`, `createSiteManifest()` `overrides` and `resolutions`, and `pnpm-workspace.yaml`. `test/generator.test.js` enforces this. Removal criteria for the override are in `PACKAGE_MANAGERS.md`.
 
 ---
 

@@ -3,7 +3,10 @@ import {getVisibleTasks, type TaskFilter, type TaskState} from './task-state.js'
 
 const filters: TaskFilter[] = ['all', 'active', 'completed'];
 
-/** Render the task example from state for both build-time HTML and browser updates. */
+/**
+ * The task example's markup, used both for the build-time HTML and for browser re-renders. The filter links are real
+ * links, so filtering works without JavaScript.
+ */
 export default function TaskExample({state}: {state: TaskState}) {
     const visibleTasks = getVisibleTasks(state);
     const completed = state.tasks.filter(task => task.complete).length;

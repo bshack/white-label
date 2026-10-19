@@ -52,7 +52,29 @@ There is no generator renderer prompt and no `--jsx` or `--no-jsx` flag. If a pr
 
 See [Template engines](https://whitelabeljs.org/docs/view/#template-engines) for tested integrations and trust boundaries.
 
-Run `white-label --help` (or `white-label create --help`) for usage. A destination that begins with `-` is treated as a mistyped option and rejected with a usage error; to create a directory whose name starts with `-`, pass it as a path such as `./-my-project`. See [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md) for package-manager compatibility details.
+## Usage and exit codes
+
+```text
+Usage:
+  white-label create <directory>
+
+Commands:
+  create <directory>  Create a tagged-template White Label project.
+
+Options:
+  -h, --help         Show this help message.
+```
+
+`generator-white-label` and `white-label` are the same command.
+
+| Input | Result |
+| --- | --- |
+| no arguments, `--help`, `-h`, `create --help`, `create -h` | Help on stdout, exit code 0 |
+| `create <directory>` | Creates the project, prints `Created White Label project at <absolute path>`, exit code 0 |
+| anything else: an unknown command, `create` with no directory, extra arguments, or a directory starting with `-` | Help on stderr, exit code 1, nothing created |
+| a non-empty destination, or a file-system failure | `Unable to create White Label project: <reason>` on stderr, exit code 1 |
+
+A relative directory resolves against the current working directory. A destination that begins with `-` is treated as a mistyped option; to create a directory whose name starts with `-`, pass it as a path such as `./-my-project`. See [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md) for package-manager details.
 
 ## Use the API
 
@@ -64,7 +86,7 @@ await createProject({
 });
 ```
 
-`createProject()` uses the same destination-safety rule as the CLI: missing and empty directories are allowed; non-empty directories are rejected before project content is written.
+`createProject()` applies the same rules as the CLI: missing and empty directories are allowed, non-empty directories are rejected before anything is written, and a failed call removes what it created. It also rejects an empty or non-string `destination` with a `TypeError`. The full API is in the [README](README.md#programmatic-api).
 
 ## Read the implementation
 
