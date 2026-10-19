@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import {lstat, mkdtemp, readFile, rm, symlink, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
-import {createProject} from '../dist/scaffold/index.js';
+import {createProject, createSiteManifest} from '../dist/scaffold/index.js';
 
 async function injectManifestSymlink(destination, target) {
     const manifest = path.join(destination, 'package.json');
@@ -23,8 +23,9 @@ async function injectManifestSymlink(destination, target) {
     throw new Error('Destination was not created while scaffolding');
 }
 
-test('programmatic project creation refuses a non-empty destination before copying', async () => {
+test('programmatic project creation refuses a non-empty destination before copying', async t => {
     const destination = await mkdtemp(path.join(tmpdir(), 'white-label-scaffold-existing-'));
+    t.after(() => rm(destination, {recursive: true, force: true}));
     await writeFile(path.join(destination, 'keep.txt'), 'existing work');
     let copies = 0;
     const fileSystem = {
@@ -39,18 +40,22 @@ test('programmatic project creation refuses a non-empty destination before copyi
     assert.equal(copies, 0);
 });
 
-test('programmatic project creation accepts an existing empty destination', async () => {
+test('programmatic project creation accepts an existing empty destination', async t => {
     const destination = await mkdtemp(path.join(tmpdir(), 'white-label-scaffold-empty-'));
-    let copies = 0;
-    let manifests = 0;
+    t.after(() => rm(destination, {recursive: true, force: true}));
+    const copies = [];
+    const manifests = [];
     const fileSystem = {
-        copy() {copies += 1;},
-        writeJSON() {manifests += 1;}
+        copy(source, target) {copies.push(target);},
+        writeJSON(target, value) {manifests.push({target, value});}
     };
 
     await createProject({destination, fileSystem});
-    assert.ok(copies > 0);
-    assert.equal(manifests, 1);
+    assert.ok(copies.length > 0);
+    assert.ok(copies.every(target => path.dirname(target) === destination), 'scaffold copies must target the destination root');
+    assert.ok(copies.includes(path.join(destination, 'app')));
+    assert.ok(copies.includes(path.join(destination, 'test')));
+    assert.deepEqual(manifests, [{target: path.join(destination, 'package.json'), value: createSiteManifest()}]);
 });
 
 test('native scaffolding refuses a manifest symlink injected after the destination check', async t => {

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
-import {mkdtemp, symlink, writeFile} from 'node:fs/promises';
+import {mkdtemp, rm, symlink, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {spawnSync} from 'node:child_process';
 import {formatCliError, runCli} from '../dist/cli/index.js';
@@ -58,8 +58,9 @@ test('CLI rejects malformed create commands and removed renderer flags', async (
     }
 });
 
-test('CLI refuses an existing non-empty destination before scaffolding', async () => {
+test('CLI refuses an existing non-empty destination before scaffolding', async t => {
     const directory = await mkdtemp(path.join(tmpdir(), 'white-label-cli-existing-'));
+    t.after(() => rm(directory, {recursive: true, force: true}));
     await writeFile(path.join(directory, 'keep.txt'), 'existing work');
     let called = false;
 
@@ -75,8 +76,9 @@ test('CLI refuses an existing non-empty destination before scaffolding', async (
     assert.equal(called, false);
 });
 
-test('CLI accepts an existing empty destination', async () => {
+test('CLI accepts an existing empty destination', async t => {
     const directory = await mkdtemp(path.join(tmpdir(), 'white-label-cli-empty-'));
+    t.after(() => rm(directory, {recursive: true, force: true}));
     let received;
     const exitCode = await runCli(['create', directory], {
         cwd: () => process.cwd(),
@@ -120,8 +122,9 @@ test('compiled CLI executes its main success path', () => {
     assert.match(result.stdout, /white-label create <directory>/);
 });
 
-test('compiled CLI executes when invoked through a symlink', async () => {
+test('compiled CLI executes when invoked through a symlink', async t => {
     const directory = await mkdtemp(path.join(tmpdir(), 'white-label-cli-symlink-'));
+    t.after(() => rm(directory, {recursive: true, force: true}));
     const executable = path.join(directory, 'white-label');
     await symlink(path.resolve('dist/cli/index.js'), executable);
 
@@ -134,8 +137,9 @@ test('compiled CLI executes when invoked through a symlink', async () => {
     assert.match(result.stdout, /white-label create <directory>/);
 });
 
-test('compiled CLI executes its main error path', async () => {
+test('compiled CLI executes its main error path', async t => {
     const directory = await mkdtemp(path.join(tmpdir(), 'white-label-cli-'));
+    t.after(() => rm(directory, {recursive: true, force: true}));
     const blocker = path.join(directory, 'blocker');
     await writeFile(blocker, 'not a directory');
 

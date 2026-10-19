@@ -48,7 +48,7 @@ export function createSiteManifest() {
         scripts: {
             build: 'tsc -p tsconfig.json && node dist/scripts/build.js',
             typecheck: 'tsc -p tsconfig.json --noEmit',
-            test: 'node --run typecheck && node --run build -- --version=test --production=true --site-url=https://example.com && node --test --experimental-test-coverage --test-coverage-include=dist/app/assets/script/index.js --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 test/*.test.js'
+            test: 'node --run typecheck && node --run build -- --version=test --production=true --site-url=https://example.com && node --test --experimental-test-coverage --test-coverage-include="dist/app/assets/script/**/*.js" --test-coverage-include="dist/app/assets/view/examples/tasks/*.js" --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 test/*.test.js'
         },
         allowScripts: {
             '@parcel/watcher@2.5.1': true,
@@ -63,8 +63,8 @@ export function createSiteManifest() {
             '@types/node': '24.13.3',
             'axe-core': '4.13.0',
             'esbuild': '0.28.2',
-            'html-validate': '11.15.0',
-            'jsdom': '30.0.1',
+            'html-validate': '11.16.0',
+            'jsdom': '30.1.0',
             'tailwindcss': '4.3.3',
             'typescript': '7.0.2'
         },

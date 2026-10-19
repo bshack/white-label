@@ -53,9 +53,7 @@ jobs:
       - name: Use coordinated View 7 package
         run: npm install --ignore-scripts --no-save --package-lock=false "$(realpath view-package/*.tgz)"
       - run: npm run lint
-      - run: npm run compile
-      - run: npm run typecheck
-      - run: npm test
+      # coverage compiles (a full typecheck), runs the consumer type checks, and runs every unit test.
       - run: npm run coverage
       - run: npm run build -- --version=ci --production=true --site-url=https://example.com
       - run: npm run audit
