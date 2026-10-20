@@ -131,10 +131,10 @@ export function createSiteManifest() {
         devDependencies: {
             '@tailwindcss/cli': '4.3.3',
             '@types/node': '24.13.3',
-            'axe-core': '4.13.0',
+            'axe-core': '4.14.0',
             'esbuild': '0.28.2',
-            'html-validate': '11.16.0',
-            'jsdom': '30.1.0',
+            'html-validate': '11.16.2',
+            'jsdom': '30.1.2',
             'tailwindcss': '4.3.3',
             'typescript': '7.0.2'
         },
