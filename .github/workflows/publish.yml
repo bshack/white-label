@@ -41,7 +41,7 @@ jobs:
           fi
       - run: npm ci --ignore-scripts
       - run: npm run lint
-      - run: npm run typecheck
+      # coverage compiles (a full typecheck), runs the consumer type checks, and runs every unit test.
       - run: npm run coverage
       - run: npm run build -- --version=release --production=true --site-url=https://example.com
       - run: npm run audit

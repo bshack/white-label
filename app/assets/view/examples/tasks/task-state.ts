@@ -1,12 +1,16 @@
-/** Shared state shape used by build-time tagged HTML and the browser application. */
+// Task state types and helpers, shared by the build-time HTML and the browser application.
+
+/** Which tasks to show. */
 export type TaskFilter = 'all' | 'active' | 'completed';
 
+/** One task. */
 export interface TaskItem {
     complete: boolean;
     id: number;
     title: string;
 }
 
+/** Everything the task example renders from. */
 export interface TaskState extends Record<PropertyKey, unknown> {
     filter: TaskFilter;
     tasks: TaskItem[];
@@ -23,17 +27,15 @@ export function getVisibleTasks(state: TaskState): TaskItem[] {
     return state.tasks.filter(taskPredicates[state.filter]);
 }
 
-/** Describe the currently rendered task result for assistive technology. */
+/** Text for the live status region, announced by screen readers when the list changes. */
 export function describeTaskStatus(state: TaskState): string {
     const visible = getVisibleTasks(state).length;
     return `Showing ${visible} ${visible === 1 ? 'task' : 'tasks'} for the ${state.filter} filter.`;
 }
 
 /**
- * Return fresh demo data for each application instance.
- *
- * A factory avoids sharing mutable state between tests, pages, or future
- * server-side renders while keeping the initial HTML deterministic.
+ * Return a new copy of the demo tasks. A function rather than a shared constant, so one page, test, or server render
+ * cannot change another's state, while the initial HTML stays the same every time.
  */
 export function createInitialTaskState(): TaskState {
     return {

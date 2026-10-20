@@ -6,7 +6,7 @@ import TaskModel from './TaskModel.js';
 import {createTaskRouter} from './TaskRouter.js';
 import {createTaskView} from './TaskView.js';
 
-/** Public handles make the example straightforward to test and tear down. */
+/** The running task example. Its parts are exposed so tests can inspect them, and `destroy()` tears it all down. */
 export interface TaskApplication {
     mediator: TaskMediator;
     model: TaskModel;
@@ -16,11 +16,14 @@ export interface TaskApplication {
 }
 
 /**
- * Compose the application at one explicit boundary.
+ * Wire the task example together: the Router turns the URL into a `task:filter` event, form and checkbox events
+ * become `task:add` and `task:toggle`, Mediator listeners apply them to the Model, and the View re-renders.
  *
- * This is the only module that knows every moving part. Model, View, Router,
- * and Mediator stay independently understandable, while this file documents
- * the small amount of wiring needed to make them cooperate in a real feature.
+ * This is the only module that knows about every part, so Model, View, Router, and Mediator can each be read on
+ * their own.
+ *
+ * @param documentRoot - The document containing the server-rendered `[data-task-example]` markup.
+ * @throws {TypeError} If the page has no `[data-task-example]` container.
  */
 export function initializeTaskApplication(documentRoot: Document): TaskApplication {
     const parentElement = documentRoot.querySelector<HTMLElement>('[data-task-example]');
@@ -39,6 +42,7 @@ export function initializeTaskApplication(documentRoot: Document): TaskApplicati
     mediator.addEventListener('task:toggle', toggleTask);
     mediator.addEventListener('task:filter', setFilter);
 
+    // Listen on the container, which outlives re-renders, rather than on elements the View replaces.
     const delegated = view.delegate(parentElement);
     delegated.on('submit', '[data-task-form]', (event: Event) => {
         event.preventDefault();
@@ -51,6 +55,7 @@ export function initializeTaskApplication(documentRoot: Document): TaskApplicati
         const input = event.target as HTMLInputElement;
         const id = Number(input.dataset.taskId);
         mediator.dispatchEvent(new CustomEvent('task:toggle', {detail: id}));
+        // After the re-render, focus the toggled task's checkbox, or the current filter link if the filter now hides it.
         const focusTarget = parentElement.querySelector<HTMLInputElement>(`[data-task-id="${id}"]`)
             ?? parentElement.querySelector<HTMLAnchorElement>('[data-task-filter][aria-current="page"]')!;
         focusTarget.focus();

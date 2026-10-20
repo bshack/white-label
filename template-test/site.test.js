@@ -146,6 +146,39 @@ test('all client packages cooperate through the task application without losing 
     assert.deepEqual(application.model.get(), {});
 });
 
+test('task application keeps focus on the filter when the focused task leaves the view', async () => {
+    const dom = installBrowser();
+    const application = initializeTaskApplication(dom.window.document);
+    const activeFilter = dom.window.document.querySelector('[data-task-filter="active"]');
+    activeFilter.focus();
+    activeFilter.dispatchEvent(new dom.window.MouseEvent('click', {bubbles: true, button: 0}));
+    await Promise.resolve();
+
+    const disappearingToggle = dom.window.document.querySelector('[data-task-toggle]');
+    disappearingToggle.focus();
+    disappearingToggle.dispatchEvent(new dom.window.Event('change', {bubbles: true}));
+    assert.match(dom.window.document.querySelector('[data-task-status]').textContent, /Showing 0 tasks for the active filter/);
+    assert.equal(dom.window.document.activeElement.dataset.taskFilter, 'active');
+    application.destroy();
+});
+
+test('task modules reject invalid domain and markup input cleanly', () => {
+    const dom = installBrowser();
+    const application = initializeTaskApplication(dom.window.document);
+    const initialTasks = application.model.get().tasks;
+    assert.equal(application.model.add('   '), false);
+    assert.equal(application.model.toggle(999), false);
+    assert.deepEqual(application.model.get().tasks, initialTasks);
+    assert.equal(normalizeTaskFilter(undefined), 'all');
+    assert.equal(normalizeTaskFilter('active'), 'active');
+    application.destroy();
+
+    const noApplication = installBrowser('<!doctype html><html><body><main></main></body></html>');
+    assert.throws(() => initializeTaskApplication(noApplication.window.document), /data-task-example/);
+    const noViewRoot = installBrowser('<!doctype html><html><body><main><div data-task-example></div></main></body></html>');
+    assert.throws(() => initializeTaskApplication(noViewRoot.window.document), /static task-app root/);
+});
+
 test('serverless handler keeps warm and concurrent requests isolated', async () => {
     await withoutBrowserGlobals(async () => {
         const {handleRequest} = await import('../dist/server/handler.js');
@@ -153,6 +186,8 @@ test('serverless handler keeps warm and concurrent requests isolated', async () 
         const second = await handleRequest(new Request('https://example.com/hello?name=Grace'));
         assert.equal(first.status, 200);
         assert.equal(second.status, 200);
+        assert.equal(first.headers.get('x-content-type-options'), 'nosniff');
+        assert.match(first.headers.get('content-security-policy'), /default-src 'self'/);
         assert.match(await first.text(), /Hello Ada\./);
         assert.match(await second.text(), /Hello Grace\./);
 

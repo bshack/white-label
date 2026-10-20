@@ -1,7 +1,7 @@
 import {html} from 'white-label-view/html';
 import CodeBlock, {syntax} from '../CodeBlock.js';
 
-/** Keep the shortest path from generator install to a verified local build visible. */
+/** "Get started" section showing the commands to create and build a project. */
 export default function GettingStartedSection() {
     return html`<section class="section" id="start" aria-labelledby="start-title">
             <div class="container start-grid">
@@ -12,10 +12,11 @@ export default function GettingStartedSection() {
                 </div>
                 <div>
                     <p class="code-label">Create a project</p>
-                    ${CodeBlock({lines: [html`<span class="${syntax.type}">npx</span> generator-white-label`]})}
+                    ${CodeBlock({lines: [html`<span class="${syntax.type}">npx</span> generator-white-label create <span class="${syntax.value}">my-site</span>`]})}
                     <p class="code-label">Then develop</p>
                     ${CodeBlock({lines: [
-                        html`<span class="${syntax.type}">npm</span> ci`,
+                        html`<span class="${syntax.type}">cd</span> <span class="${syntax.value}">my-site</span>`,
+                        html`<span class="${syntax.type}">npm</span> install`,
                         html`<span class="${syntax.type}">npm</span> test`,
                         html`<span class="${syntax.type}">npm</span> run build -- --version=<span class="${syntax.value}">local</span>`
                     ]})}
