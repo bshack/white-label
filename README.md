@@ -262,7 +262,7 @@ npm run lint && npm run coverage && npm run audit
 
 ## Coordinated runtime release
 
-Generator 10 targets the published White Label runtime line: `white-label-mediator@5.0.1`, `white-label-model@7.0.3`, `white-label-router@6.1.2`, and `white-label-view@7.0.2`. The release and install baseline is registry-backed; CI additionally substitutes a fixed packed View 7 source revision in coordinated integration jobs.
+Generator 11 targets the published White Label runtime line: `white-label-mediator@5.0.2`, `white-label-model@7.1.0`, `white-label-router@6.2.0`, and `white-label-view@8.0.0`. The release and install baseline is registry-backed; CI additionally substitutes the packed View `v8.0.0` release commit in coordinated integration jobs.
 
 Generated projects also pin `@parcel/watcher` to 2.6.0 through npm, Yarn, and pnpm overrides, to avoid a `braces` advisory pulled in by `@tailwindcss/cli` 4.3.3. [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md#the-parcelwatcher-override) explains why and when to remove it.
 

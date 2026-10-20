@@ -139,10 +139,10 @@ export function createSiteManifest() {
             'typescript': '7.0.2'
         },
         dependencies: {
-            'white-label-mediator': '5.0.1',
-            'white-label-model': '7.0.3',
-            'white-label-router': '6.1.2',
-            'white-label-view': '7.0.2'
+            'white-label-mediator': '5.0.2',
+            'white-label-model': '7.1.0',
+            'white-label-router': '6.2.0',
+            'white-label-view': '8.0.0'
         }
     };
 }

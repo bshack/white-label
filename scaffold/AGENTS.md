@@ -2,7 +2,7 @@
 
 These instructions are more specific than the repository-root agent guide for files under `scaffold/`.
 
-## Generator 10 creation contract
+## Generator 11 creation contract
 
 - `createProject()` is the canonical project-creation engine. CLI and future adapters must call it rather than reimplement scaffold copying or policy.
 - The generator is for **new projects**. Destination safety belongs in `createProject()`: missing and empty destinations are allowed; an existing non-empty destination must be rejected before scaffold files are copied or package metadata is written. An empty or non-string `destination` is a `TypeError` (it would otherwise write into the cwd).
@@ -25,4 +25,4 @@ These instructions are more specific than the repository-root agent guide for fi
 
 ## Coordinated release dependency
 
-Generator 10 targets the exact published coordinated runtime versions: `white-label-mediator@5.0.1`, `white-label-model@7.0.3`, `white-label-router@6.1.2`, and `white-label-view@7.0.2`. Keep the release lockfile registry-based and regenerate it with the package manager when coordinated runtime versions change.
+Generator 11 targets the exact published coordinated runtime versions: `white-label-mediator@5.0.2`, `white-label-model@7.1.0`, `white-label-router@6.2.0`, and `white-label-view@8.0.0`. Keep the release lockfile registry-based and regenerate it with the package manager when coordinated runtime versions change.
