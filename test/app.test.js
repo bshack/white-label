@@ -127,5 +127,5 @@ test('landing page source styles keep branding grayscale and code text at AA con
 
 test.after(() => {
     boot.window.close();
-    for (const key of ['window', 'document', 'DOMParser', 'Element', 'Node']) delete globalThis[key];
+    for (const key of ['window', 'document', 'DOMParser', 'Element', 'Node']) {delete globalThis[key];}
 });

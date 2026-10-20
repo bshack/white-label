@@ -1,8 +1,6 @@
 /**
- * Build-time data available to every page template.
- *
- * Keeping this contract separate from the renderer keeps top-level tagged
- * HTML focused on application composition instead of deployment plumbing.
+ * The page data fields the home page reads: values from `global.json` and `index.json` plus the build config.
+ * Pages receive more than this; see `scripts/build.ts`.
  */
 export interface PageData {
     cdn: string;

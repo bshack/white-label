@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp, rm, symlink, readFile, writeFile} from 'node:fs/promises';
+import {access, mkdtemp, rm, symlink, readFile, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {execFileSync, spawn} from 'node:child_process';
@@ -8,6 +8,8 @@ import {createServer} from 'node:net';
 import {build, parseArguments} from '../dist/scripts/build.js';
 import {createProject, createSiteManifest} from '../dist/scaffold/index.js';
 const root = path.resolve('.');
+// The fast loop runs `node --test` outside npm, so expose the locally installed Tailwind CLI the build spawns.
+process.env.PATH = [path.join(root, 'node_modules/.bin'), process.env.PATH].join(path.delimiter);
 
 function compileSite(destination) {
     execFileSync(process.execPath, [path.join(root, 'node_modules/typescript/bin/tsc'), '-p', 'tsconfig.json'], {cwd: destination, stdio: 'pipe'});
@@ -37,7 +39,9 @@ async function waitForPreview(origin, process) {
             const response = await fetch(`${origin}/`);
             if (response.ok) {return response;}
             await response.arrayBuffer();
-        } catch {}
+        } catch {
+            // The preview server is not accepting connections yet; retry after the delay.
+        }
         await new Promise(resolve => setTimeout(resolve, 100));
     }
     throw new Error('Local preview did not become available');
@@ -86,6 +90,11 @@ test('programmatic scaffold API creates the canonical tagged-template site', asy
     assert.match(readme, taggedTemplateDescription);
     assert.match(readme, /--directory _deploy/);
     assert.match(readme, /http:\/\/localhost:8080\//);
+    assert.equal(await readFile(path.join(destination, 'AGENTS.md'), 'utf8'), await readFile(path.join(root, 'scaffold/project-AGENTS.md'), 'utf8'));
+    const gitignore = (await readFile(path.join(destination, '.gitignore'), 'utf8')).split('\n');
+    for (const pattern of ['node_modules/', 'dist/', '_deploy/', 'coverage/', '*.tgz']) {
+        assert.ok(gitignore.includes(pattern), `.gitignore must ignore ${pattern}`);
+    }
     const yarnConfig = await readFile(path.join(destination, '.yarnrc.yml'), 'utf8');
     assert.match(yarnConfig, /nodeLinker:\s*node-modules/);
     assert.match(yarnConfig, /npmPreapprovedPackages/);
@@ -102,7 +111,37 @@ test('programmatic scaffold API creates the canonical tagged-template site', asy
     assert.match(await readFile(path.join(destination, 'app/index.ts'), 'utf8'), /white-label-view\/html/);
     assert.match(await readFile(path.join(destination, 'app/assets/view/examples/tasks/TaskExample.ts'), 'utf8'), /attributes\(/);
     assert.match(await readFile(path.join(destination, 'scripts/build.ts'), 'utf8'), /tailwindcss/);
-    assert.match(await readFile(path.join(destination, 'test/site.test.js'), 'utf8'), /test/);
+    assert.equal(await readFile(path.join(destination, 'test/site.test.js'), 'utf8'), await readFile(path.join(root, 'template-test/site.test.js'), 'utf8'));
+});
+
+test('generated manifest pins the same tool and runtime versions this repository verifies', async () => {
+    const [repositoryManifest, lockfile] = await Promise.all(['package.json', 'package-lock.json']
+        .map(async file => JSON.parse(await readFile(path.join(root, file), 'utf8'))));
+    const manifest = createSiteManifest();
+    const generatedPins = {...manifest.devDependencies, ...manifest.dependencies};
+    assert.ok(Object.keys(generatedPins).length > 0);
+    for (const [name, version] of Object.entries(generatedPins)) {
+        assert.equal(version, repositoryManifest.devDependencies[name], `${name} must match the repository devDependency`);
+    }
+    for (const approved of Object.keys(manifest.allowScripts)) {
+        const separator = approved.lastIndexOf('@');
+        const [name, version] = [approved.slice(0, separator), approved.slice(separator + 1)];
+        assert.equal(version, lockfile.packages[`node_modules/${name}`]?.version, `${approved} must match the locked ${name} version`);
+        assert.deepEqual(manifest.dependenciesMeta[approved], {built: true});
+    }
+    assert.deepEqual(Object.keys(manifest.dependenciesMeta).sort(), Object.keys(manifest.allowScripts).sort());
+    // Generated projects must resolve the same audited transitive versions under npm, Yarn, and pnpm.
+    assert.deepEqual(manifest.overrides, repositoryManifest.overrides);
+    assert.deepEqual(manifest.resolutions, repositoryManifest.overrides);
+    const pnpmWorkspace = await readFile(path.join(root, 'pnpm-workspace.yaml'), 'utf8');
+    for (const [name, version] of Object.entries(repositoryManifest.overrides)) {
+        assert.equal(lockfile.packages[`node_modules/${name}`]?.version, version, `${name} override must be the locked version`);
+        assert.match(pnpmWorkspace, new RegExp(`^overrides:[\\s\\S]*'${name.replace('/', '\\/')}': ${version.replaceAll('.', '\\.')}$`, 'm'));
+    }
+    assert.match(manifest.scripts.test, /--test-coverage-include="dist\/app\/assets\/script\/\*\*\/\*\.js"/);
+    for (const threshold of ['lines', 'functions', 'branches']) {
+        assert.match(manifest.scripts.test, new RegExp(`--test-coverage-${threshold}=100\\b`));
+    }
 });
 
 test('packaged project creator creates a strictly typed Tailwind and tagged-template site that builds in development and production', async t => {
@@ -117,12 +156,12 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
     const manifest = JSON.parse(await readFile(path.join(destination, 'package.json'), 'utf8'));
     assert.deepEqual(manifest, createSiteManifest());
     assert.equal(manifest.type, 'module');
-    assert.equal(manifest.dependencies['white-label-mediator'], '5.0.1');
-    assert.equal(manifest.dependencies['white-label-model'], '7.0.3');
-    assert.equal(manifest.dependencies['white-label-router'], '6.1.2');
-    assert.equal(manifest.dependencies['white-label-view'], '7.0.2');
-    assert.equal(manifest.allowScripts['white-label-view@7.0.2'], undefined);
-    assert.equal(manifest.dependenciesMeta['white-label-view@7.0.2'], undefined);
+    assert.equal(manifest.dependencies['white-label-mediator'], '5.0.2');
+    assert.equal(manifest.dependencies['white-label-model'], '7.1.0');
+    assert.equal(manifest.dependencies['white-label-router'], '6.2.0');
+    assert.equal(manifest.dependencies['white-label-view'], '8.0.0');
+    assert.equal(manifest.allowScripts['white-label-view@8.0.0'], undefined);
+    assert.equal(manifest.dependenciesMeta['white-label-view@8.0.0'], undefined);
     assert.equal(manifest.allowScripts['esbuild@0.28.2'], true);
     assert.equal(manifest.dependenciesMeta['esbuild@0.28.2']?.built, true);
     assert.equal(manifest.dependencies.eta, undefined);
@@ -134,19 +173,24 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
     assert.equal(manifest.dependencies.handlebars, undefined);
     assert.equal(manifest.engines.node, '^22.18.0 || >=24.11.0');
     assert.match(await readFile(path.join(destination, 'README.md'), 'utf8'), taggedTemplateDescription);
+    // npm never packs a file named .gitignore, so the packed generator must still produce one.
+    assert.match(await readFile(path.join(destination, '.gitignore'), 'utf8'), /^_deploy\/$/m);
+    assert.match(await readFile(path.join(destination, 'AGENTS.md'), 'utf8'), /^# Agent guide$/m);
     assert.match(manifest.scripts.typecheck, /tsc/);
     await symlink(path.join(root, 'node_modules'), path.join(destination, 'node_modules'));
 
+    // The generated build script compiles TypeScript, so dist/ is current for the direct build below.
     execFileSync('npm', ['run', 'build', '--', '--version=local'], {cwd: destination, stdio: 'pipe'});
     await verifyLocalPreview(destination);
 
-    compileSite(destination);
     execFileSync(process.execPath, ['dist/scripts/build.js', '--version=package-test', '--site-url=https://example.com'], {cwd: destination, stdio: 'pipe'});
     assert.match(await readFile(path.join(destination, '_deploy/index.html'), 'utf8'), /<!DOCTYPE html>/i);
     execFileSync(process.execPath, ['--test', 'test/site.test.js'], {cwd: destination, stdio: 'pipe'});
 
     await build(parseArguments(['--version=development']), destination);
     const css = await readFile(path.join(destination, '_deploy/release/development/assets/style/global.css'), 'utf8');
+    // No page loads a global script, so the build must not emit an empty placeholder for one.
+    await assert.rejects(access(path.join(destination, '_deploy/release/development/assets/script/global.compiled.js')), {code: 'ENOENT'});
     assert.match(css, /tailwindcss v4\.3\.3/i);
     assert.match(css, /\.visually-hidden/);
     assert.match(css, /\.mx-auto/);
@@ -154,17 +198,17 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
     await build(parseArguments(['--version=production', '--production=true', '--site-url=https://example.com']), destination);
     assert.ok((await readFile(path.join(destination, '_deploy/release/production/assets/style/global.css'), 'utf8')).length < css.length);
 
+    // One compile covers both added pages; build() discovers pages from app/ sources, so removing bad.ts drops it.
     await writeFile(path.join(destination, 'app/no-data.ts'), "import {html} from 'white-label-view/html';\nexport default function Page(data: Record<string, unknown>) { return html`<p>${String(data.www)}</p>`; }\n");
-    compileSite(destination);
-    await build(parseArguments(['--version=no-data']), destination);
-    assert.ok((await readFile(path.join(destination, '_deploy/no-data.html'), 'utf8')).includes('<p>/</p>'));
-    assert.match(await readFile(path.join(destination, '_deploy/robots.txt'), 'utf8'), /Allow: \//);
-    assert.match(await readFile(path.join(destination, '_deploy/sitemap.xml'), 'utf8'), /http:\/\/localhost:8080/);
-
     await writeFile(path.join(destination, 'app/bad.ts'), 'export default 1;\n');
     compileSite(destination);
     await assert.rejects(build(parseArguments(['--version=bad-page']), destination), /must export a default render function/);
     await rm(path.join(destination, 'app/bad.ts'));
+
+    await build(parseArguments(['--version=no-data']), destination);
+    assert.ok((await readFile(path.join(destination, '_deploy/no-data.html'), 'utf8')).includes('<p>/</p>'));
+    assert.match(await readFile(path.join(destination, '_deploy/robots.txt'), 'utf8'), /Allow: \//);
+    assert.match(await readFile(path.join(destination, '_deploy/sitemap.xml'), 'utf8'), /http:\/\/localhost:8080/);
 
     await writeFile(path.join(destination, 'app/assets/data/view/no-data.json'), '{invalid');
     await assert.rejects(build(parseArguments(['--version=invalid']), destination), SyntaxError);

@@ -6,6 +6,54 @@
 
 White Label does not prescribe a framework. It provides focused pieces that can be composed where useful and omitted where they are not.
 
+## Create a project
+
+Requirement:
+
+- Node.js `^22.18.0` or `>=24.11.0`
+
+Run the package directly:
+
+```sh
+npx generator-white-label create my-project
+# or
+yarn dlx generator-white-label create my-project
+# or
+pnpm dlx generator-white-label create my-project
+```
+
+A global install also exposes the `white-label` command:
+
+```sh
+npm install --global generator-white-label
+white-label create my-project
+```
+
+After generation, use one package manager consistently:
+
+```sh
+cd my-project
+npm install && npm test
+# or: yarn install && yarn test
+# or: pnpm install && pnpm test
+```
+
+`white-label create --help` prints usage. There is one scaffold: no renderer prompt and no mode flags.
+
+The destination may be missing (it is created) or an empty directory. A non-empty destination is rejected before anything is written, by `createProject()` itself, so the CLI and the API behave the same. If creation fails part-way, the files and directories it created are removed, so you can fix the cause and rerun the same command.
+
+### What you get
+
+- `app/` pages, templates, browser code, data, and styles, including the task example;
+- `server/handler.ts`, the serverless example;
+- `scripts/build.ts`, the static build;
+- `test/site.test.js`, accessibility, SEO, interaction, and serverless tests with a 100% coverage requirement on browser code;
+- `package.json` with exact version pins, `tsconfig.json`, `.gitignore`, `.editorconfig`, `.yarnrc.yml`, and `pnpm-workspace.yaml`;
+- `README.md`, which explains how to run, build, test, deploy, and extend the project ([`app/README.md`](app/README.md) in this repository);
+- `AGENTS.md`, a guide for coding agents working on the generated project: code map, the `npm test` gate, architectural rules, and a working agreement ([`scaffold/project-AGENTS.md`](scaffold/project-AGENTS.md) in this repository).
+
+See [`CLI.md`](CLI.md), [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md), and [`EXISTING_APPLICATIONS.md`](EXISTING_APPLICATIONS.md).
+
 ## Where the generator fits
 
 Use the generator when starting a **new** site or small web application and you want:
@@ -122,44 +170,6 @@ A useful reading order is:
 6. [`server/handler.ts`](server/handler.ts) — provider-neutral `Request`/`Response` composition.
 7. Tests — executable contracts for browser and generated-project behavior.
 
-## Create a project
-
-Requirement:
-
-- Node.js `^22.18.0` or `>=24.11.0`
-
-Run the package directly:
-
-```sh
-npx generator-white-label create my-project
-# or
-yarn dlx generator-white-label create my-project
-# or
-pnpm dlx generator-white-label create my-project
-```
-
-A global install also exposes the `white-label` command:
-
-```sh
-npm install --global generator-white-label
-white-label create my-project
-```
-
-After generation, use one package manager consistently:
-
-```sh
-cd my-project
-npm install && npm test
-# or: yarn install && yarn test
-# or: pnpm install && pnpm test
-```
-
-There is one canonical scaffold. The CLI has no renderer prompt or renderer-specific mode switch.
-
-The generator refuses to layer a scaffold over an existing non-empty destination. This protection is enforced by the shared `createProject()` engine for both CLI and programmatic use. An existing empty directory is allowed; a missing directory is created.
-
-See [`CLI.md`](CLI.md), [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md), and [`EXISTING_APPLICATIONS.md`](EXISTING_APPLICATIONS.md).
-
 ## Progressive enhancement and SEO
 
 The generated project renders meaningful HTML during the build. Interactive task filters are real links first and are enhanced with History API navigation after initialization.
@@ -173,49 +183,32 @@ Public content should remain readable, navigable, and crawlable without executin
 
 Do not treat metadata in source code as proof of search-engine indexing. Verify deployed behavior and indexing with actual production/search-console evidence.
 
-## A simple View click event
-
-Use View lifecycle hooks to add and remove browser listeners with the same callback reference:
-
-```ts
-import View from 'white-label-view';
-
-class ButtonView extends View {
-    handleClick = () => console.log('Clicked');
-
-    addListeners() {
-        this.element.addEventListener('click', this.handleClick);
-        return this;
-    }
-
-    removeListeners() {
-        this.element.removeEventListener('click', this.handleClick);
-        return this;
-    }
-}
-```
-
-`addListeners()` runs when the View mounts. `removeListeners()` runs before replacement or destruction, so listener ownership remains explicit.
-
 ## Programmatic API
 
-Project creation has one implementation:
-
 ```js
+import {fileURLToPath} from 'node:url';
 import {createProject} from 'generator-white-label';
 
 await createProject({
-    destination: new URL('./my-project', import.meta.url).pathname
+    destination: fileURLToPath(new URL('./my-project', import.meta.url))
 });
 ```
 
-`createProject(options)` returns `Promise<void>`. A successful call resolves with `undefined`; file-system failures reject. If the destination exists and contains files, it rejects before copying or writing project content.
+The package (`generator-white-label`, also available as `generator-white-label/scaffold`) exports:
 
-`createProject()` is the canonical creation API. The CLI and future integrations are adapters around it rather than separate generation systems. Keeping overwrite policy here prevents adapters from bypassing the same safety boundary.
+- **`createProject(options): Promise<void>`** creates a project. Options:
+  - `destination` (string, required): a missing or empty directory. Relative paths resolve against `process.cwd()`.
+  - `fileSystem` (`ScaffoldFileSystem`, optional): replaces the two file operations, `copy(source, destination)` and `writeJSON(destination, value)`, for example to record writes in a test. Each may return a promise. The default never overwrites an existing file.
+
+  It rejects with a `TypeError` if `destination` is empty or not a string, and with an `Error` if the destination is a non-empty directory (before anything is written) or a file-system operation fails. On failure it first removes the entries and directories it created; files that existed before the call are never removed.
+- **`createSiteManifest()`** returns a fresh copy of the generated `package.json` object.
+- The types `CreateProjectOptions` and `ScaffoldFileSystem`.
+
+The CLI is a thin wrapper over `createProject()`. Other integrations should call it too, rather than copying templates, so they get the same overwrite protection and cleanup.
 
 ## Serverless and function runtimes
 
-Every generated project includes `server/handler.ts`, a provider-neutral example built around Web `Request` and `Response`. It composes Router, Mediator, Model, and `white-label-view/server` without Express or a provider SDK.
+Every generated project includes `server/handler.ts`, a provider-neutral example built around Web `Request` and `Response`. It composes Router, Mediator, Model, and `white-label-view/server` without Express or a provider SDK. Its HTML responses carry baseline `Content-Security-Policy` (same-origin resources only), `Referrer-Policy: strict-origin-when-cross-origin`, and `X-Content-Type-Options: nosniff` headers; widen the policy deliberately if pages load assets from another origin. These headers come from the handler only: a static host serving `_deploy/` needs its own header configuration.
 
 Mutable White Label instances are created inside `handleRequest()`. Serverless hosts can reuse a warm process for many requests, so mutable module-level state can leak request data or listeners. Immutable configuration can still live at module scope when its lifetime is intentionally process-wide.
 
@@ -230,6 +223,8 @@ The Web-target smoke test does **not** claim blanket Cloudflare/Deno/edge-provid
 | Path | Purpose |
 | --- | --- |
 | `scaffold/index.ts` | Canonical `createProject()` implementation and destination-safety boundary |
+| `scaffold/gitignore` | The generated project's `.gitignore` (npm does not publish files named `.gitignore`) |
+| `scaffold/project-AGENTS.md` | The generated project's `AGENTS.md` |
 | `cli/index.ts` | First-party command-line adapter |
 | `app/*.ts` | Static pages using tagged HTML templates |
 | `app/assets/view/` | Reusable tagged-template views and sections |
@@ -237,43 +232,39 @@ The Web-target smoke test does **not** claim blanket Cloudflare/Deno/edge-provid
 | `server/handler.ts` | Provider-neutral serverless Request → Response example |
 | `scripts/build.ts` | Static rendering and asset build |
 | `test/` | Executable contracts and integration tests |
-| `template-test/` | Generated-project validation |
+| `template-test/` | The generated project's `test/` directory |
+| `test-types/` | Type checks for the package's public declarations |
+| `app/README.md` | The generated project's `README.md` |
 
 No React, Bootstrap, Sass, Eta, Handlebars, Mustache, Nunjucks, Pug, KitaJS HTML, web font, cloud SDK, or browser-side template framework is required. Optional renderers/providers remain application dependencies.
 
-## Build and verify
+## Develop the generator
 
-Development build:
+This repository builds the starter in place, so you can preview it without generating a project:
 
 ```sh
+npm ci --ignore-scripts
 npm run build -- --version=local
 python3 -m http.server 8080 --directory _deploy
 ```
 
-Production build:
+For a production build, add `--production=true --site-url=https://www.example.com`. Build flags are described in [`app/README.md`](app/README.md#build-flags). The build's steps (pages, scripts, styles, data, robots.txt, sitemap) run concurrently.
+
+Before submitting a change:
 
 ```sh
-npm run build -- \
-  --version=production \
-  --production=true \
-  --site-url=https://www.example.com
+npm run lint && npm run coverage && npm run audit
 ```
 
-Verification:
+`npm run coverage` compiles (which type checks), runs the declaration type checks and every test, and requires 100% statement, branch, function, and line coverage for each source file. If you change `app/`, `server/`, `scripts/`, `template-test/`, or `scaffold/`, also generate a project into a temporary directory and run `npm install && npm test` there. CI additionally runs a production build, `npm pack --dry-run`, the minimum Node version, and packed-package and generated-project checks under npm, Yarn, and pnpm. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-```sh
-npm run lint
-npm test
-npm run coverage
-npm run audit
-npm pack --dry-run
-```
-
-Tests are part of the documentation. Executable project source is held to 100% statement, branch, function, and line coverage. CI checks supported Node versions, packed CLI/programmatic installation, production builds, and generated-project compatibility across npm, Yarn, and pnpm.
+`dist/` is build output and is not committed.
 
 ## Coordinated runtime release
 
-Generator 10 targets the published White Label runtime line: `white-label-mediator@5.0.1`, `white-label-model@7.0.3`, `white-label-router@6.1.2`, and `white-label-view@7.0.2`. The release and install baseline is registry-backed; CI additionally substitutes a fixed packed View 7 source revision in coordinated integration jobs.
+Generator 11 targets the published White Label runtime line: `white-label-mediator@5.0.2`, `white-label-model@7.1.0`, `white-label-router@6.2.0`, and `white-label-view@8.0.0`. The release and install baseline is registry-backed; CI additionally substitutes the packed View `v8.0.0` release commit in coordinated integration jobs.
+
+Generated projects also pin `@parcel/watcher` to 2.6.0 through npm, Yarn, and pnpm overrides, to avoid a `braces` advisory pulled in by `@tailwindcss/cli` 4.3.3. [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md#the-parcelwatcher-override) explains why and when to remove it.
 
 ## White Label ecosystem
 

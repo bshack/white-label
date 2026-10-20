@@ -1,6 +1,6 @@
 import {html} from 'white-label-view/html';
 
-/** Static navigation remains ordinary crawlable HTML; JavaScript enhances only opted-in links. */
+/** Site header. Its navigation is plain links, so it works and can be crawled without JavaScript. */
 export default function SiteHeader() {
     return html`<header class="site-header">
             <div class="container site-header__inner">

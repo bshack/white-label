@@ -2,7 +2,10 @@ import {html} from 'white-label-view/html';
 import TaskExample from '../examples/tasks/TaskExample.js';
 import {createInitialTaskState, describeTaskStatus} from '../examples/tasks/task-state.js';
 
-/** Render useful initial HTML with the same tagged template reused by Browser View. */
+/**
+ * Live example section. It renders the task example at build time with the same `TaskExample` template the browser
+ * View uses, so the page has real content before JavaScript loads.
+ */
 export default function LiveExampleSection() {
     const state = createInitialTaskState();
 

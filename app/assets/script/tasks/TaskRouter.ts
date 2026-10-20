@@ -4,16 +4,17 @@ import type {TaskMediator} from './TaskMediator.js';
 
 const taskFilters = new Set<TaskFilter>(['all', 'active', 'completed']);
 
-/** Normalize URL input at the routing boundary before it reaches domain state. */
+/** Turn the `?tasks=` query value into a known filter. Anything unexpected becomes `'all'`. */
 export function normalizeTaskFilter(value: string | undefined): TaskFilter {
     return value && taskFilters.has(value as TaskFilter) ? value as TaskFilter : 'all';
 }
 
 /**
- * Router translates URL state into an application event.
+ * Create the Router that turns the URL into a `task:filter` event.
  *
- * It does not update the Model or DOM directly. That separation keeps routing
- * usable in different applications and makes browser navigation easy to test.
+ * It never updates the Model or renders anything; it only announces intent (and keeps focus on the filter link). That keeps routing reusable and
+ * easy to test. The filter links are ordinary links that work without JavaScript; their `data-pushstate` attribute
+ * lets the Router handle them with the History API instead of a full page load.
  */
 export function createTaskRouter(documentRoot: Document, mediator: TaskMediator): Router {
     const router = new Router();

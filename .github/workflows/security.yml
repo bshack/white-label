@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           repository: bshack/white-label-view
-          ref: 3fc721e1673653236b76f796e874eda360a27dc3
+          ref: 387c885cf3af87401005511f59b99419d9d1a1d4 # v8.0.0
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
@@ -50,12 +50,10 @@ jobs:
           name: white-label-view-package
           path: view-package
       - run: npm ci --ignore-scripts
-      - name: Use coordinated View 7 package
+      - name: Use coordinated View 8 package
         run: npm install --ignore-scripts --no-save --package-lock=false "$(realpath view-package/*.tgz)"
       - run: npm run lint
-      - run: npm run compile
-      - run: npm run typecheck
-      - run: npm test
+      # coverage compiles (a full typecheck), runs the consumer type checks, and runs every unit test.
       - run: npm run coverage
       - run: npm run build -- --version=ci --production=true --site-url=https://example.com
       - run: npm run audit
@@ -99,7 +97,7 @@ jobs:
           name: white-label-view-package
           path: view-package
       - run: npm ci --ignore-scripts
-      - name: Use coordinated View 7 package
+      - name: Use coordinated View 8 package
         run: npm install --ignore-scripts --no-save --package-lock=false "$(realpath view-package/*.tgz)"
       - run: npm test
 
