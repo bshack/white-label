@@ -7,6 +7,12 @@ test('server handler renders the health route', async () => {
 
     assert.equal(response.status, 200);
     assert.equal(response.headers.get('content-type'), 'text/html; charset=utf-8');
+    assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+    assert.equal(response.headers.get('referrer-policy'), 'strict-origin-when-cross-origin');
+    const policy = response.headers.get('content-security-policy');
+    for (const directive of ["default-src 'self'", "object-src 'none'", "base-uri 'self'", "frame-ancestors 'none'"]) {
+        assert.ok(policy.split(/;\s*/).includes(directive), `${directive} missing from ${policy}`);
+    }
     assert.equal(await response.text(), '<!doctype html><main><h1>Healthy</h1><p>Serverless request handled.</p></main>');
 });
 
@@ -28,5 +34,6 @@ test('server handler preserves the not-found state for unmatched routes', async 
     const response = await handleRequest(new Request('https://example.com/missing'));
 
     assert.equal(response.status, 404);
+    assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
     assert.equal(await response.text(), '<!doctype html><main><h1>Not found</h1><p>No route for /missing.</p></main>');
 });

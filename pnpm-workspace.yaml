@@ -1,3 +1,5 @@
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
+overrides:
+  '@parcel/watcher': 2.6.0

@@ -1,6 +1,6 @@
 import {html} from 'white-label-view/html';
 
-/** Point learners at the implementation paths that demonstrate each responsibility. */
+/** "Read the source" section pointing to the files that show each part of the architecture. */
 export default function SourceGuideSection() {
     return html`<section class="section" id="source" aria-labelledby="source-title">
             <div class="container start-grid">
@@ -14,7 +14,7 @@ export default function SourceGuideSection() {
                         <div><dt>Page composition</dt><dd><code>app/index.ts</code></dd></div>
                         <div><dt>Tagged HTML views</dt><dd><code>app/assets/view/</code></dd></div>
                         <div><dt>Task application</dt><dd><code>app/assets/script/tasks/</code></dd></div>
-                        <div><dt>Integration tests</dt><dd><code>test/app.test.js</code></dd></div>
+                        <div><dt>Integration tests</dt><dd><code>test/site.test.js</code></dd></div>
                     </dl>
                     <p><a href="https://github.com/bshack/white-label/tree/master/app">Browse the application source</a></p>
                 </div>
