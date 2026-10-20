@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp, rm, symlink, readFile, writeFile} from 'node:fs/promises';
+import {access, mkdtemp, rm, symlink, readFile, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {execFileSync, spawn} from 'node:child_process';
@@ -189,6 +189,8 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
 
     await build(parseArguments(['--version=development']), destination);
     const css = await readFile(path.join(destination, '_deploy/release/development/assets/style/global.css'), 'utf8');
+    // No page loads a global script, so the build must not emit an empty placeholder for one.
+    await assert.rejects(access(path.join(destination, '_deploy/release/development/assets/script/global.compiled.js')), {code: 'ENOENT'});
     assert.match(css, /tailwindcss v4\.3\.3/i);
     assert.match(css, /\.visually-hidden/);
     assert.match(css, /\.mx-auto/);

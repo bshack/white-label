@@ -249,8 +249,6 @@ async function compileScripts(outputAssets: string, production: boolean, project
         sourcemap: !production,
         target: ['es2018']
     });
-    // Empty placeholder for the `scripts.global` path listed in the page data files.
-    await fs.writeFile(path.join(outputAssets, 'script/global.compiled.js'), '');
 }
 
 /** Escape a value for XML text, used for the sitemap. */

@@ -4,6 +4,5 @@
   "link": {},
   "twitter": {"card": "summary", "title": "White Label", "description": "A modular TypeScript web stack and starter generator."},
   "og": {"title": "White Label", "type": "website", "site_name": "White Label", "description": "A modular TypeScript web stack and starter generator.", "locale": "en_US"},
-  "styles": {"all": {"global": "assets/style/global.css"}, "print": {"global": "assets/style/print.css"}},
-  "scripts": {"global": "assets/script/global.compiled.js"}
+  "styles": {"all": {"global": "assets/style/global.css"}, "print": {"global": "assets/style/print.css"}}
 }
