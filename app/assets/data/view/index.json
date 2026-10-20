@@ -1,7 +1,6 @@
 {
     "title": "White Label | TypeScript Web Starter",
     "scripts":{
-        "global":"assets/script/global.compiled.js",
         "section":"assets/script/index.compiled.js"
     },
     "structuredData": {

@@ -1,7 +1,31 @@
-/** Values injected into page templates and the generated config file. */
-export interface BuildConfig {cdn: string; production: boolean; siteUrl: string; version: string; www: string}
+/**
+ * Static site build: renders `app/*.ts` pages to HTML, bundles browser scripts with esbuild, compiles Tailwind CSS,
+ * and writes robots.txt and sitemap.xml into `_deploy/`.
+ *
+ * Run it after `tsc` (the `build` script does both). Flags use `--name=value`; see {@link parseArguments}.
+ *
+ * @module scripts/build
+ */
+
+/**
+ * Deployment settings. They are passed to every page template (overriding page data with the same key) and written
+ * to `_deploy/release/<version>/assets/data/config.json`.
+ */
+export interface BuildConfig {
+    /** URL prefix for versioned assets: root-relative (`/`) or absolute HTTP(S). Always ends with `/`. */
+    cdn: string;
+    /** Minify output and require HTTPS for every URL. */
+    production: boolean;
+    /** Public origin (and optional path) used for canonical URLs, robots.txt, and sitemap.xml. No trailing slash. */
+    siteUrl: string;
+    /** Name of the asset directory, `_deploy/release/<version>/`. Not an npm version. */
+    version: string;
+    /** URL prefix for links back to the site's pages, such as the 404 page's home link. Always ends with `/`. */
+    www: string;
+}
 import {execFile} from 'node:child_process';
 import fs from 'node:fs/promises';
+import {createRequire} from 'node:module';
 import path from 'node:path';
 import {promisify} from 'node:util';
 import {fileURLToPath, pathToFileURL} from 'node:url';
@@ -12,6 +36,10 @@ const defaultProjectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.u
 const relativePublicPrefix = /^\/(?!\/)[A-Za-z0-9._~!$&'()*+,;=:@%/-]*$/;
 const buildOptionNames = new Set(['cdn', 'production', 'site-url', 'version', 'www']);
 
+// Validation helpers. Every value ends up inside generated HTML, XML, or a file path, so reject anything that could
+// break out of those contexts instead of trying to escape it.
+
+/** True when `value` contains an ASCII control character, such as a newline that could split robots.txt. */
 function hasControlCharacters(value: string): boolean {
     return [...value].some(character => {
         const code = character.charCodeAt(0);
@@ -19,6 +47,7 @@ function hasControlCharacters(value: string): boolean {
     });
 }
 
+/** Accept a single, safe directory name so the version cannot point outside `_deploy/release/`. */
 function normalizeVersion(value: unknown): string {
     if (typeof value !== 'string' || !/^[A-Za-z0-9._-]+$/.test(value) || value === '.' || value === '..') {
         throw new Error('Version may contain only letters, numbers, dots, underscores, and hyphens and must name one release directory');
@@ -31,6 +60,7 @@ function normalizeProduction(value: unknown): boolean {
     return value;
 }
 
+/** Accept an absolute HTTP(S) URL without credentials, query, or fragment (HTTPS only in production). */
 function normalizeSiteUrl(value: unknown, production: boolean): string {
     if (typeof value !== 'string') {
         throw new Error('Site URL must be an absolute HTTP(S) URL; production builds require HTTPS');
@@ -44,6 +74,10 @@ function normalizeSiteUrl(value: unknown, production: boolean): string {
     return url.toString().replace(/\/$/, '');
 }
 
+/**
+ * Accept a root-relative path such as `/` or `/site/`, or an absolute HTTP(S) URL (HTTPS only in production), and
+ * add a trailing slash so templates can append paths directly.
+ */
 function normalizePublicPrefix(value: unknown, name: 'www' | 'cdn', production: boolean): string {
     if (typeof value !== 'string' || hasControlCharacters(value)) {
         throw new Error(`${name} must be a root-relative or absolute HTTP(S) URL prefix`);
@@ -59,6 +93,7 @@ function normalizePublicPrefix(value: unknown, name: 'www' | 'cdn', production: 
     return normalized.endsWith('/') ? normalized : `${normalized}/`;
 }
 
+/** Validate every field. Runs for programmatic `build()` calls too, not just command-line flags. */
 function normalizeBuildConfig(config: BuildConfig): BuildConfig {
     const production = normalizeProduction(config.production);
     return {
@@ -70,7 +105,15 @@ function normalizeBuildConfig(config: BuildConfig): BuildConfig {
     };
 }
 
-/** Read deployment flags and reject unsafe or invalid deployment values. */
+/**
+ * Parse build flags into a validated {@link BuildConfig}.
+ *
+ * Accepted flags, each as `--name=value`: `--version` (default: current Unix time in seconds), `--production`
+ * (`true` or `false`, default `false`), `--site-url` (default `http://localhost:8080`), `--www` and `--cdn`
+ * (default `/`).
+ *
+ * @throws For an unknown flag, a flag without `=value`, or a value that fails validation.
+ */
 export function parseArguments(argumentsList: string[]): BuildConfig {
     const values: Record<string, string> = {};
     for (const argument of argumentsList) {
@@ -99,12 +142,23 @@ export function parseArguments(argumentsList: string[]): BuildConfig {
     });
 }
 
-/** Return the local Tailwind executable name for the current platform. */
-export function tailwindExecutable(platform: NodeJS.Platform = process.platform) {
-    return platform === 'win32' ? 'tailwindcss.cmd' : 'tailwindcss';
+/**
+ * Find the JavaScript entry of the project's own `@tailwindcss/cli`.
+ *
+ * The build runs that file with the current Node executable. That avoids searching PATH and avoids the Windows
+ * `.cmd` wrapper in `node_modules/.bin`, which `execFile` cannot start without a shell (it fails with EINVAL).
+ *
+ * @throws If the installed `@tailwindcss/cli` does not declare a `tailwindcss` bin.
+ */
+async function tailwindEntry(projectRoot: string) {
+    const manifestPath = createRequire(path.join(projectRoot, 'package.json')).resolve('@tailwindcss/cli/package.json');
+    const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as {bin?: Record<string, string>};
+    const entry = manifest.bin?.tailwindcss;
+    if (!entry) {throw new Error('@tailwindcss/cli does not declare a tailwindcss executable');}
+    return path.join(path.dirname(manifestPath), entry);
 }
 
-/** Recursively collect files below a directory, propagating filesystem failures. */
+/** List every file below `directory`, recursively. File-system errors are thrown, not skipped. */
 async function filesUnder(directory: string): Promise<string[]> {
     const entries = await fs.readdir(directory, {withFileTypes: true});
     const files = await Promise.all(entries.map(async (entry) => {
@@ -114,21 +168,31 @@ async function filesUnder(directory: string): Promise<string[]> {
     return files.flat();
 }
 
+/** What a compiled page module must export: a default function that returns the page's HTML. */
 interface PageModule {
     default(data: Record<string, unknown>): {toString(): string} | string;
 }
 
-/** Render compiled TypeScript pages using global, page-specific, and deployment data. */
+/**
+ * Render every page to HTML.
+ *
+ * A page is any `.ts` file under `app/` outside an `assets` directory, for example `app/index.ts` or
+ * `app/docs/intro.ts`. Its compiled module in `dist/app/` is imported and its default export is called with
+ * `global.json`, then the page's own data file (`app/assets/data/view/<page>.json`, optional), then the build
+ * config, merged in that order. The result is written to `_deploy/<page>.html`.
+ */
 async function renderMarkup(config: BuildConfig, outputRoot: string, projectRoot: string) {
     const globalData = JSON.parse(await fs.readFile(
         path.join(projectRoot, 'app/assets/data/view/global.json'), 'utf8'
     )) as Record<string, unknown>;
     const appRoot = path.join(projectRoot, 'app');
     const pages = (await filesUnder(appRoot))
-        .filter((file) => /\.ts$/.test(file) && !file.endsWith('.d.ts') && !file.includes(`${path.sep}assets${path.sep}`));
+        .map((file) => path.relative(appRoot, file))
+        // Check for an assets/ segment only in the path below app/, so a project stored under a directory named
+        // `assets` still finds its pages.
+        .filter((relative) => /\.ts$/.test(relative) && !relative.endsWith('.d.ts') && !`${path.sep}${relative}`.includes(`${path.sep}assets${path.sep}`));
 
-    await Promise.all(pages.map(async (page) => {
-        const relative = path.relative(appRoot, page);
+    await Promise.all(pages.map(async (relative) => {
         const pageDataPath = path.join(projectRoot, 'app/assets/data/view', relative.replace(/\.ts$/, '.json'));
         let pageData: Record<string, unknown> = {};
         try {
@@ -150,7 +214,7 @@ async function renderMarkup(config: BuildConfig, outputRoot: string, projectRoot
     }));
 }
 
-/** Compile Tailwind and project CSS into the deploy directory. */
+/** Compile `global.css` with Tailwind (minified in production) and copy `print.css` unchanged. */
 async function compileStyles(outputAssets: string, production: boolean, projectRoot: string) {
     const styleRoot = path.join(projectRoot, 'app/assets/style');
     await fs.mkdir(path.join(outputAssets, 'style'), {recursive: true});
@@ -160,11 +224,14 @@ async function compileStyles(outputAssets: string, production: boolean, projectR
         '-o', destination
     ];
     if (production) {argumentsList.push('--minify');}
-    await execFileAsync(tailwindExecutable(), argumentsList, {cwd: projectRoot});
+    await execFileAsync(process.execPath, [await tailwindEntry(projectRoot), ...argumentsList], {cwd: projectRoot});
     await fs.copyFile(path.join(styleRoot, 'print.css'), path.join(outputAssets, 'style/print.css'));
 }
 
-/** Bundle plain TypeScript browser entry points, excluding declaration-only files. */
+/**
+ * Bundle each `.ts` file directly inside `app/assets/script/` (not subdirectories) into `<name>.compiled.js`.
+ * Bundles are IIFEs targeting ES2018, minified in production and with source maps otherwise.
+ */
 async function compileScripts(outputAssets: string, production: boolean, projectRoot: string) {
     const scriptRoot = path.join(projectRoot, 'app/assets/script');
     const entries = (await fs.readdir(scriptRoot, {withFileTypes: true}))
@@ -182,9 +249,9 @@ async function compileScripts(outputAssets: string, production: boolean, project
         sourcemap: !production,
         target: ['es2018']
     });
-    await fs.writeFile(path.join(outputAssets, 'script/global.compiled.js'), '');
 }
 
+/** Escape a value for XML text, used for the sitemap. */
 function escapeXml(value: string): string {
     return value
         .replaceAll('&', '&amp;')
@@ -194,7 +261,17 @@ function escapeXml(value: string): string {
         .replaceAll("'", '&apos;');
 }
 
-/** Replace the deployment directory with compiled pages, scripts, styles, and static assets. */
+/**
+ * Delete `_deploy/` and rebuild it from the compiled project.
+ *
+ * Output: `<page>.html` for each page, `robots.txt`, a `sitemap.xml` listing the site root, and
+ * `release/<version>/assets/` holding `data/` (a copy of `app/assets/data` plus `config.json`), `script/`, and
+ * `style/`.
+ *
+ * @param config - Deployment settings; validated again even when passed directly. Defaults to the command-line flags.
+ * @param projectRoot - Project directory. Defaults to the directory above `dist/`.
+ * @throws If the config is invalid (before anything is deleted), or any build step fails.
+ */
 export async function build(config = parseArguments(process.argv.slice(2)), projectRoot = defaultProjectRoot) {
     const safeConfig = normalizeBuildConfig(config);
     const outputRoot = path.join(projectRoot, '_deploy');
@@ -202,17 +279,24 @@ export async function build(config = parseArguments(process.argv.slice(2)), proj
     await fs.rm(outputRoot, {recursive: true, force: true});
     await fs.mkdir(outputAssets, {recursive: true});
 
-    await fs.cp(path.join(projectRoot, 'app/assets/data'), path.join(outputAssets, 'data'), {recursive: true});
-    await fs.writeFile(path.join(outputAssets, 'data/config.json'), JSON.stringify(safeConfig));
-    await renderMarkup(safeConfig, outputRoot, projectRoot);
-    await compileStyles(outputAssets, safeConfig.production, projectRoot);
-    await compileScripts(outputAssets, safeConfig.production, projectRoot);
     const robots = `User-agent: *\nAllow: /\nSitemap: ${safeConfig.siteUrl}/sitemap.xml\n`;
-    await fs.writeFile(path.join(outputRoot, 'robots.txt'), robots);
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${escapeXml(`${safeConfig.siteUrl}/`)}</loc></url></urlset>\n`;
-    await fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap);
+    // Each step writes a different part of _deploy/, so they run concurrently. Wait for every step to settle before
+    // reporting a failure, so nothing is still writing when the caller retries or inspects the output.
+    const steps = await Promise.allSettled([
+        fs.cp(path.join(projectRoot, 'app/assets/data'), path.join(outputAssets, 'data'), {recursive: true})
+            .then(() => fs.writeFile(path.join(outputAssets, 'data/config.json'), JSON.stringify(safeConfig))),
+        renderMarkup(safeConfig, outputRoot, projectRoot),
+        compileStyles(outputAssets, safeConfig.production, projectRoot),
+        compileScripts(outputAssets, safeConfig.production, projectRoot),
+        fs.writeFile(path.join(outputRoot, 'robots.txt'), robots),
+        fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap)
+    ]);
+    const failure = steps.find((step): step is PromiseRejectedResult => step.status === 'rejected');
+    if (failure) {throw failure.reason;}
 }
 
+// Build when run as `node dist/scripts/build.js`, but not when imported (for example by tests).
 if (path.resolve(process.argv[1] || '') === fileURLToPath(import.meta.url)) {
     await build();
 }

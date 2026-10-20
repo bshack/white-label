@@ -4,11 +4,8 @@ Describe the problem and the solution.
 
 ## Verification
 
-- [ ] `npm run lint`
-- [ ] `npm run typecheck`
-- [ ] `npm test`
-- [ ] `npm run coverage`
-- [ ] `npm run audit`
+- [ ] `npm run lint && npm run coverage && npm run audit`
+- [ ] Generated a project and ran its `npm install && npm test` (if `app/`, `server/`, `scripts/`, `scaffold/`, or `template-test/` changed)
 - [ ] `npm pack --dry-run`
 - [ ] Complete diff reviewed
 

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
-import {mkdtemp, symlink, writeFile} from 'node:fs/promises';
+import {mkdtemp, rm, symlink, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {spawnSync} from 'node:child_process';
 import {formatCliError, runCli} from '../dist/cli/index.js';
@@ -44,6 +44,38 @@ test('CLI accepts explicit help flags', async () => {
     }
 });
 
+test('CLI shows help for create help flags without scaffolding', async () => {
+    for (const flag of ['--help', '-h']) {
+        const stdout = captureStream();
+        let called = false;
+        const exitCode = await runCli(['create', flag], {
+            cwd: () => '/workspace',
+            createProject: async () => {called = true;},
+            stdout: stdout.stream,
+            stderr: captureStream().stream
+        });
+        assert.equal(exitCode, 0);
+        assert.equal(called, false);
+        assert.match(stdout.read(), /white-label create <directory>/);
+    }
+});
+
+test('CLI rejects option-like create destinations instead of creating them', async () => {
+    for (const destination of ['--force', '-x', '-', '--help=yes']) {
+        const stderr = captureStream();
+        let called = false;
+        const exitCode = await runCli(['create', destination], {
+            cwd: () => '/workspace',
+            createProject: async () => {called = true;},
+            stdout: captureStream().stream,
+            stderr: stderr.stream
+        });
+        assert.equal(exitCode, 1, destination);
+        assert.equal(called, false, destination);
+        assert.match(stderr.read(), /Usage:/);
+    }
+});
+
 test('CLI rejects malformed create commands and removed renderer flags', async () => {
     for (const args of [['unknown'], ['create'], ['create', 'site', 'extra'], ['create', 'site', '--jsx'], ['create', 'site', '--no-jsx']]) {
         const stderr = captureStream();
@@ -58,8 +90,9 @@ test('CLI rejects malformed create commands and removed renderer flags', async (
     }
 });
 
-test('CLI refuses an existing non-empty destination before scaffolding', async () => {
+test('CLI refuses an existing non-empty destination before scaffolding', async t => {
     const directory = await mkdtemp(path.join(tmpdir(), 'white-label-cli-existing-'));
+    t.after(() => rm(directory, {recursive: true, force: true}));
     await writeFile(path.join(directory, 'keep.txt'), 'existing work');
     let called = false;
 
@@ -75,8 +108,9 @@ test('CLI refuses an existing non-empty destination before scaffolding', async (
     assert.equal(called, false);
 });
 
-test('CLI accepts an existing empty destination', async () => {
+test('CLI accepts an existing empty destination', async t => {
     const directory = await mkdtemp(path.join(tmpdir(), 'white-label-cli-empty-'));
+    t.after(() => rm(directory, {recursive: true, force: true}));
     let received;
     const exitCode = await runCli(['create', directory], {
         cwd: () => process.cwd(),
@@ -120,8 +154,9 @@ test('compiled CLI executes its main success path', () => {
     assert.match(result.stdout, /white-label create <directory>/);
 });
 
-test('compiled CLI executes when invoked through a symlink', async () => {
+test('compiled CLI executes when invoked through a symlink', async t => {
     const directory = await mkdtemp(path.join(tmpdir(), 'white-label-cli-symlink-'));
+    t.after(() => rm(directory, {recursive: true, force: true}));
     const executable = path.join(directory, 'white-label');
     await symlink(path.resolve('dist/cli/index.js'), executable);
 
@@ -134,8 +169,22 @@ test('compiled CLI executes when invoked through a symlink', async () => {
     assert.match(result.stdout, /white-label create <directory>/);
 });
 
-test('compiled CLI executes its main error path', async () => {
+test('compiled CLI can be imported without a matching entry script', () => {
+    const cli = path.resolve('dist/cli/index.js');
+    for (const extra of [[], ['missing-entry-script']]) {
+        const result = spawnSync(process.execPath, ['--input-type=module', '-e', `await import(${JSON.stringify(new URL(`file://${cli}`).href)})`, ...extra], {
+            cwd: process.cwd(),
+            encoding: 'utf8',
+            env: process.env
+        });
+        assert.equal(result.status, 0, result.stderr);
+        assert.equal(result.stdout, '');
+    }
+});
+
+test('compiled CLI executes its main error path', async t => {
     const directory = await mkdtemp(path.join(tmpdir(), 'white-label-cli-'));
+    t.after(() => rm(directory, {recursive: true, force: true}));
     const blocker = path.join(directory, 'blocker');
     await writeFile(blocker, 'not a directory');
 

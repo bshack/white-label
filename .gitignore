@@ -1,6 +1,7 @@
 _deploy/
 NetBoot/
 node_modules/
+dist/
 bower_components/
 app/**/*.html
 app/**/**/*.html
