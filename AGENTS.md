@@ -4,6 +4,10 @@ Generator and first-party CLI for production-oriented static TypeScript sites us
 
 Verified against `package.json`, `README.md`, `PACKAGE_MANAGERS.md`, and `.github/workflows/security.yml` on October 19, 2026. Recheck those files when commands or supported environments change.
 
+## Response style
+
+The owner requires concise, neutral, evidence-based responses (October 12, 2026). Do not add personality, enthusiasm, flattery or filler.
+
 ## Code map
 
 - `scaffold/index.ts`: `createProject()`, `createSiteManifest()` (the generated `package.json`), and the list of files copied into a project. Contract in `scaffold/AGENTS.md`.
