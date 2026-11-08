@@ -85,7 +85,7 @@ The generated application has one canonical first-party rendering path, through 
 
 The starter uses system fonts.
 
-Generated-project dependency contract: exact pins in `createSiteManifest()` must equal this repository's `devDependencies`; `allowScripts`/`dependenciesMeta` versions must equal the locked versions; the `@parcel/watcher` override must match in `package.json` `overrides`, `createSiteManifest()` `overrides` and `resolutions`, and `pnpm-workspace.yaml`. `test/generator.test.js` enforces this. Removal criteria for the override are in `PACKAGE_MANAGERS.md`.
+Generated-project dependency contract: exact pins in `createSiteManifest()` must equal this repository's `devDependencies`; `allowScripts`/`dependenciesMeta` versions must equal the locked versions; the `@parcel/watcher` override must match in `package.json` `overrides`, `createSiteManifest()` `overrides` and `resolutions`, and `pnpm-workspace.yaml`. Repository-only overrides for the lint and coverage tools are listed in `REPOSITORY_ONLY_OVERRIDES` and are not generated. `test/generator.test.js` enforces this. Removal criteria for the override are in `PACKAGE_MANAGERS.md`.
 
 ---
 
