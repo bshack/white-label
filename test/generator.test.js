@@ -8,6 +8,8 @@ import {createServer} from 'node:net';
 import {build, parseArguments} from '../dist/scripts/build.js';
 import {createProject, createSiteManifest} from '../dist/scaffold/index.js';
 const root = path.resolve('.');
+// Overrides for this repository's own lint and coverage tools (eslint, c8); see PACKAGE_MANAGERS.md.
+const REPOSITORY_ONLY_OVERRIDES = ['glob', 'minimatch'];
 // The fast loop runs `node --test` outside npm, so expose the locally installed Tailwind CLI the build spawns.
 process.env.PATH = [path.join(root, 'node_modules/.bin'), process.env.PATH].join(path.delimiter);
 
@@ -130,13 +132,20 @@ test('generated manifest pins the same tool and runtime versions this repository
         assert.deepEqual(manifest.dependenciesMeta[approved], {built: true});
     }
     assert.deepEqual(Object.keys(manifest.dependenciesMeta).sort(), Object.keys(manifest.allowScripts).sort());
-    // Generated projects must resolve the same audited transitive versions under npm, Yarn, and pnpm.
-    assert.deepEqual(manifest.overrides, repositoryManifest.overrides);
-    assert.deepEqual(manifest.resolutions, repositoryManifest.overrides);
+    // Generated projects must resolve the same audited transitive versions under npm, Yarn, and pnpm. The repository may
+    // add overrides for its own development tools (REPOSITORY_ONLY_OVERRIDES), which generated projects do not install.
+    const generatedOverrides = Object.fromEntries(Object.entries(repositoryManifest.overrides ?? {})
+        .filter(([name]) => !REPOSITORY_ONLY_OVERRIDES.includes(name)));
+    assert.deepEqual(manifest.overrides ?? {}, generatedOverrides);
+    assert.deepEqual(manifest.resolutions ?? {}, generatedOverrides);
     const pnpmWorkspace = await readFile(path.join(root, 'pnpm-workspace.yaml'), 'utf8');
     for (const [name, version] of Object.entries(repositoryManifest.overrides ?? {})) {
         assert.equal(lockfile.packages[`node_modules/${name}`]?.version, version, `${name} override must be the locked version`);
-        assert.match(pnpmWorkspace, new RegExp(`^overrides:[\\s\\S]*'${name.replace('/', '\\/')}': ${version.replaceAll('.', '\\.')}$`, 'm'));
+        if (name in generatedOverrides) {
+            assert.match(pnpmWorkspace, new RegExp(`^overrides:[\\s\\S]*'${name.replace('/', '\\/')}': ${version.replaceAll('.', '\\.')}$`, 'm'));
+        } else {
+            assert.ok(!(name in manifest.devDependencies) && !(name in manifest.dependencies), `${name} must not be a generated dependency`);
+        }
     }
     assert.match(manifest.scripts.test, /--test-coverage-include="dist\/app\/assets\/script\/\*\*\/\*\.js"/);
     for (const threshold of ['lines', 'functions', 'branches']) {

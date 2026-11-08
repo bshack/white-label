@@ -56,4 +56,8 @@ Yarn's package-age gate stays on for ordinary dependencies. The generated `.yarn
 
 The committed `package-lock.json` is the generator repository's only lockfile, and npm is the package manager for maintenance and audits. Compatibility CI packs the real generator and checks its API and CLI under npm, Yarn, and pnpm, then generates a project and runs its tests under each. Lockfiles for Yarn and pnpm are not committed.
 
+### Repository-only overrides
+
+`package.json` also overrides `minimatch` to 11.0.5 and `glob` to 14.0.4 for this repository's own development tools. `eslint` 10.14.0 depends on `minimatch` ^10.2.6 ([GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249), fixed in 11.0.1), and `c8` 12.0.0 depends, through `test-exclude`, on `glob` ^13.0.6 ([GHSA-3g3m-2fjr-6pw4](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4), fixed in 14.0.2). Generated projects install neither tool, so these overrides are not copied into `createSiteManifest()` or `pnpm-workspace.yaml`; `test/generator.test.js` lists them in `REPOSITORY_ONLY_OVERRIDES`. Remove both once `eslint` and `c8` releases depend on fixed versions, then confirm `npm run lint`, `npm run coverage`, and `npm run audit` still pass.
+
 Generator 11 pins the published runtime line exactly (`white-label-mediator@5.0.2`, `white-label-model@7.1.0`, `white-label-router@6.2.0`, `white-label-view@8.0.0`), and the committed lockfile resolves them from the npm registry. The security workflow also substitutes a packed build of a fixed View source revision in integration jobs; that is an additional cross-repository check, not a workaround for an unpublished release. Keep the lockfile registry-based rather than pointing runtime dependencies at Git or local packages.
