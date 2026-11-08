@@ -66,8 +66,8 @@ test('starter uses Tailwind and White Label tagged HTML without Bootstrap, Eta, 
     const [manifest, buildSource, style, page] = await Promise.all([
         'package.json', 'scripts/build.ts', 'app/assets/style/global.css', 'app/index.ts'
     ].map(file => readFile(file, 'utf8')));
-    assert.match(manifest, /"tailwindcss": "4\.3\.3"/);
-    assert.match(manifest, /"@tailwindcss\/cli": "4\.3\.3"/);
+    assert.match(manifest, /"tailwindcss": "4\.3\.5"/);
+    assert.match(manifest, /"@tailwindcss\/cli": "4\.3\.5"/);
     assert.match(style, /@import "tailwindcss"/);
     assert.match(page, /white-label-view\/html/);
     assert.doesNotMatch(page, /white-label-view\/jsx-runtime/);

@@ -264,8 +264,6 @@ npm run lint && npm run coverage && npm run audit
 
 Generator 11 targets the published White Label runtime line: `white-label-mediator@5.0.2`, `white-label-model@7.1.0`, `white-label-router@6.2.0`, and `white-label-view@8.0.0`. The release and install baseline is registry-backed, and CI tests generated projects with those same registry packages.
 
-Generated projects also pin `@parcel/watcher` to 2.6.0 through npm, Yarn, and pnpm overrides, to avoid a `braces` advisory pulled in by `@tailwindcss/cli` 4.3.3. [`PACKAGE_MANAGERS.md`](PACKAGE_MANAGERS.md#the-parcelwatcher-override) explains why and when to remove it.
-
 ## White Label ecosystem
 
 - [`white-label-model`](https://github.com/bshack/white-label-model) — observable state.

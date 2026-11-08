@@ -122,20 +122,14 @@ export function createSiteManifest() {
             '@parcel/watcher@2.6.0': {built: true},
             'esbuild@0.28.2': {built: true}
         },
-        // @tailwindcss/cli 4.3.3 pins @parcel/watcher 2.5.1, which depends on micromatch -> braces, and braces has a
-        // high-severity advisory with no fixed release. @parcel/watcher 2.6.0 uses picomatch instead, so force it.
-        // npm reads `overrides`, Yarn reads `resolutions`, and pnpm reads `overrides` in pnpm-workspace.yaml.
-        // Remove all three once @tailwindcss/cli depends on a fixed @parcel/watcher (see PACKAGE_MANAGERS.md).
-        overrides: {'@parcel/watcher': '2.6.0'},
-        resolutions: {'@parcel/watcher': '2.6.0'},
         devDependencies: {
-            '@tailwindcss/cli': '4.3.3',
+            '@tailwindcss/cli': '4.3.5',
             '@types/node': '24.19.2',
             'axe-core': '4.14.0',
             'esbuild': '0.28.2',
             'html-validate': '11.17.0',
             'jsdom': '30.1.3',
-            'tailwindcss': '4.3.3',
+            'tailwindcss': '4.3.5',
             'typescript': '7.0.2'
         },
         dependencies: {

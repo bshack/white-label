@@ -59,7 +59,7 @@ Open `http://localhost:8080/`. Serve `_deploy/` as the root; asset URLs are root
 - **Accessibility.** Target WCAG 2.2 AA: semantic HTML and landmarks, the skip link, logical headings, labelled forms, keyboard operation with visible focus, status announcements, and sufficient contrast. Prefer native controls to ARIA. The tests run html-validate and axe, which catch only some problems; list the manual keyboard and screen-reader checks still needed rather than claiming conformance.
 - **Search.** Keep accurate, unique titles, descriptions, canonical URLs, and structured data. The build's `sitemap.xml` lists only the site root: add new indexable pages to it in `scripts/build.ts`.
 - **Server code is request-scoped.** `handleRequest()` creates and destroys its Model, View, Router, and Mediator inside each call. Never keep mutable request state at module level (warm serverless processes reuse modules); constant configuration may stay there. Keep it on the Web `Request`/`Response` API, with provider adapters as thin wrappers. Widen the Content-Security-Policy one origin at a time, and mirror the security headers on any static host.
-- **Dependencies.** Versions are exact pins. Only `esbuild` and `@parcel/watcher` may run install scripts (`allowScripts`, `dependenciesMeta`, `pnpm-workspace.yaml`). The `@parcel/watcher` override lives in three places (`overrides`, `resolutions`, `pnpm-workspace.yaml`); change all three together, as `README.md` explains.
+- **Dependencies.** Versions are exact pins. Only `esbuild` and `@parcel/watcher` may run install scripts (`allowScripts`, `dependenciesMeta`, `pnpm-workspace.yaml`).
 
 ## Working agreement
 

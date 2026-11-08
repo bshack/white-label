@@ -208,7 +208,6 @@ const response = await handleRequest(new Request('https://example.com/hello?name
 All versions in `package.json` are exact pins. The four `white-label-*` packages are the only runtime dependencies.
 
 - **Install scripts.** Only `esbuild` and `@parcel/watcher` (used by the Tailwind CLI) may run install scripts: through `allowScripts` (npm), `dependenciesMeta` (Yarn), and `onlyBuiltDependencies` in `pnpm-workspace.yaml` (pnpm).
-- **`@parcel/watcher` override.** `@tailwindcss/cli` 4.3.3 depends on `@parcel/watcher` 2.5.1, which pulls in `micromatch` and `braces`. `braces` has a high-severity advisory ([GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)) with no fixed release. `@parcel/watcher` 2.6.0 no longer uses them, so the project forces 2.6.0 in three places: `overrides` (npm) and `resolutions` (Yarn) in `package.json`, and `overrides` in `pnpm-workspace.yaml` (pnpm). When you upgrade `@tailwindcss/cli` to a release that depends on `@parcel/watcher` 2.6.0 or later, delete all three, and update the version in `allowScripts` and `dependenciesMeta` to match.
 - **Yarn package age.** `.yarnrc.yml` lets the four `white-label-*` packages install as soon as they are published; every other package still goes through Yarn's age check.
 
 ## Next steps
