@@ -130,11 +130,11 @@ export function createSiteManifest() {
         resolutions: {'@parcel/watcher': '2.6.0'},
         devDependencies: {
             '@tailwindcss/cli': '4.3.3',
-            '@types/node': '24.13.3',
+            '@types/node': '24.19.2',
             'axe-core': '4.14.0',
             'esbuild': '0.28.2',
-            'html-validate': '11.16.2',
-            'jsdom': '30.1.2',
+            'html-validate': '11.17.0',
+            'jsdom': '30.1.3',
             'tailwindcss': '4.3.3',
             'typescript': '7.0.2'
         },
