@@ -176,8 +176,8 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
     assert.equal(manifest.dependencies.eta, undefined);
     assert.equal(manifest.devDependencies.bootstrap, undefined);
     assert.equal(manifest.devDependencies.sass, undefined);
-    assert.equal(manifest.devDependencies.tailwindcss, '4.3.3');
-    assert.equal(manifest.devDependencies['@tailwindcss/cli'], '4.3.3');
+    assert.equal(manifest.devDependencies.tailwindcss, '4.3.4');
+    assert.equal(manifest.devDependencies['@tailwindcss/cli'], '4.3.4');
     assert.equal(manifest.dependencies.react, undefined);
     assert.equal(manifest.dependencies.handlebars, undefined);
     assert.equal(manifest.engines.node, '^22.18.0 || >=24.11.0');
@@ -200,7 +200,7 @@ test('packaged project creator creates a strictly typed Tailwind and tagged-temp
     const css = await readFile(path.join(destination, '_deploy/release/development/assets/style/global.css'), 'utf8');
     // No page loads a global script, so the build must not emit an empty placeholder for one.
     await assert.rejects(access(path.join(destination, '_deploy/release/development/assets/script/global.compiled.js')), {code: 'ENOENT'});
-    assert.match(css, /tailwindcss v4\.3\.3/i);
+    assert.match(css, /tailwindcss v4\.3\.4/i);
     assert.match(css, /\.visually-hidden/);
     assert.match(css, /\.mx-auto/);
     assert.doesNotMatch(css, /Bootstrap\s+v5/);
